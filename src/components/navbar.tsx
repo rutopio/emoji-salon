@@ -5,7 +5,7 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ActionDropdown } from "@/components/action-dropdown";
 import { FluidHoverControls } from "@/components/fluid-hover-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -29,12 +29,29 @@ const drawerLinkClass =
   "flex min-h-12 items-center justify-between rounded-lg px-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
 const headerActionClass =
   "cursor-default transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
+const mobileQuery = "(max-width: 767px)";
+
+function subscribeToMobile(onChange: () => void) {
+  const media = window.matchMedia(mobileQuery);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+function isMobileViewport() {
+  return window.matchMedia(mobileQuery).matches;
+}
 
 export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();
   const [navOpen, setNavOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const isMobile = useSyncExternalStore(
+    subscribeToMobile,
+    isMobileViewport,
+    () => false
+  );
   const locale = localeForPath(pathname);
   const barePath = stripLocale(pathname);
   const isHome = barePath === "/";
@@ -160,23 +177,67 @@ export default function Navbar() {
           >
             <GithubLogoIcon className="size-4" aria-hidden="true" />
           </a>
-          <ActionDropdown
-            label={t("Language")}
-            trigger={<TranslateIcon aria-hidden="true" />}
-            className={headerActionClass}
-            selectedId={locale}
-            items={locales.map((item) => ({
-              id: item.code,
-              label: item.label,
-              lang: item.htmlLang,
-              onSelect: () =>
-                navigate({
-                  to: withLocale(pathname, item.code),
-                  search: (previous) => previous,
-                  hash: true,
-                }),
-            }))}
-          />
+          {isMobile ? (
+            <Drawer open={languageOpen} onOpenChange={setLanguageOpen}>
+              <DrawerTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={headerActionClass}
+                    aria-label={t("Language")}
+                  >
+                    <TranslateIcon aria-hidden="true" />
+                  </Button>
+                }
+              />
+              <DrawerContent>
+                <DrawerHeader className="border-border border-b pb-4">
+                  <DrawerTitle>{t("Language")}</DrawerTitle>
+                </DrawerHeader>
+                <div className="flex flex-col gap-1 px-4 pt-4 pb-6">
+                  {locales.map((item) => (
+                    <button
+                      key={item.code}
+                      type="button"
+                      lang={item.htmlLang}
+                      aria-current={locale === item.code ? "true" : undefined}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
+                      onClick={() => {
+                        setLanguageOpen(false);
+                        navigate({
+                          to: withLocale(pathname, item.code),
+                          search: (previous) => previous,
+                          hash: true,
+                        });
+                      }}
+                    >
+                      {item.label}
+                      {locale === item.code && <CheckIcon aria-hidden="true" />}
+                    </button>
+                  ))}
+                </div>
+              </DrawerContent>
+            </Drawer>
+          ) : (
+            <ActionDropdown
+              label={t("Language")}
+              trigger={<TranslateIcon aria-hidden="true" />}
+              className={headerActionClass}
+              selectedId={locale}
+              items={locales.map((item) => ({
+                id: item.code,
+                label: item.label,
+                lang: item.htmlLang,
+                onSelect: () =>
+                  navigate({
+                    to: withLocale(pathname, item.code),
+                    search: (previous) => previous,
+                    hash: true,
+                  }),
+              }))}
+            />
+          )}
           <ThemeToggle className={headerActionClass} />
         </FluidHoverControls>
       </nav>
