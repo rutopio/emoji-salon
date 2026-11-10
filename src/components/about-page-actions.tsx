@@ -1,4 +1,8 @@
-import { ArrowBendRightUpIcon, ShareNetworkIcon } from "@phosphor-icons/react";
+import {
+  ArrowBendRightUpIcon,
+  ArrowLeftIcon,
+  ShareNetworkIcon,
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ActionDropdown } from "@/components/action-dropdown";
@@ -59,6 +63,7 @@ export function AboutPageActions() {
   const [activeId, setActiveId] = useState("");
   const [progress, setProgress] = useState(0);
   const [outlineOpen, setOutlineOpen] = useState(false);
+  const selectedId = activeId || items[0]?.id || "";
 
   useMountEffect(() => {
     const headings = Array.from(
@@ -195,28 +200,28 @@ export function AboutPageActions() {
               aria-label={t("Table of contents")}
               className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
             >
-              <ul className="flex flex-col">
+              <ul className="flex flex-col gap-1">
                 {items.map((item) => (
                   <li
                     key={item.id}
-                    className={
-                      item.depth === 3
-                        ? "ml-3 border-primary/20 border-l pl-3"
-                        : undefined
-                    }
+                    className={item.depth === 3 ? "mx-6" : undefined}
                   >
                     <a
                       href={`#${item.id}`}
                       aria-current={
-                        activeId === item.id ? "location" : undefined
+                        selectedId === item.id ? "location" : undefined
                       }
                       onClick={(event) => {
                         event.preventDefault();
                         navigateToHeading(item.id);
                       }}
-                      className="block py-1 text-base text-foreground aria-[current=location]:font-bold"
+                      className="flex min-h-10 w-full items-center justify-between gap-3 rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=location]:bg-muted"
                     >
-                      {item.label}
+                      <span className="min-w-0">{item.label}</span>
+                      <ArrowLeftIcon
+                        className={`size-4 shrink-0 ${selectedId === item.id ? "" : "invisible"}`}
+                        aria-hidden="true"
+                      />
                     </a>
                   </li>
                 ))}
@@ -239,7 +244,10 @@ export function AboutPageActions() {
             ...item,
             onSelect: () => navigateToHeading(item.id),
           }))}
-          selectedId={activeId}
+          selectedId={selectedId}
+          activeIcon={
+            <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
+          }
           currentValue="location"
           side="left"
           variant="outline"

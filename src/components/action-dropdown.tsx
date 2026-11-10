@@ -22,6 +22,7 @@ export function ActionDropdown({
   trigger,
   items,
   selectedId,
+  activeIcon,
   currentValue = "true",
   side = "bottom",
   align = "end",
@@ -34,6 +35,7 @@ export function ActionDropdown({
   trigger: ReactNode;
   items: ActionDropdownItem[];
   selectedId?: string;
+  activeIcon?: ReactNode;
   currentValue?: "true" | "page" | "location";
   side?: "bottom" | "left";
   align?: "start" | "end";
@@ -291,8 +293,19 @@ export function ActionDropdown({
                       >
                         {item.label}
                       </span>
-                      {selectedId === item.id && side === "bottom" && (
-                        <CheckIcon aria-hidden="true" />
+                      {activeIcon ? (
+                        <span
+                          className={cn(
+                            "size-4 shrink-0",
+                            selectedId !== item.id && "invisible"
+                          )}
+                          aria-hidden="true"
+                        >
+                          {activeIcon}
+                        </span>
+                      ) : (
+                        selectedId === item.id &&
+                        side === "bottom" && <CheckIcon aria-hidden="true" />
                       )}
                     </button>
                   ))}

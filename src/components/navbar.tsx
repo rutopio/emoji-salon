@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 const routeLinkClass =
   "flex h-9 items-center whitespace-nowrap rounded-lg px-3 font-medium text-base text-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
 const drawerLinkClass =
-  "flex min-h-12 items-center justify-between rounded-lg px-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
+  "flex min-h-10 items-center justify-between rounded-lg px-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
 const headerActionClass =
   "cursor-default transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
 const mobileQuery = "(max-width: 767px)";
@@ -100,7 +100,7 @@ export default function Navbar() {
               />
               <DrawerContent>
                 <DrawerHeader className="border-border border-b pb-4">
-                  <DrawerTitle className="text-lg">EmojiSalon</DrawerTitle>
+                  <DrawerTitle>EmojiSalon</DrawerTitle>
                 </DrawerHeader>
                 <nav
                   aria-label={t("Pages")}
@@ -202,7 +202,7 @@ export default function Navbar() {
                       type="button"
                       lang={item.htmlLang}
                       aria-current={locale === item.code ? "true" : undefined}
-                      className="flex min-h-12 items-center justify-between rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
+                      className="flex min-h-10 items-center justify-between rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
                       onClick={() => {
                         setLanguageOpen(false);
                         navigate({
