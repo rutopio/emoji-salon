@@ -2,6 +2,7 @@
 @import "tailwindcss" source("./");
 
 @import "tw-animate-css";
+@import "@rutopio/base-component/styles.css";
 @import "@fontsource-variable/noto-sans-jp";
 @import "@fontsource-variable/noto-sans-tc";
 @import "./styles/shadcn-utilities.css";
@@ -310,10 +311,6 @@ html:lang(ja) {
   body,
   #root {
     height: 100%;
-  }
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
   }
   @media (prefers-reduced-motion: reduce) {
     *,

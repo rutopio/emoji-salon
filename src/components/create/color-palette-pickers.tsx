@@ -93,14 +93,14 @@ function NativeColorPicker({ color, onColorChange }: ColorPickerPopoverProps) {
   return (
     <label
       aria-label={`${t("Pick color")} ${color}`}
-      className="relative block size-12 cursor-pointer overflow-hidden rounded-lg border-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+      className="relative block size-12 overflow-hidden rounded-lg border-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
       style={{ backgroundColor: color }}
     >
       <input
         type="color"
         value={color}
         onChange={(e) => onColorChange(e.target.value)}
-        className="absolute inset-0 size-full cursor-pointer opacity-0"
+        className="absolute inset-0 size-full opacity-0"
       />
     </label>
   );
@@ -134,7 +134,7 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
     <DialogTrigger>
       <AriaButton
         aria-label={`${t("Pick color")} ${color}`}
-        className="size-12 cursor-pointer rounded-lg border-2 p-0 outline-none focus:ring-2 focus:ring-offset-2"
+        className="size-12  rounded-lg border-2 p-0 outline-none focus:ring-2 focus:ring-offset-2"
         style={{ backgroundColor: color }}
       >
         <ColorSwatch />

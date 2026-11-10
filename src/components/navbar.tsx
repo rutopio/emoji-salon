@@ -27,7 +27,7 @@ import { useT } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 const headerActionClass =
-  "cursor-default transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
+  "transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
 const mobileQuery = "(max-width: 767px)";
 
 function subscribeToMobile(onChange: () => void) {
