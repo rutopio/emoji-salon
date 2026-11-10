@@ -13,14 +13,25 @@ export default function Footer() {
           >
             rutopio/emoji-salon
           </a>
-          <a
-            href="https://chingru.com"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="block rounded-sm hover:text-foreground hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-ring"
-          >
-            Created by ChingRu
-          </a>
+          <p>
+            <a
+              href="https://chingru.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="rounded-sm hover:text-foreground hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              Created by ChingRu
+            </a>{" "}
+            /{" "}
+            <a
+              href="https://justfont.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="rounded-sm hover:text-foreground hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              justfont
+            </a>
+          </p>
         </div>
       </div>
     </footer>
