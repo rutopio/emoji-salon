@@ -3,9 +3,10 @@ import {
   ArrowLeftIcon,
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
+import { ActionMenu } from "@rutopio/base-component/action-menu";
+import { OutlineList } from "@rutopio/base-component/outline-list";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ActionDropdown } from "@/components/action-dropdown";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -200,32 +201,12 @@ export function AboutPageActions() {
               aria-label={t("Table of contents")}
               className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
             >
-              <ul className="flex flex-col gap-1">
-                {items.map((item) => (
-                  <li
-                    key={item.id}
-                    className={item.depth === 3 ? "ml-6" : undefined}
-                  >
-                    <a
-                      href={`#${item.id}`}
-                      aria-current={
-                        selectedId === item.id ? "location" : undefined
-                      }
-                      onClick={(event) => {
-                        event.preventDefault();
-                        navigateToHeading(item.id);
-                      }}
-                      className="flex min-h-10 w-full items-center justify-between gap-3 rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=location]:bg-muted"
-                    >
-                      <span className="min-w-0">{item.label}</span>
-                      <ArrowLeftIcon
-                        className={`size-4 shrink-0 ${selectedId === item.id ? "" : "invisible"}`}
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <OutlineList
+                items={items}
+                activeId={selectedId}
+                onNavigate={navigateToHeading}
+                indicator={<ArrowLeftIcon className="size-4" />}
+              />
             </nav>
           </DrawerContent>
         </Drawer>
@@ -237,21 +218,24 @@ export function AboutPageActions() {
         aria-label={t("About page actions")}
         className="fixed top-1/2 left-[var(--gutter-offset)] z-10 hidden h-fit -translate-y-1/2 min-[50rem]:flex"
       >
-        <ActionDropdown
+        <ActionMenu
           label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
           trigger={<ReadingProgressRing progress={progress} />}
           items={items.map((item) => ({
             ...item,
-            onSelect: () => navigateToHeading(item.id),
+            active: item.id === selectedId,
+            ariaCurrent:
+              item.id === selectedId ? ("location" as const) : undefined,
+            href: `#${encodeURIComponent(item.id)}`,
+            onSelect: (event) => {
+              event.preventDefault();
+              navigateToHeading(item.id);
+            },
           }))}
-          selectedId={selectedId}
-          activeIcon={
+          indicator={
             <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
           }
-          currentValue="location"
           side="left"
-          variant="outline"
-          size="icon-lg"
         />
         {utilities}
       </ButtonGroup>

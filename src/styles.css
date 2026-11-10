@@ -1,3 +1,4 @@
+@source "../node_modules/@rutopio/base-component/dist";
 @import "tailwindcss" source("./");
 
 @import "tw-animate-css";

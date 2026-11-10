@@ -4,9 +4,9 @@ import {
   ListIcon,
   TranslateIcon,
 } from "@phosphor-icons/react";
+import { ActionMenu } from "@rutopio/base-component/action-menu";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useState, useSyncExternalStore } from "react";
-import { ActionDropdown } from "@/components/action-dropdown";
 import { FluidHoverControls } from "@/components/fluid-hover-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -223,15 +223,18 @@ export default function Navbar() {
               </DrawerContent>
             </Drawer>
           ) : (
-            <ActionDropdown
+            <ActionMenu
               label={t("Language")}
               trigger={<TranslateIcon aria-hidden="true" />}
-              className={headerActionClass}
-              selectedId={locale}
+              triggerClassName={headerActionClass}
+              indicator={<CheckIcon className="size-4" />}
               items={locales.map((item) => ({
                 id: item.code,
                 label: item.label,
                 lang: item.htmlLang,
+                active: locale === item.code,
+                ariaCurrent:
+                  locale === item.code ? ("true" as const) : undefined,
                 onSelect: () =>
                   navigate({
                     to: withLocale(pathname, item.code),
