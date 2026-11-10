@@ -224,7 +224,7 @@ export function downloadSVG(svgData: string, emoji: string): void {
   const url = URL.createObjectURL(svgBlob);
   const filename = `${emojiToUnicode(emoji)}-EmojiSalon.svg`;
   triggerDownload(url, filename);
-  toast.success("SVG downloading....", {
+  toast.success("Downloading SVG...", {
     description: filename,
   });
 }

@@ -123,7 +123,7 @@ export default function DownloadDialog({
               rel="noreferrer noopener"
               className="underline"
             >
-              Free for Personal & Commercial Use
+              Free for personal and commercial use
             </a>
           </p>
         </div>

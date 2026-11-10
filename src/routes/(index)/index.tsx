@@ -44,7 +44,7 @@ export const Route = createFileRoute("/(index)/")({
       {
         name: "description",
         content:
-          "Customize your emoji colors with EmojiSalon! Select any emoji, pick custom colors, and download as SVG or PNG.",
+          "Choose any emoji, pick your own colors, and save the result as SVG or PNG.",
       },
       {
         property: "og:title",
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/(index)/")({
       {
         property: "og:description",
         content:
-          "Customize your emoji colors with EmojiSalon! Select any emoji, pick custom colors, and download as SVG or PNG.",
+          "Choose any emoji, pick your own colors, and save the result as SVG or PNG.",
       },
       {
         property: "og:url",

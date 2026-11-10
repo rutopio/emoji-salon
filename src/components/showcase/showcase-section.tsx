@@ -224,7 +224,7 @@ export default function ShowcaseSection({
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.png`;
       triggerDownload(dataUrl, filename);
-      toast.success("Image downloading...", { description: filename });
+      toast.success("Downloading image...", { description: filename });
     }, "png");
   }, [emoji, generateImage]);
 
@@ -235,7 +235,7 @@ export default function ShowcaseSection({
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.jpg`;
       triggerDownload(dataUrl, filename);
-      toast.success("Image downloading...", { description: filename });
+      toast.success("Downloading image...", { description: filename });
     }, "jpg");
   }, [emoji, generateImage]);
 

@@ -1,7 +1,7 @@
 {
   "name": "EmojiSalon - Coloring Your Emoji",
   "short_name": "EmojiSalon",
-  "description": "Customize your emoji colors with EmojiSalon! Create unique emoji variations and download as SVG or PNG.",
+  "description": "Change emoji colors with EmojiSalon. Create your own color variations, then download them as SVG or PNG.",
   "start_url": "/",
   "icons": [
     {

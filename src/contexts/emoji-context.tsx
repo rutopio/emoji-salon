@@ -245,7 +245,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       } else {
         // fetchEmojiData already logged the cause; surface it to the user so a
         // broken URL palette or missing asset doesn't just silently do nothing.
-        toast.error("Could not load this emoji. Please try another one.");
+        toast.error("Could not load this emoji. Try another one.");
       }
     },
     [updateURL]
@@ -402,7 +402,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleReset = useCallback(() => {
     updateEmoji(currentEmoji, false);
-    toast.success("Palette colors have been reset.");
+    toast.success("Colors reset to original.");
   }, [currentEmoji, updateEmoji]);
 
   /**
@@ -544,7 +544,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         return;
       }
       updateCanvas(CANVAS_ACTION.DOWNLOAD, format);
-      toast.success("Image downloading...", {
+      toast.success("Downloading image...", {
         description: `${emojiToUnicode(currentEmoji)}-EmojiSalon.${format}`,
       });
     },
@@ -573,7 +573,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW);
     if (navigator.share && window.innerWidth < 768) {
       const shareData = {
-        title: "Collaborate & Share With Friends!",
+        title: "Share with friends",
         text: "#EmojiSalon",
         url: window.location.href,
       };

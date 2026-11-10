@@ -24,7 +24,7 @@ export const Route = createFileRoute("/showcase/")({
       {
         name: "description",
         content:
-          "Explore creative emoji color variations created by the community. Download or remix customized emoji designs.",
+          "Browse emoji color variations made by the community. Download or remix any design.",
       },
       {
         property: "og:title",
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/showcase/")({
       {
         property: "og:description",
         content:
-          "Explore creative emoji color variations created by the community. Download or remix customized emoji designs.",
+          "Browse emoji color variations made by the community. Download or remix any design.",
       },
       {
         property: "og:url",
@@ -64,7 +64,7 @@ function ShowcasePage() {
             Showcase
           </h1>
           <p className="text-pretty text-base text-neutral-800 leading-[1.65] dark:text-neutral-300">
-            Explore creative emoji color variations
+            Browse emoji color variations from the community
           </p>
           <div>
             <Button
@@ -76,7 +76,7 @@ function ShowcasePage() {
                   rel="noreferrer noopener"
                 >
                   <MagicWandIcon className="mr-2 size-4" aria-hidden="true" />
-                  Submit Your Own
+                  Submit your own
                 </a>
               }
             />

@@ -105,7 +105,7 @@ export default function ShareDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Share Your Customized Emoji</DialogTitle>
+            <DialogTitle>Share your emoji</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
@@ -188,7 +188,7 @@ export default function ShareDialog({
                     rel="noreferrer noopener"
                   >
                     <GithubLogoIcon aria-hidden="true" />
-                    Submit Showcase
+                    Submit to showcase
                   </a>
                 }
               />

@@ -4,10 +4,10 @@
  * copyright, and open source details.
  */
 
-import { GithubLogoIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AboutPageActions } from "@/components/about-page-actions";
 import { ArticleHeading } from "@/components/article-heading";
+import { GithubMarkIcon } from "@/components/github-mark-icon";
 import PageLayout from "@/layout";
 
 import { GITHUB_REPO_URL, SITE_URL } from "@/lib/constants";
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/about/")({
       {
         name: "description",
         content:
-          "Learn how EmojiSalon works, how recoloring may help distinguish emoji, and how its artwork and code are licensed.",
+          "How EmojiSalon works, how recoloring can help tell emoji apart, and how the artwork and code are licensed.",
       },
       {
         property: "og:title",
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/about/")({
       {
         property: "og:description",
         content:
-          "Learn how EmojiSalon works, how recoloring may help distinguish emoji, and how its artwork and code are licensed.",
+          "How EmojiSalon works, how recoloring can help tell emoji apart, and how the artwork and code are licensed.",
       },
       {
         property: "og:url",
@@ -63,12 +63,11 @@ function AboutPage() {
         {/* Hero section */}
         <header className="flex flex-col gap-6">
           <h1 className="text-balance font-bold text-lg text-neutral-950 leading-[1.65] dark:text-neutral-50">
-            About EmojiSalon
+            About
           </h1>
           <p className="text-pretty text-base">
-            EmojiSalon allows you to customize the colors of emojis, just like
-            dressing them up with various cosmetics or coloring them with
-            different paints.
+            EmojiSalon lets you change the colors of any emoji — like giving it
+            a makeover or a fresh coat of paint.
           </p>
         </header>
 
@@ -76,19 +75,20 @@ function AboutPage() {
         <section className="flex flex-col gap-6">
           <ArticleHeading id="how-it-works">How it works</ArticleHeading>
           <p className="text-pretty">
-            EmojiSalon uses Twemoji artwork. Choose an emoji and edit its colors
-            in three steps:
+            EmojiSalon uses Twemoji artwork. Pick an emoji and change its colors
+            in 3 steps:
           </p>
           <ol className="ml-6 flex list-decimal flex-col gap-2">
-            <li>Select an emoji from the picker or choose Random Emoji.</li>
+            <li>Pick an emoji from the picker, or choose Random Emoji.</li>
             <li>
-              Use the color swatches to change its palette. Select Reset Palette
-              to restore the original colors.
+              Use the color swatches to change its palette. Choose Reset Palette
+              to go back to the original colors.
             </li>
             <li>
-              Save or share your result. On desktop, Save Image offers SVG, PNG,
-              JPG, and Copy. On smaller screens, Save Image copies the image.
-              Share Link creates a URL with your emoji and colors.
+              Save or share what you made. On desktop, Save Image lets you
+              choose SVG, PNG, JPG, or Copy. On smaller screens it copies the
+              image directly. Share Link creates a URL that includes your emoji
+              and color choices.
             </li>
           </ol>
         </section>
@@ -97,32 +97,28 @@ function AboutPage() {
         <section className="flex flex-col gap-6">
           <ArticleHeading id="accessibility">Accessibility</ArticleHeading>
           <p className="text-pretty">
-            People see and distinguish colors in different ways. Recoloring may
-            make an emoji easier for some people to recognize, but the result
-            depends on the person, emoji, and size.
+            People see and tell colors apart in different ways. Recoloring can
+            make an emoji easier to recognize, but the effect depends on the
+            person, the emoji, and the display size.
           </p>
 
           <div className="flex flex-col gap-16">
             {/* Challenges */}
             <div className="flex flex-col gap-6">
               <ArticleHeading id="challenges" level={3}>
-                What can make emoji hard to distinguish
+                What makes emoji hard to tell apart
               </ArticleHeading>
               <p className="text-pretty">
                 Color vision differences or low vision can make some emoji
-                harder to distinguish:
+                harder to tell apart:
               </p>
               <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>
                   similar colors can make parts of an emoji blend together
                 </li>
+                <li>emoji that differ only by color can look the same</li>
                 <li>
-                  emoji that differ mainly by color may be difficult to tell
-                  apart
-                </li>
-                <li>
-                  fine details can disappear when an emoji is shown at a small
-                  size
+                  fine details disappear when an emoji is shown at a small size
                 </li>
               </ul>
             </div>
@@ -141,7 +137,7 @@ function AboutPage() {
                   <li>🇲🇨 Monaco / 🇮🇩 Indonesia</li>
                 </ul>
                 <p className="pt-2">
-                  Heart emoji can also rely on color to convey a difference:
+                  Heart emoji also rely on color alone to show a difference:
                 </p>
                 <ul className="ml-6 flex list-disc flex-col gap-1">
                   <li>❤️ Red / 💜 Purple</li>
@@ -161,15 +157,16 @@ function AboutPage() {
                 audience. You can:
               </p>
               <ul className="ml-6 flex list-disc flex-col gap-1">
-                <li>increase contrast between editable parts of an emoji</li>
+                <li>raise the contrast between parts of an emoji</li>
                 <li>
-                  use more distinct colors when placing similar emoji together
+                  use more distinct colors so similar emoji are easier to tell
+                  apart
                 </li>
               </ul>
               <p className="text-pretty">
-                These changes apply to images you save or share. They do not
-                change emoji in a device's keyboard. If an emoji carries
-                important information, include a text label or alternative text.
+                These changes only apply to the images you save or share. They
+                do not change the emoji on your device's keyboard. If an emoji
+                carries meaning, pair it with a text label or alt text.
               </p>
             </div>
 
@@ -207,7 +204,7 @@ function AboutPage() {
         {/* Copyright section */}
         <section className="flex flex-col gap-6">
           <ArticleHeading id="copyright-license">
-            Copyright & License
+            Copyright and license
           </ArticleHeading>
           <div className="flex flex-col gap-16 text-pretty">
             {/* Graphics License */}
@@ -232,7 +229,7 @@ function AboutPage() {
                 >
                   Twemoji
                 </a>
-                , licensed under{" "}
+                , whose artwork is licensed under{" "}
                 <a
                   href="https://creativecommons.org/licenses/by/4.0/"
                   target="_blank"
@@ -240,17 +237,16 @@ function AboutPage() {
                   className="underline underline-offset-4 hover:text-foreground"
                 >
                   CC-BY 4.0
-                </a>{" "}
-                (graphic).
+                </a>
+                .
               </p>
               <p>
-                This license enables reusers to distribute, remix, adapt, and
-                build upon the material in any medium or format, so long as
-                attribution is given to the creator. The license allows for
-                commercial use.
+                You can share, remix, and build on the artwork in any medium or
+                format, as long as you credit the original creator. Commercial
+                use is allowed.
               </p>
               <p className="font-medium">
-                The author does not own any copyright to your work.
+                The creator of EmojiSalon holds no copyright over what you make.
               </p>
             </div>
 
@@ -277,7 +273,7 @@ function AboutPage() {
 
         {/* Open source section */}
         <section className="flex flex-col gap-6">
-          <ArticleHeading id="open-source">Open Source</ArticleHeading>
+          <ArticleHeading id="open-source">Open source</ArticleHeading>
           <p>
             <a
               href={GITHUB_REPO_URL}
@@ -285,7 +281,7 @@ function AboutPage() {
               rel="noreferrer noopener"
               className="whitespace-nowrap text-primary underline decoration-[0.5px] underline-offset-4 transition-[color,text-decoration-thickness] duration-150 hover:text-neutral-950 hover:decoration-[1px] dark:hover:text-neutral-50"
             >
-              <GithubLogoIcon
+              <GithubMarkIcon
                 aria-hidden="true"
                 className="mr-1 inline-block size-4 align-[-0.125em]"
               />
