@@ -82,6 +82,7 @@
 }
 
 :root {
+  text-autospace: normal;
   --hover: rgb(0 0 0 / 0.04);
   --gutter-offset: calc(50% + 21rem + 0.5rem);
   /* z-index scale */

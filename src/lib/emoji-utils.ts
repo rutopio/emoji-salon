@@ -33,7 +33,7 @@ const emojiDataCache = new Map<string, EmojiSVGData>();
  * rgbaToHexColor([255, 0, 0, 255]); // Returns "#ff0000"
  * rgbaToHexColor([0, 128, 255]);    // Returns "#0080ff"
  */
-export function rgbaToHexColor(rgbaColorArray: number[]): string {
+function rgbaToHexColor(rgbaColorArray: number[]): string {
   return (
     "#" +
     rgbaColorArray
@@ -42,17 +42,6 @@ export function rgbaToHexColor(rgbaColorArray: number[]): string {
       .map((ele) => (ele.length === 1 ? `0${ele}` : ele))
       .join("")
   );
-}
-
-/**
- * Checks if two color strings are equal.
- *
- * @param color1 - First color to compare.
- * @param color2 - Second color to compare.
- * @returns True if the colors are identical.
- */
-export function areColorsEqual(color1: string, color2: string): boolean {
-  return color1 === color2;
 }
 
 /**
@@ -246,11 +235,7 @@ export function getOverrideStyleString(
       return `${originalPaletteIndex[idx]}_${hexColor}`;
     })
     .filter(
-      (_, idx) =>
-        !areColorsEqual(
-          customizedPaletteColors[idx],
-          originalPaletteColors[idx]
-        )
+      (_, idx) => customizedPaletteColors[idx] !== originalPaletteColors[idx]
     )
     .join("-");
 }
@@ -295,8 +280,6 @@ export function parsePaletteString(
   return modifiedColors;
 }
 
-// Re-export from constants for backward compatibility
-
 /**
  * Gets the label/name for an emoji character.
  *
@@ -319,7 +302,7 @@ export function getEmojiLabel(emoji: string): string {
  * @example
  * getRandomEmoji(); // Returns a random emoji like "😀" or "🦄"
  */
-export function getRandomEmoji(): string {
+function getRandomEmoji(): string {
   const randomIndex = Math.floor(Math.random() * DEFAULT_EMOJIS.length);
   return DEFAULT_EMOJIS[randomIndex];
 }

@@ -88,10 +88,7 @@ interface ColorPickerPopoverProps {
  * @param props - Component props (color + onColorChange).
  * @returns A swatch button backed by a native color input.
  */
-export function NativeColorPicker({
-  color,
-  onColorChange,
-}: ColorPickerPopoverProps) {
+function NativeColorPicker({ color, onColorChange }: ColorPickerPopoverProps) {
   const t = useT();
   return (
     <label
@@ -117,10 +114,7 @@ export function NativeColorPicker({
  * @param props - Component props.
  * @returns Color picker popover component.
  */
-export function ColorPickerPopover({
-  color,
-  onColorChange,
-}: ColorPickerPopoverProps) {
+function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
   const t = useT();
   // Parse the hex color string to a Color object in HSB format
   const colorValue = parseColor(color).toFormat("hsb");

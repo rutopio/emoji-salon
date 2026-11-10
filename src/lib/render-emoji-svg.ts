@@ -20,7 +20,7 @@ export interface EmojiData {
 }
 
 /** Both SVGs for one emoji: original palette and user-customized palette. */
-export interface EmojiPair {
+interface EmojiPair {
   /** Original emoji inner SVG (just `<path>` elements, viewBox 0 0 36 36). */
   originalInner: string;
   /** Customized emoji inner SVG (just `<path>` elements, viewBox 0 0 36 36). */
@@ -32,7 +32,7 @@ export interface EmojiPair {
  * color list `c`, returning the customized colors (same length/order as `c`).
  * Unknown or out-of-range indices are ignored.
  */
-export function applyOverride(c: string[], override?: string): string[] {
+function applyOverride(c: string[], override?: string): string[] {
   const colors = [...c];
   if (!override) return colors;
   for (const pair of override.split("-")) {

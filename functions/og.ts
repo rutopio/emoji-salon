@@ -65,5 +65,3 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
   });
 };
-
-export const config = { runtime: "edge" };

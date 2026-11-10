@@ -1,14 +1,9 @@
-import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import {
-  CheckIcon,
-  GithubLogoIcon,
-  ListIcon,
-  TranslateIcon,
-} from "@phosphor-icons/react";
+import { GithubLogoIcon, ListIcon, TranslateIcon } from "@phosphor-icons/react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { ActionDropdown } from "@/components/action-dropdown";
 import { FluidHoverControls } from "@/components/fluid-hover-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
@@ -17,8 +12,6 @@ import { cn } from "@/lib/utils";
 
 const routeLinkClass =
   "flex h-9 items-center whitespace-nowrap rounded-lg px-3 font-medium text-base text-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
-const routeMenuItemClass =
-  "flex cursor-default items-center justify-between gap-2 rounded-sm px-3 py-1.5 text-base text-foreground outline-none focus:bg-accent focus:text-accent-foreground";
 const headerActionClass =
   "cursor-default transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
 
@@ -59,56 +52,37 @@ export default function Navbar() {
             </span>
           </Link>
           <div className="md:hidden">
-            <MenuPrimitive.Root>
-              <MenuPrimitive.Trigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    type="button"
-                    aria-label={t("Pages")}
-                  >
-                    <ListIcon aria-hidden="true" />
-                  </Button>
-                }
-              />
-              <MenuPrimitive.Portal>
-                <MenuPrimitive.Positioner
-                  align="start"
-                  side="bottom"
-                  sideOffset={4}
-                  className="isolate z-50 outline-none"
-                >
-                  <MenuPrimitive.Popup
-                    aria-label={t("Pages")}
-                    className="z-50 min-w-40 rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none ring-1 ring-foreground/10"
-                  >
-                    <MenuPrimitive.Item
-                      aria-current={isHome ? "page" : undefined}
-                      className={routeMenuItemClass}
-                      onClick={() => navigate({ to: localized("/") })}
-                    >
-                      {t("Create")} {isHome && <CheckIcon aria-hidden="true" />}
-                    </MenuPrimitive.Item>
-                    <MenuPrimitive.Item
-                      aria-current={isShowcase ? "page" : undefined}
-                      className={routeMenuItemClass}
-                      onClick={() => navigate({ to: localized("/showcase") })}
-                    >
-                      {t("Showcase")}{" "}
-                      {isShowcase && <CheckIcon aria-hidden="true" />}
-                    </MenuPrimitive.Item>
-                    <MenuPrimitive.Item
-                      aria-current={isAbout ? "page" : undefined}
-                      className={routeMenuItemClass}
-                      onClick={() => navigate({ to: localized("/about") })}
-                    >
-                      {t("About")} {isAbout && <CheckIcon aria-hidden="true" />}
-                    </MenuPrimitive.Item>
-                  </MenuPrimitive.Popup>
-                </MenuPrimitive.Positioner>
-              </MenuPrimitive.Portal>
-            </MenuPrimitive.Root>
+            <ActionDropdown
+              label={t("Pages")}
+              trigger={<ListIcon aria-hidden="true" />}
+              align="start"
+              selectedId={
+                isHome
+                  ? "create"
+                  : isShowcase
+                    ? "showcase"
+                    : isAbout
+                      ? "about"
+                      : undefined
+              }
+              items={[
+                {
+                  id: "create",
+                  label: t("Create"),
+                  onSelect: () => navigate({ to: localized("/") }),
+                },
+                {
+                  id: "showcase",
+                  label: t("Showcase"),
+                  onSelect: () => navigate({ to: localized("/showcase") }),
+                },
+                {
+                  id: "about",
+                  label: t("About"),
+                  onSelect: () => navigate({ to: localized("/about") }),
+                },
+              ]}
+            />
           </div>
           <div className="hidden items-center gap-2 md:flex">
             <Link
@@ -150,53 +124,22 @@ export default function Navbar() {
           >
             <GithubLogoIcon className="size-4" aria-hidden="true" />
           </a>
-          <MenuPrimitive.Root>
-            <MenuPrimitive.Trigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  type="button"
-                  aria-label={t("Language")}
-                  className={headerActionClass}
-                >
-                  <TranslateIcon aria-hidden="true" />
-                </Button>
-              }
-            />
-            <MenuPrimitive.Portal>
-              <MenuPrimitive.Positioner
-                side="bottom"
-                align="end"
-                sideOffset={4}
-                className="isolate z-50 outline-none"
-              >
-                <MenuPrimitive.Popup
-                  aria-label={t("Language")}
-                  className="min-w-36 rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none ring-1 ring-foreground/10"
-                >
-                  {locales.map((item) => (
-                    <MenuPrimitive.Item
-                      key={item.code}
-                      lang={item.htmlLang}
-                      aria-current={locale === item.code ? "true" : undefined}
-                      className={routeMenuItemClass}
-                      onClick={() =>
-                        navigate({
-                          to: withLocale(pathname, item.code),
-                          search: (previous) => previous,
-                          hash: true,
-                        })
-                      }
-                    >
-                      {item.label}{" "}
-                      {locale === item.code && <CheckIcon aria-hidden="true" />}
-                    </MenuPrimitive.Item>
-                  ))}
-                </MenuPrimitive.Popup>
-              </MenuPrimitive.Positioner>
-            </MenuPrimitive.Portal>
-          </MenuPrimitive.Root>
+          <ActionDropdown
+            label={t("Language")}
+            trigger={<TranslateIcon aria-hidden="true" />}
+            className={headerActionClass}
+            selectedId={locale}
+            items={locales.map((item) => ({
+              id: item.code,
+              label: item.label,
+              onSelect: () =>
+                navigate({
+                  to: withLocale(pathname, item.code),
+                  search: (previous) => previous,
+                  hash: true,
+                }),
+            }))}
+          />
           <ThemeToggle className={headerActionClass} />
         </FluidHoverControls>
       </nav>

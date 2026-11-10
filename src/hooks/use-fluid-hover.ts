@@ -17,7 +17,7 @@ export interface ItemRect {
   width: number;
 }
 
-export interface UseFluidHoverOptions {
+interface UseFluidHoverOptions {
   /**
    * With `nearest`, which direction to resolve the nearest item along.
    *   "y"  — vertical lists (default): closest by top/height

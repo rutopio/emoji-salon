@@ -1,7 +1,7 @@
-import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ArrowBendRightUpIcon, ShareNetworkIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ActionDropdown } from "@/components/action-dropdown";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -232,45 +232,18 @@ export function AboutPageActions() {
         aria-label={t("About page actions")}
         className="fixed top-1/2 left-[var(--gutter-offset)] z-10 hidden h-fit -translate-y-1/2 min-[50rem]:flex"
       >
-        <MenuPrimitive.Root>
-          <MenuPrimitive.Trigger
-            render={
-              <Button
-                variant="outline"
-                size="icon-lg"
-                aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
-              />
-            }
-          >
-            <ReadingProgressRing progress={progress} />
-          </MenuPrimitive.Trigger>
-          <MenuPrimitive.Portal>
-            <MenuPrimitive.Positioner
-              side="left"
-              align="center"
-              sideOffset={8}
-              className="isolate z-50 outline-none"
-            >
-              <MenuPrimitive.Popup
-                aria-label={t("Table of contents")}
-                className="max-h-[50dvh] w-64 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none ring-1 ring-foreground/10"
-              >
-                {items.map((item) => (
-                  <MenuPrimitive.Item
-                    key={item.id}
-                    aria-current={activeId === item.id ? "location" : undefined}
-                    className="flex cursor-default items-center rounded-sm px-3 py-1.5 text-base outline-none focus:bg-accent aria-[current=location]:font-semibold"
-                    onClick={() => navigateToHeading(item.id)}
-                  >
-                    <span className={item.depth === 3 ? "pl-4" : undefined}>
-                      {item.label}
-                    </span>
-                  </MenuPrimitive.Item>
-                ))}
-              </MenuPrimitive.Popup>
-            </MenuPrimitive.Positioner>
-          </MenuPrimitive.Portal>
-        </MenuPrimitive.Root>
+        <ActionDropdown
+          label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
+          trigger={<ReadingProgressRing progress={progress} />}
+          items={items.map((item) => ({
+            ...item,
+            onSelect: () => navigateToHeading(item.id),
+          }))}
+          selectedId={activeId}
+          side="left"
+          variant="outline"
+          size="icon-lg"
+        />
         {utilities}
       </ButtonGroup>
     </>

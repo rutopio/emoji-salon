@@ -98,7 +98,7 @@ interface EmojiContextValue {
 }
 
 /** Supported image download formats. */
-export type ImageFormat = "png" | "jpg" | "svg";
+type ImageFormat = "png" | "jpg" | "svg";
 
 const EmojiContext = createContext<EmojiContextValue | null>(null);
 

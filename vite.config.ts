@@ -40,8 +40,7 @@ function ogImagePlugin(): Plugin {
   };
 }
 
-// Preload the self-hosted fonts used on first paint. The old Albert Sans and
-// Host Grotesk asset matchers no longer apply after the Inter migration.
+// Preload the self-hosted fonts used on first paint.
 const PUBLIC_PRELOAD_FONTS = [
   "/font/inter-normal-core.woff2",
   "/font/PaperMono%5Bwght%5D.woff2",
