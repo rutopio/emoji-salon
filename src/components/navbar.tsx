@@ -24,10 +24,7 @@ import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
 import { useT } from "@/lib/translations";
-import { cn } from "@/lib/utils";
 
-const headerActionClass =
-  "transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
 const mobileQuery = "(max-width: 767px)";
 
 function subscribeToMobile(onChange: () => void) {
@@ -131,10 +128,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("GitHub (opens in a new tab)")}
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "icon" }),
-              headerActionClass
-            )}
+            className={buttonVariants({ variant: "ghost", size: "icon" })}
           >
             <GithubLogoIcon className="size-4" aria-hidden="true" />
           </a>
@@ -145,7 +139,6 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={headerActionClass}
                     aria-label={t("Language")}
                   >
                     <TranslateIcon aria-hidden="true" />
@@ -184,7 +177,6 @@ export default function Navbar() {
             <ActionMenu
               label={t("Language")}
               trigger={<TranslateIcon aria-hidden="true" />}
-              triggerClassName={headerActionClass}
               indicator={<CheckIcon className="size-4" />}
               items={locales.map((item) => ({
                 id: item.code,
@@ -202,7 +194,7 @@ export default function Navbar() {
               }))}
             />
           )}
-          <ThemeToggle className={headerActionClass} />
+          <ThemeToggle />
         </>
       }
     />
