@@ -80,7 +80,7 @@ function AnimatedOutlet() {
       initial={reduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="min-h-full"
+      className="h-full"
     >
       <Outlet />
     </motion.div>
