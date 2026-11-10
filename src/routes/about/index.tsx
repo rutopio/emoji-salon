@@ -4,12 +4,13 @@
  * copyright, and open source details.
  */
 
+import { GithubLogoIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AboutPageActions } from "@/components/about-page-actions";
 import { ArticleHeading } from "@/components/article-heading";
 import PageLayout from "@/layout";
 
-import { SITE_URL } from "@/lib/constants";
+import { GITHUB_REPO_URL, SITE_URL } from "@/lib/constants";
 
 /**
  * About page route configuration.
@@ -179,7 +180,9 @@ function AboutPage() {
 
             {/* See more */}
             <div className="flex flex-col gap-2">
-              <p>See more:</p>
+              <ArticleHeading id="see-more" level={3}>
+                See more
+              </ArticleHeading>
               <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>
                   <a
@@ -280,18 +283,19 @@ function AboutPage() {
         {/* Open source section */}
         <section className="flex flex-col gap-6">
           <ArticleHeading id="open-source">Open Source</ArticleHeading>
-          <p className="text-pretty">
-            EmojiSalon is open source and available on{" "}
+          <p>
             <a
-              href="https://github.com/rutopio/emoji-salon"
+              href={GITHUB_REPO_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="underline underline-offset-4 hover:text-foreground"
+              className="whitespace-nowrap text-primary underline decoration-[0.5px] underline-offset-4 transition-[color,text-decoration-thickness] duration-150 hover:text-neutral-950 hover:decoration-[1px] dark:hover:text-neutral-50"
             >
-              GitHub
+              <GithubLogoIcon
+                aria-hidden="true"
+                className="mr-1 inline-block size-4 align-[-0.125em]"
+              />
+              rutopio/emoji-salon
             </a>
-            . Feel free to contribute, report issues, or suggest new features to
-            help make this tool even better for everyone.
           </p>
         </section>
       </article>
