@@ -25,7 +25,7 @@ export const Route = createFileRoute("/about/")({
       {
         name: "description",
         content:
-          "Learn about EmojiSalon, how it works, accessibility features for visually impaired users, and open source licensing.",
+          "Learn how EmojiSalon works, how recoloring may help distinguish emoji, and how its artwork and code are licensed.",
       },
       {
         property: "og:title",
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/about/")({
       {
         property: "og:description",
         content:
-          "Learn about EmojiSalon, how it works, accessibility features for visually impaired users, and open source licensing.",
+          "Learn how EmojiSalon works, how recoloring may help distinguish emoji, and how its artwork and code are licensed.",
       },
       {
         property: "og:url",
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/about/")({
 /**
  * About page component.
  * Displays information about EmojiSalon including how it works,
- * accessibility features, copyright information, and open source details.
+ * accessibility considerations, copyright information, and open source details.
  *
  * @returns About page component.
  */
@@ -74,56 +74,55 @@ function AboutPage() {
 
         {/* How it works section */}
         <section className="flex flex-col gap-6">
-          <ArticleHeading id="how-it-works">How It Works</ArticleHeading>
+          <ArticleHeading id="how-it-works">How it works</ArticleHeading>
           <p className="text-pretty">
-            EmojiSalon uses Twemoji SVG data for emoji rendering. You can select
-            any emoji, customize its colors using an intuitive color palette
-            system, and download your creation as SVG or PNG for personal or
-            commercial use. The tool provides full creative control over each
-            color component of the emoji, allowing for endless customization
-            possibilities.
+            EmojiSalon uses Twemoji artwork. Choose an emoji and edit its colors
+            in three steps:
           </p>
+          <ol className="ml-6 flex list-decimal flex-col gap-2">
+            <li>Select an emoji from the picker or choose Random Emoji.</li>
+            <li>
+              Use the color swatches to change its palette. Select Reset Palette
+              to restore the original colors.
+            </li>
+            <li>
+              Save or share your result. On desktop, Save Image offers SVG, PNG,
+              JPG, and Copy. On smaller screens, Save Image copies the image.
+              Share Link creates a URL with your emoji and colors.
+            </li>
+          </ol>
         </section>
 
         {/* Accessibility section */}
         <section className="flex flex-col gap-6">
           <ArticleHeading id="accessibility">Accessibility</ArticleHeading>
           <p className="text-pretty">
-            Emoji accessibility is not just a binary between being able to see
-            emoji perfectly and not being able to see them at all — it is a
-            spectrum that accounts for multiple experiences.
+            People see and distinguish colors in different ways. Recoloring may
+            make an emoji easier for some people to recognize, but the result
+            depends on the person, emoji, and size.
           </p>
 
           <div className="flex flex-col gap-16">
             {/* Challenges */}
             <div className="flex flex-col gap-6">
               <ArticleHeading id="challenges" level={3}>
-                Challenges for Visually Impaired Users
+                What can make emoji hard to distinguish
               </ArticleHeading>
               <p className="text-pretty">
-                For people with color vision deficiencies, color blindness, or
-                low vision, identifying certain emojis can be challenging:
+                Color vision differences or low vision can make some emoji
+                harder to distinguish:
               </p>
               <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>
-                  <strong>Similar colors:</strong> Emoji may appear blurry or
-                  distorted, making it difficult to distinguish between
-                  similar-looking icons
+                  similar colors can make parts of an emoji blend together
                 </li>
                 <li>
-                  <strong>Color-based identification:</strong> Many users
-                  identify emoji by color or general shape rather than fine
-                  details
+                  emoji that differ mainly by color may be difficult to tell
+                  apart
                 </li>
                 <li>
-                  <strong>Multiple emoji in sequence:</strong> When several
-                  emoji appear in a row, they can be hard to tell apart,
-                  especially with similar colors
-                </li>
-                <li>
-                  <strong>Small keyboard icons:</strong> Emoji keyboards have
-                  small icons arranged closely together, making selection
-                  difficult
+                  fine details can disappear when an emoji is shown at a small
+                  size
                 </li>
               </ul>
             </div>
@@ -131,13 +130,10 @@ function AboutPage() {
             {/* Commonly Confused Emoji */}
             <div className="flex flex-col gap-6">
               <ArticleHeading id="commonly-confused-emoji" level={3}>
-                Commonly Confused Emoji
+                Examples of similar emoji
               </ArticleHeading>
               <div className="flex flex-col gap-6">
-                <p>
-                  <strong>Flag emoji</strong> with similar color schemes are
-                  particularly problematic:
-                </p>
+                <p>Some flag emoji have similar color schemes:</p>
                 <ul className="ml-6 flex list-disc flex-col gap-1">
                   <li>🇮🇹 Italy / 🇮🇪 Ireland</li>
                   <li>🇷🇴 Romania / 🇹🇩 Chad</li>
@@ -145,8 +141,7 @@ function AboutPage() {
                   <li>🇲🇨 Monaco / 🇮🇩 Indonesia</li>
                 </ul>
                 <p className="pt-2">
-                  <strong>Heart emoji</strong> colors can also be easily
-                  confused:
+                  Heart emoji can also rely on color to convey a difference:
                 </p>
                 <ul className="ml-6 flex list-disc flex-col gap-1">
                   <li>❤️ Red / 💜 Purple</li>
@@ -156,26 +151,26 @@ function AboutPage() {
               </div>
             </div>
 
-            {/* How EmojiSalon Helps */}
+            {/* How recoloring may help */}
             <div className="flex flex-col gap-6">
               <ArticleHeading id="how-emoji-salon-helps" level={3}>
-                How EmojiSalon Helps
+                How recoloring may help
               </ArticleHeading>
               <p className="text-pretty">
-                Most current emoji designs do not consider these accessibility
-                needs. EmojiSalon provides a solution by allowing users to:
+                EmojiSalon lets you try colors that work better for you or your
+                audience. You can:
               </p>
               <ul className="ml-6 flex list-disc flex-col gap-1">
-                <li>Customize emoji colors for better personal distinction</li>
+                <li>increase contrast between editable parts of an emoji</li>
                 <li>
-                  Create high-contrast variants tailored to individual visual
-                  needs
-                </li>
-                <li>
-                  Generate easily distinguishable emoji for users with specific
-                  color vision deficiencies
+                  use more distinct colors when placing similar emoji together
                 </li>
               </ul>
+              <p className="text-pretty">
+                These changes apply to images you save or share. They do not
+                change emoji in a device's keyboard. If an emoji carries
+                important information, include a text label or alternative text.
+              </p>
             </div>
 
             {/* See more */}
