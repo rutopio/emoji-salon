@@ -1,24 +1,12 @@
-import {
-  CheckIcon,
-  GithubLogoIcon,
-  ListIcon,
-  TranslateIcon,
-} from "@phosphor-icons/react";
-import { ActionMenu } from "@rutopio/base-component/action-menu";
-import { Button, buttonVariants } from "@rutopio/base-component/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@rutopio/base-component/drawer";
+import { CheckIcon, GithubLogoIcon, ListIcon } from "@phosphor-icons/react";
+import { buttonVariants } from "@rutopio/base-component/button";
+import { LanguageToggle } from "@rutopio/base-component/language-toggle";
 import {
   HeaderNavigation,
   SiteHeader,
 } from "@rutopio/base-component/site-header";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
@@ -41,7 +29,6 @@ export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();
-  const [languageOpen, setLanguageOpen] = useState(false);
   const isMobile = useSyncExternalStore(
     subscribeToMobile,
     isMobileViewport,
@@ -132,70 +119,24 @@ export default function Navbar() {
           >
             <GithubLogoIcon className="size-4" aria-hidden="true" />
           </a>
-          {isMobile ? (
-            <Drawer open={languageOpen} onOpenChange={setLanguageOpen}>
-              <DrawerTrigger
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t("Language")}
-                  >
-                    <TranslateIcon aria-hidden="true" />
-                  </Button>
-                }
-              />
-              <DrawerContent>
-                <DrawerHeader className="border-border border-b pb-4">
-                  <DrawerTitle className="cn-font-heading">
-                    {t("Language")}
-                  </DrawerTitle>
-                </DrawerHeader>
-                <div className="flex flex-col gap-1 px-4 pt-4 pb-6">
-                  {locales.map((item) => (
-                    <button
-                      key={item.code}
-                      type="button"
-                      lang={item.htmlLang}
-                      aria-current={locale === item.code ? "true" : undefined}
-                      className="flex min-h-10 items-center justify-between rounded-lg px-3 text-left text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=true]:bg-muted"
-                      onClick={() => {
-                        setLanguageOpen(false);
-                        navigate({
-                          to: withLocale(pathname, item.code),
-                          search: (previous) => previous,
-                          hash: true,
-                        });
-                      }}
-                    >
-                      {item.label}
-                      {locale === item.code && <CheckIcon aria-hidden="true" />}
-                    </button>
-                  ))}
-                </div>
-              </DrawerContent>
-            </Drawer>
-          ) : (
-            <ActionMenu
-              label={t("Language")}
-              trigger={<TranslateIcon aria-hidden="true" />}
-              indicator={<CheckIcon className="size-4" />}
-              items={locales.map((item) => ({
-                id: item.code,
-                label: item.label,
-                lang: item.htmlLang,
-                active: locale === item.code,
-                ariaCurrent:
-                  locale === item.code ? ("true" as const) : undefined,
-                onSelect: () =>
-                  navigate({
-                    to: withLocale(pathname, item.code),
-                    search: (previous) => previous,
-                    hash: true,
-                  }),
-              }))}
-            />
-          )}
+          <LanguageToggle
+            label={t("Language")}
+            current={locale}
+            options={locales.map((item) => ({
+              value: item.code,
+              label: item.label,
+              htmlLang: item.htmlLang,
+            }))}
+            isMobile={isMobile}
+            titleClassName="cn-font-heading"
+            onChange={(value) =>
+              navigate({
+                to: withLocale(pathname, value),
+                search: (previous) => previous,
+                hash: true,
+              })
+            }
+          />
           <ThemeToggle />
         </>
       }
