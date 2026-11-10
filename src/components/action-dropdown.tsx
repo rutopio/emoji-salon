@@ -233,10 +233,12 @@ export function ActionDropdown({
               animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
               exit={{
                 opacity: 0,
-                scale: 0.97,
-                transition: spring.moderate.exit,
+                scale: side === "left" ? 0.97 : 0.96,
+                ...(side === "left" ? { x: 6 } : { y: -4 }),
+                transition:
+                  side === "left" ? spring.moderate.exit : spring.fast.exit,
               }}
-              transition={spring.moderate}
+              transition={side === "left" ? spring.moderate : spring.fast}
               style={{
                 transformOrigin:
                   side === "left"

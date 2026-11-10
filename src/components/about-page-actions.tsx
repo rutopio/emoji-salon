@@ -204,7 +204,7 @@ export function AboutPageActions() {
                 {items.map((item) => (
                   <li
                     key={item.id}
-                    className={item.depth === 3 ? "mx-6" : undefined}
+                    className={item.depth === 3 ? "ml-6" : undefined}
                   >
                     <a
                       href={`#${item.id}`}
