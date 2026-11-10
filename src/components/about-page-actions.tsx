@@ -5,10 +5,12 @@ import {
 } from "@phosphor-icons/react";
 import { ActionMenu } from "@rutopio/base-component/action-menu";
 import { OutlineList } from "@rutopio/base-component/outline-list";
+import { PageActionRail } from "@rutopio/base-component/page-action-rail";
+import { shareOrCopyCurrentPage } from "@rutopio/base-component/page-share";
+import { navigateToSection } from "@rutopio/base-component/section-navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Drawer,
   DrawerContent,
@@ -115,37 +117,15 @@ export function AboutPageActions() {
   });
 
   const navigateToHeading = (id: string) => {
-    setOutlineOpen(false);
-    const reduceMotion = prefersReducedMotion();
-    window.setTimeout(
-      () => {
-        document.getElementById(id)?.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-        });
-        history.replaceState(null, "", `#${encodeURIComponent(id)}`);
-      },
-      reduceMotion ? 0 : 350
-    );
+    navigateToSection(id, () => setOutlineOpen(false));
   };
 
-  const sharePage = async () => {
-    const url = window.location.href;
-    if (window.matchMedia("(pointer: coarse)").matches && navigator.share) {
-      try {
-        await navigator.share({ title: document.title, url });
-      } catch (error) {
-        if (!(error instanceof Error && error.name === "AbortError"))
-          toast.error(t("Could not share this page."));
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success(t("Page link copied."));
-    } catch {
-      toast.error(t("Could not copy the page link."));
-    }
-  };
+  const sharePage = () =>
+    shareOrCopyCurrentPage({
+      onCopied: () => toast.success(t("Page link copied.")),
+      onShareError: () => toast.error(t("Could not share this page.")),
+      onCopyError: () => toast.error(t("Could not copy the page link.")),
+    });
 
   const scrollToTop = () =>
     window.scrollTo({
@@ -175,70 +155,65 @@ export function AboutPageActions() {
   );
 
   return (
-    <>
-      <ButtonGroup
-        orientation="horizontal"
-        aria-label={t("About page actions")}
-        className="fixed right-4 bottom-[calc(2rem+env(safe-area-inset-bottom))] z-10 h-fit min-[50rem]:hidden"
-      >
-        <Drawer open={outlineOpen} onOpenChange={setOutlineOpen}>
-          <DrawerTrigger
-            render={
-              <Button
-                variant="outline"
-                size="icon-lg"
-                aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
-              />
-            }
-          >
-            <ReadingProgressRing progress={progress} />
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader className="border-border border-b pb-4">
-              <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
-            </DrawerHeader>
-            <nav
-              aria-label={t("Table of contents")}
-              className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
+    <PageActionRail
+      label={t("About page actions")}
+      mobileOutline={
+        <>
+          <Drawer open={outlineOpen} onOpenChange={setOutlineOpen}>
+            <DrawerTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="icon-lg"
+                  aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
+                />
+              }
             >
-              <OutlineList
-                items={items}
-                activeId={selectedId}
-                onNavigate={navigateToHeading}
-                indicator={<ArrowLeftIcon className="size-4" />}
-              />
-            </nav>
-          </DrawerContent>
-        </Drawer>
-        {utilities}
-      </ButtonGroup>
-
-      <ButtonGroup
-        orientation="vertical"
-        aria-label={t("About page actions")}
-        className="fixed top-1/2 left-[var(--gutter-offset)] z-10 hidden h-fit -translate-y-1/2 min-[50rem]:flex"
-      >
-        <ActionMenu
-          label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
-          trigger={<ReadingProgressRing progress={progress} />}
-          items={items.map((item) => ({
-            ...item,
-            active: item.id === selectedId,
-            ariaCurrent:
-              item.id === selectedId ? ("location" as const) : undefined,
-            href: `#${encodeURIComponent(item.id)}`,
-            onSelect: (event) => {
-              event.preventDefault();
-              navigateToHeading(item.id);
-            },
-          }))}
-          indicator={
-            <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
-          }
-          side="left"
-        />
-        {utilities}
-      </ButtonGroup>
-    </>
+              <ReadingProgressRing progress={progress} />
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader className="border-border border-b pb-4">
+                <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
+              </DrawerHeader>
+              <nav
+                aria-label={t("Table of contents")}
+                className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
+              >
+                <OutlineList
+                  items={items}
+                  activeId={selectedId}
+                  onNavigate={navigateToHeading}
+                  indicator={<ArrowLeftIcon className="size-4" />}
+                />
+              </nav>
+            </DrawerContent>
+          </Drawer>
+        </>
+      }
+      desktopOutline={
+        <>
+          <ActionMenu
+            label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
+            trigger={<ReadingProgressRing progress={progress} />}
+            items={items.map((item) => ({
+              ...item,
+              active: item.id === selectedId,
+              ariaCurrent:
+                item.id === selectedId ? ("location" as const) : undefined,
+              href: `#${encodeURIComponent(item.id)}`,
+              onSelect: (event) => {
+                event.preventDefault();
+                navigateToHeading(item.id);
+              },
+            }))}
+            indicator={
+              <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
+            }
+            side="left"
+          />
+        </>
+      }
+      actions={utilities}
+    />
   );
 }

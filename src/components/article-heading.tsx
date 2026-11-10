@@ -1,4 +1,5 @@
-import { LinkIcon } from "@phosphor-icons/react";
+import { SectionHeadingAnchor } from "@rutopio/base-component/section-heading-anchor";
+import { copySectionLink } from "@rutopio/base-component/section-navigation";
 import { toast } from "sonner";
 import { useT } from "@/lib/translations";
 import { cn } from "@/lib/utils";
@@ -17,10 +18,9 @@ export function ArticleHeading({
   const t = useT();
   const Heading = level === 3 ? "h3" : "h2";
 
-  const copySectionLink = () => {
-    const url = new URL(window.location.href);
-    url.hash = id;
-    navigator.clipboard.writeText(url.href).then(
+  const handleCopySectionLink = () => {
+    void copySectionLink(
+      id,
       () => toast.success(t("Section link copied.")),
       () => toast.error(t("Could not copy the section link."))
     );
@@ -34,20 +34,13 @@ export function ArticleHeading({
         level === 3 ? "scroll-m-20" : "scroll-mt-14"
       )}
     >
-      <a
-        href={`#${id}`}
+      <SectionHeadingAnchor
+        id={id}
         title={t("Copy link to this section")}
-        onClick={copySectionLink}
-        className="relative inline text-inherit no-underline"
+        onClick={handleCopySectionLink}
       >
-        <span
-          aria-hidden="true"
-          className="absolute top-1/2 -left-6 flex h-4 w-5 -translate-y-1/2 items-center justify-end opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 sm:-left-8"
-        >
-          <LinkIcon className="size-4 text-neutral-400 dark:text-neutral-500" />
-        </span>
         {children}
-      </a>
+      </SectionHeadingAnchor>
       {level === 2 && (
         <span
           aria-hidden="true"
