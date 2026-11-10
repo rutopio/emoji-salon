@@ -309,7 +309,7 @@ export default function ShowcaseSection({
         </div>
 
         {/* Emoji previews */}
-        <div className="flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-12">
+        <div className="flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-6">
           {/* Original emoji */}
           <EmojiPreview
             svg={originalSvg}
@@ -332,21 +332,27 @@ export default function ShowcaseSection({
           />
 
           {/* Variant previews */}
-          {hasMultipleVariants ? (
-            variants.map((variant) => (
-              <VariantPreview
-                key={variant.palette}
-                emoji={emoji}
-                variant={variant}
+          <div
+            className={
+              hasMultipleVariants ? "grid grid-cols-1 gap-4 sm:grid-cols-2" : ""
+            }
+          >
+            {hasMultipleVariants ? (
+              variants.map((variant) => (
+                <VariantPreview
+                  key={variant.palette}
+                  emoji={emoji}
+                  variant={variant}
+                />
+              ))
+            ) : (
+              <EmojiPreview
+                svg={modifiedSvg}
+                label={firstVariant.name}
+                isLoading={isLoading}
               />
-            ))
-          ) : (
-            <EmojiPreview
-              svg={modifiedSvg}
-              label={firstVariant.name}
-              isLoading={isLoading}
-            />
-          )}
+            )}
+          </div>
         </div>
 
         {/* Download dialog */}

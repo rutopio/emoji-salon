@@ -58,12 +58,12 @@ export const Route = createFileRoute("/showcase/")({
 function ShowcasePage() {
   return (
     <PageLayout>
-      <div className="container flex-1 lg:py-16">
-        <div className="flex flex-col items-start gap-4 lg:items-center">
-          <h1 className="text-balance font-bold font-title-sans text-4xl lg:text-5xl">
+      <div className="flex min-w-0 flex-1 flex-col py-6 sm:py-12">
+        <div className="flex flex-col items-start gap-6">
+          <h1 className="text-balance font-bold text-lg leading-[1.65]">
             Showcase
           </h1>
-          <p className="text-pretty text-lg text-muted-foreground lg:text-xl">
+          <p className="text-pretty text-base text-neutral-800 leading-[1.65] dark:text-neutral-300">
             Explore creative emoji color variations
           </p>
           <div>
@@ -83,13 +83,12 @@ function ShowcasePage() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 gap-4">
           {showcaseData.sections.map((section) => (
             <ShowcaseSection
               key={section.emoji}
               emoji={section.emoji}
               variants={section.variants}
-              className={section.variants.length > 1 ? "lg:col-span-2" : ""}
             />
           ))}
         </div>

@@ -83,7 +83,7 @@ function EmojiSalonPage() {
       {/* Hidden canvas for image export */}
       <canvas ref={canvasRef} className="hidden" width={256} height={256} />
 
-      <div className="container flex flex-1 flex-col items-center justify-between gap-16 lg:justify-center">
+      <div className="flex w-full min-w-0 flex-1 flex-col items-center justify-between gap-16 py-4 lg:w-[calc(100vw-3rem)] lg:max-w-5xl lg:flex-none lg:justify-center">
         <h1 className="sr-only">Create Your Custom Emoji</h1>
         <div className="grid grid-cols-1 items-center lg:grid-cols-3 lg:gap-16">
           <DesktopEmojiPicker />

@@ -5,6 +5,8 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
+import { AboutPageActions } from "@/components/about-page-actions";
+import { ArticleHeading } from "@/components/article-heading";
 import PageLayout from "@/layout";
 
 import { SITE_URL } from "@/lib/constants";
@@ -56,56 +58,52 @@ export const Route = createFileRoute("/about/")({
 function AboutPage() {
   return (
     <PageLayout>
-      <div className="container flex flex-1 flex-col lg:py-16">
-        <div className="mx-auto max-w-3xl space-y-12">
-          {/* Hero section */}
-          <section className="space-y-4 lg:text-center">
-            <h1 className="text-balance font-bold font-title-sans text-4xl lg:text-5xl">
-              About EmojiSalon
-            </h1>
-            <p className="text-pretty text-lg text-muted-foreground lg:text-xl">
-              EmojiSalon allows you to customize the colors of emojis, just like
-              dressing them up with various cosmetics or coloring them with
-              different paints.
-            </p>
-          </section>
+      <article className="flex w-full min-w-0 flex-1 flex-col gap-16 py-6 text-base text-neutral-800 tabular-nums leading-[1.65] sm:py-12 dark:text-neutral-300">
+        {/* Hero section */}
+        <header className="flex flex-col gap-6">
+          <h1 className="text-balance font-bold text-lg text-neutral-950 leading-[1.65] dark:text-neutral-50">
+            About EmojiSalon
+          </h1>
+          <p className="text-pretty text-base">
+            EmojiSalon allows you to customize the colors of emojis, just like
+            dressing them up with various cosmetics or coloring them with
+            different paints.
+          </p>
+        </header>
 
-          {/* How it works section */}
-          <section className="space-y-4">
-            <h2 className="text-balance font-bold font-title-sans text-2xl lg:text-3xl">
-              How It Works
-            </h2>
-            <p className="text-pretty text-muted-foreground leading-relaxed">
-              EmojiSalon uses Twemoji SVG data for emoji rendering. You can
-              select any emoji, customize its colors using an intuitive color
-              palette system, and download your creation as SVG or PNG for
-              personal or commercial use. The tool provides full creative
-              control over each color component of the emoji, allowing for
-              endless customization possibilities.
-            </p>
-          </section>
+        {/* How it works section */}
+        <section className="flex flex-col gap-6">
+          <ArticleHeading id="how-it-works">How It Works</ArticleHeading>
+          <p className="text-pretty">
+            EmojiSalon uses Twemoji SVG data for emoji rendering. You can select
+            any emoji, customize its colors using an intuitive color palette
+            system, and download your creation as SVG or PNG for personal or
+            commercial use. The tool provides full creative control over each
+            color component of the emoji, allowing for endless customization
+            possibilities.
+          </p>
+        </section>
 
-          {/* Accessibility section */}
-          <section className="space-y-6">
-            <h2 className="text-balance font-bold font-title-sans text-2xl lg:text-3xl">
-              Accessibility
-            </h2>
-            <p className="text-pretty text-muted-foreground leading-relaxed">
-              Emoji accessibility is not just a binary between being able to see
-              emoji perfectly and not being able to see them at all — it is a
-              spectrum that accounts for multiple experiences.
-            </p>
+        {/* Accessibility section */}
+        <section className="flex flex-col gap-6">
+          <ArticleHeading id="accessibility">Accessibility</ArticleHeading>
+          <p className="text-pretty">
+            Emoji accessibility is not just a binary between being able to see
+            emoji perfectly and not being able to see them at all — it is a
+            spectrum that accounts for multiple experiences.
+          </p>
 
+          <div className="flex flex-col gap-16">
             {/* Challenges */}
-            <div className="space-y-3">
-              <h3 className="font-semibold font-title-sans text-xl">
+            <div className="flex flex-col gap-6">
+              <ArticleHeading id="challenges" level={3}>
                 Challenges for Visually Impaired Users
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              </ArticleHeading>
+              <p className="text-pretty">
                 For people with color vision deficiencies, color blindness, or
                 low vision, identifying certain emojis can be challenging:
               </p>
-              <ul className="list-inside list-disc space-y-1 pl-2 text-muted-foreground">
+              <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>
                   <strong>Similar colors:</strong> Emoji may appear blurry or
                   distorted, making it difficult to distinguish between
@@ -130,16 +128,16 @@ function AboutPage() {
             </div>
 
             {/* Commonly Confused Emoji */}
-            <div className="space-y-3">
-              <h3 className="font-semibold font-title-sans text-xl">
+            <div className="flex flex-col gap-6">
+              <ArticleHeading id="commonly-confused-emoji" level={3}>
                 Commonly Confused Emoji
-              </h3>
-              <div className="space-y-2 text-muted-foreground">
+              </ArticleHeading>
+              <div className="flex flex-col gap-2">
                 <p>
                   <strong>Flag emoji</strong> with similar color schemes are
                   particularly problematic:
                 </p>
-                <ul className="list-inside list-disc space-y-1 pl-2">
+                <ul className="ml-6 flex list-disc flex-col gap-1">
                   <li>🇮🇹 Italy / 🇮🇪 Ireland</li>
                   <li>🇷🇴 Romania / 🇹🇩 Chad</li>
                   <li>🇱🇻 Latvia / 🇦🇹 Austria</li>
@@ -149,7 +147,7 @@ function AboutPage() {
                   <strong>Heart emoji</strong> colors can also be easily
                   confused:
                 </p>
-                <ul className="list-inside list-disc space-y-1 pl-2">
+                <ul className="ml-6 flex list-disc flex-col gap-1">
                   <li>❤️ Red / 💜 Purple</li>
                   <li>💙 Blue / 💜 Purple</li>
                   <li>💚 Green / 🧡 Orange</li>
@@ -158,15 +156,15 @@ function AboutPage() {
             </div>
 
             {/* How EmojiSalon Helps */}
-            <div className="space-y-3">
-              <h3 className="font-semibold font-title-sans text-xl">
+            <div className="flex flex-col gap-6">
+              <ArticleHeading id="how-emoji-salon-helps" level={3}>
                 How EmojiSalon Helps
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              </ArticleHeading>
+              <p className="text-pretty">
                 Most current emoji designs do not consider these accessibility
                 needs. EmojiSalon provides a solution by allowing users to:
               </p>
-              <ul className="list-inside list-disc space-y-1 pl-2 text-muted-foreground">
+              <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>Customize emoji colors for better personal distinction</li>
                 <li>
                   Create high-contrast variants tailored to individual visual
@@ -180,9 +178,9 @@ function AboutPage() {
             </div>
 
             {/* See more */}
-            <div className="space-y-2 text-muted-foreground">
+            <div className="flex flex-col gap-2">
               <p>See more:</p>
-              <ul className="list-inside list-disc space-y-1 pl-2">
+              <ul className="ml-6 flex list-disc flex-col gap-1">
                 <li>
                   <a
                     href="https://veroniiiica.com/emoji-and-low-vision/"
@@ -205,98 +203,99 @@ function AboutPage() {
                 </li>
               </ul>
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Copyright section */}
-          <section className="space-y-4">
-            <h2 className="text-balance font-bold font-title-sans text-2xl lg:text-3xl">
-              Copyright & License
-            </h2>
-            <div className="space-y-3 text-muted-foreground leading-relaxed">
-              {/* Graphics License */}
-              <div className="space-y-3">
-                <h3 className="font-semibold font-title-sans text-xl">
-                  Graphics
-                </h3>
-                <div className="flex justify-center py-2">
-                  <img
-                    src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png"
-                    alt="Creative Commons Attribution 4.0 International License badge"
-                    className="h-8 w-auto"
-                  />
-                </div>
-                <p>
-                  Your creation is based on{" "}
-                  <a
-                    href="https://github.com/jdecked/twemoji"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="underline underline-offset-4 hover:text-foreground"
-                  >
-                    Twemoji
-                  </a>
-                  , licensed under{" "}
-                  <a
-                    href="https://creativecommons.org/licenses/by/4.0/"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="underline underline-offset-4 hover:text-foreground"
-                  >
-                    CC-BY 4.0
-                  </a>{" "}
-                  (graphic).
-                </p>
-                <p>
-                  This license enables reusers to distribute, remix, adapt, and
-                  build upon the material in any medium or format, so long as
-                  attribution is given to the creator. The license allows for
-                  commercial use.
-                </p>
-                <p className="font-medium">
-                  The author does not own any copyright to your work.
-                </p>
+        {/* Copyright section */}
+        <section className="flex flex-col gap-6">
+          <ArticleHeading id="copyright-license">
+            Copyright & License
+          </ArticleHeading>
+          <div className="flex flex-col gap-16 text-pretty">
+            {/* Graphics License */}
+            <div className="flex flex-col gap-6">
+              <ArticleHeading id="graphics" level={3}>
+                Graphics
+              </ArticleHeading>
+              <div className="flex justify-center py-2">
+                <img
+                  src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png"
+                  alt="Creative Commons Attribution 4.0 International License badge"
+                  className="h-8 w-auto"
+                />
               </div>
-
-              {/* Code License */}
-              <div className="space-y-3 border-t pt-4">
-                <h3 className="font-semibold font-title-sans text-xl">Code</h3>
-                <p>
-                  Code licensed under the{" "}
-                  <a
-                    href="http://opensource.org/licenses/MIT"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="underline underline-offset-4 hover:text-foreground"
-                  >
-                    MIT License
-                  </a>
-                  .
-                </p>
-              </div>
+              <p>
+                Your creation is based on{" "}
+                <a
+                  href="https://github.com/jdecked/twemoji"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="underline underline-offset-4 hover:text-foreground"
+                >
+                  Twemoji
+                </a>
+                , licensed under{" "}
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="underline underline-offset-4 hover:text-foreground"
+                >
+                  CC-BY 4.0
+                </a>{" "}
+                (graphic).
+              </p>
+              <p>
+                This license enables reusers to distribute, remix, adapt, and
+                build upon the material in any medium or format, so long as
+                attribution is given to the creator. The license allows for
+                commercial use.
+              </p>
+              <p className="font-medium">
+                The author does not own any copyright to your work.
+              </p>
             </div>
-          </section>
 
-          {/* Open source section */}
-          <section className="space-y-4">
-            <h2 className="text-balance font-bold font-title-sans text-2xl lg:text-3xl">
-              Open Source
-            </h2>
-            <p className="text-pretty text-muted-foreground leading-relaxed">
-              EmojiSalon is open source and available on{" "}
-              <a
-                href="https://github.com/rutopio/emoji-salon"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="underline underline-offset-4 hover:text-foreground"
-              >
-                GitHub
-              </a>
-              . Feel free to contribute, report issues, or suggest new features
-              to help make this tool even better for everyone.
-            </p>
-          </section>
-        </div>
-      </div>
+            {/* Code License */}
+            <div className="flex flex-col gap-6">
+              <ArticleHeading id="code" level={3}>
+                Code
+              </ArticleHeading>
+              <p>
+                Code licensed under the{" "}
+                <a
+                  href="http://opensource.org/licenses/MIT"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="underline underline-offset-4 hover:text-foreground"
+                >
+                  MIT License
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Open source section */}
+        <section className="flex flex-col gap-6">
+          <ArticleHeading id="open-source">Open Source</ArticleHeading>
+          <p className="text-pretty">
+            EmojiSalon is open source and available on{" "}
+            <a
+              href="https://github.com/rutopio/emoji-salon"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              GitHub
+            </a>
+            . Feel free to contribute, report issues, or suggest new features to
+            help make this tool even better for everyone.
+          </p>
+        </section>
+      </article>
+      <AboutPageActions />
     </PageLayout>
   );
 }

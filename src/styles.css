@@ -3,11 +3,42 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* Self-hosted via @fontsource (variable, with latin + latin-ext subsets). */
-@import "@fontsource-variable/albert-sans";
-@import "@fontsource-variable/albert-sans/wght-italic.css";
-@import "@fontsource-variable/host-grotesk";
-@import "@fontsource-variable/host-grotesk/wght-italic.css";
+/* Same self-hosted Inter subsets and type scale as IntD. */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/font/inter-normal-extended.woff2") format("woff2");
+  unicode-range: U+3A3;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/font/inter-normal-core.woff2") format("woff2");
+  unicode-range: U+20-7E,U+A0-AC,U+AE-148,U+14A-17F,U+2010-2011,U+2013-2014,U+2018-2019,U+201C-201D,U+2022,U+2026;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/font/inter-italic-extended.woff2") format("woff2");
+  unicode-range: U+3A3;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/font/inter-italic-core.woff2") format("woff2");
+  unicode-range: U+20-7E,U+A0-AC,U+AE-148,U+14A-17F,U+2010-2011,U+2013-2014,U+2018-2019,U+201C-201D,U+2022,U+2026;
+}
 
 /* Paper Mono is not on @fontsource — keep self-hosted woff2. */
 @font-face {
@@ -34,13 +65,23 @@
     "cv09" 2;
 }
 
-.font-title-sans {
-  letter-spacing: 0.025em; /* match chingru.me heading tracking-wide */
-}
-
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-weight-normal: 400;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 700;
+  --text-xs: 0.625rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.375rem;
+}
+
 :root {
+  --hover: rgb(0 0 0 / 0.04);
+  --gutter-offset: calc(50% + 21rem + 0.5rem);
   /* z-index scale */
   --z-base: 0;
   --z-dropdown: 10;
@@ -83,7 +124,7 @@
   --sidebar-accent-foreground: oklch(0 0 0);
   --sidebar-border: oklch(0.94 0 0);
   --sidebar-ring: oklch(0 0 0);
-  --font-sans: "Albert Sans Variable", sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Paper Mono", ui-monospace, monospace;
   --radius: 0.5rem;
   --shadow-x: 0px;
@@ -109,7 +150,14 @@
   --spacing: 0.25rem;
 }
 
+@media (min-width: 80rem) {
+  :root {
+    --gutter-offset: calc(50% + 21rem + 1.5rem);
+  }
+}
+
 .dark {
+  --hover: rgb(255 255 255 / 0.06);
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
   --card: oklch(0.14 0 0);
@@ -142,7 +190,7 @@
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(0.32 0 0);
   --sidebar-ring: oklch(0.72 0 0);
-  --font-sans: "Albert Sans Variable", sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Paper Mono", ui-monospace, monospace;
   --radius: 0.5rem;
   --shadow-x: 0px;
@@ -167,6 +215,7 @@
 }
 
 @theme inline {
+  --color-hover: var(--hover);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -202,8 +251,6 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-title-sans: "Host Grotesk Variable";
-
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -225,9 +272,19 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply bg-background font-sans;
+    scrollbar-gutter: stable;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+  p, li, blockquote {
+    text-wrap: pretty;
   }
   html,
   body {
@@ -293,12 +350,27 @@
   }
 }
 
+@property --theme-reveal-radius {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
 
+::view-transition-old(root) {
+  z-index: 1;
+}
+
 ::view-transition-new(root) {
-  clip-path: var(--theme-vt-clip-from, circle(0px at 50% 50%));
+  z-index: 2;
+}
+
+.theme-transitioning,
+.theme-transitioning * {
+  transition: none !important;
 }
