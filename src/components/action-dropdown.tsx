@@ -169,6 +169,7 @@ export function ActionDropdown({
     // biome-ignore lint/a11y/useSemanticElements: A fieldset changes nested button layout and form behavior.
     <div
       ref={rootRef}
+      data-slot="action-dropdown"
       role="group"
       aria-label={label}
       className="relative"
