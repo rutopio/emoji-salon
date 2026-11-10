@@ -1,7 +1,7 @@
 @import "tailwindcss" source("./");
 
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "./styles/shadcn-utilities.css";
 
 /* Same self-hosted Inter subsets and type scale as IntD. */
 @font-face {
