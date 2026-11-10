@@ -4,13 +4,17 @@
  */
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { localeForPath } from "@/lib/locale";
 
 /**
  * Catch-all route configuration.
  * Redirects all unmatched routes to the home page.
  */
 export const Route = createFileRoute("/$")({
-  beforeLoad: () => {
-    throw redirect({ to: "/" });
+  beforeLoad: ({ location }) => {
+    const locale = localeForPath(location.pathname);
+    throw redirect({
+      to: locale === "zh-TW" ? "/zh_tw" : locale === "ja" ? "/ja" : "/",
+    });
   },
 });

@@ -30,6 +30,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useEmoji } from "@/contexts/emoji-context";
+import { useT } from "@/lib/translations";
 
 /**
  * Props for the ActionButtons component.
@@ -49,6 +50,7 @@ interface ActionButtonsProps {
 export default function ActionButtons({
   variant = "desktop",
 }: ActionButtonsProps) {
+  const t = useT();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
@@ -85,14 +87,14 @@ export default function ActionButtons({
             onClick={() => setEmojiPickerOpen(true)}
           >
             <SmileyWinkIcon className="size-5" aria-hidden="true" />
-            <span className="ml-1">Select Emoji</span>
+            <span className="ml-1">{t("Select Emoji")}</span>
           </Button>
 
           <Tooltip>
             <TooltipTrigger
               render={
                 <Button
-                  aria-label="Random Emoji"
+                  aria-label={t("Random Emoji")}
                   variant="outline"
                   className="col-span-1"
                   onClick={handleRandomEmoji}
@@ -101,16 +103,16 @@ export default function ActionButtons({
                 </Button>
               }
             />
-            <TooltipContent>Random Emoji</TooltipContent>
+            <TooltipContent>{t("Random Emoji")}</TooltipContent>
           </Tooltip>
         </div>
 
         <Drawer open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Select Emoji</DrawerTitle>
+              <DrawerTitle>{t("Select Emoji")}</DrawerTitle>
               <DrawerDescription className="sr-only">
-                Choose an emoji to customize
+                {t("Choose an emoji to customize")}
               </DrawerDescription>
             </DrawerHeader>
             <div className="flex justify-center overflow-auto p-4 pt-0">
@@ -124,7 +126,7 @@ export default function ActionButtons({
             <TooltipTrigger
               render={
                 <Button
-                  aria-label="Random Colors"
+                  aria-label={t("Random Colors")}
                   variant="outline"
                   className="w-full"
                   onClick={handleRandomColors}
@@ -133,14 +135,14 @@ export default function ActionButtons({
                 </Button>
               }
             />
-            <TooltipContent>Random Colors</TooltipContent>
+            <TooltipContent>{t("Random Colors")}</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger
               render={
                 <Button
-                  aria-label="Reset Colors"
+                  aria-label={t("Reset Colors")}
                   variant="outline"
                   className="w-full"
                   onClick={handleReset}
@@ -152,14 +154,14 @@ export default function ActionButtons({
                 </Button>
               }
             />
-            <TooltipContent>Reset Colors</TooltipContent>
+            <TooltipContent>{t("Reset Colors")}</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger
               render={
                 <Button
-                  aria-label="Save Image"
+                  aria-label={t("Save Image")}
                   variant="outline"
                   className="w-full"
                   onClick={handleCopyImage}
@@ -168,14 +170,14 @@ export default function ActionButtons({
                 </Button>
               }
             />
-            <TooltipContent>Save Image</TooltipContent>
+            <TooltipContent>{t("Save Image")}</TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger
               render={
                 <Button
-                  aria-label="Share"
+                  aria-label={t("Share")}
                   variant="outline"
                   className="w-full"
                   onClick={handleShare}
@@ -184,7 +186,7 @@ export default function ActionButtons({
                 </Button>
               }
             />
-            <TooltipContent>Share</TooltipContent>
+            <TooltipContent>{t("Share")}</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -195,30 +197,30 @@ export default function ActionButtons({
     <div className="hidden gap-4 lg:grid lg:grid-cols-5">
       <Button variant="outline" onClick={handleRandomEmoji}>
         <DiceFiveIcon className="size-5" aria-hidden="true" />
-        Random Emoji
+        {t("Random Emoji")}
       </Button>
       <Button variant="outline" onClick={handleRandomColors}>
         <PaletteIcon className="size-5" aria-hidden="true" />
-        Random Colors
+        {t("Random Colors")}
       </Button>
       <Button variant="outline" onClick={handleReset}>
         <ArrowCounterClockwiseIcon className="size-5" aria-hidden="true" />
-        Reset Palette
+        {t("Reset Palette")}
       </Button>
       <Button variant="outline" onClick={() => setDownloadOpen(true)}>
         <DownloadSimpleIcon className="size-5" aria-hidden="true" />
-        Save Image
+        {t("Save Image")}
       </Button>
       <Button variant="outline" onClick={handleShare}>
         <ShareNetworkIcon className="size-5" aria-hidden="true" />
-        Share Link
+        {t("Share Link")}
       </Button>
 
       <DownloadDialog
         open={downloadOpen}
         onOpenChange={setDownloadOpen}
         svgHTML={svgHTML}
-        emojiLabel={`Customized ${currentEmoji} emoji`}
+        emojiLabel={`${t("Customized emoji")} ${currentEmoji}`}
         onDownloadSVG={() => handleDownloadImage("svg")}
         onDownloadPNG={() => handleDownloadImage("png")}
         onDownloadJPG={() => handleDownloadImage("jpg")}

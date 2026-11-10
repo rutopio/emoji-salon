@@ -12,6 +12,8 @@ import {
   TWITTER_SHARE_BASE_URL,
 } from "@/lib/constants";
 import { emojiToUnicode, triggerDownload } from "@/lib/emoji-utils";
+import { localeForPath, withLocale } from "@/lib/locale";
+import { currentT } from "@/lib/translations";
 
 /**
  * Generates a shareable URL for a specific emoji/palette combination.
@@ -26,7 +28,7 @@ import { emojiToUnicode, triggerDownload } from "@/lib/emoji-utils";
 export function generateShareURL(emoji: string, palette: string): string {
   const baseURL = window.location.origin;
   const emojiUnicode = emojiToUnicode(emoji);
-  return `${baseURL}/?emoji=${emojiUnicode}&palette=${palette}`;
+  return `${baseURL}${withLocale("/", localeForPath(window.location.pathname))}?emoji=${emojiUnicode}&palette=${palette}`;
 }
 
 /**
@@ -45,7 +47,7 @@ export function shareToTwitter(url?: string): void {
   const message = `#EmojiSalon ${shareUrl}`;
   const twitterShareURL = `${TWITTER_SHARE_BASE_URL}?text=${encodeURIComponent(message)}`;
   window.open(twitterShareURL, "_blank");
-  toast.success("Shared to Twitter.");
+  toast.success(currentT("Shared to Twitter."));
 }
 
 /**
@@ -63,7 +65,7 @@ export function shareToFacebook(url?: string): void {
   const shareUrl = url ?? window.location.href;
   const facebookShareURL = `${FACEBOOK_SHARE_BASE_URL}?u=${encodeURIComponent(shareUrl)}`;
   window.open(facebookShareURL, "_blank");
-  toast.success("Shared to Facebook.");
+  toast.success(currentT("Shared to Facebook."));
 }
 
 /**
@@ -82,7 +84,7 @@ export function shareToThreads(url?: string): void {
   const message = `#EmojiSalon ${shareUrl}`;
   const threadsShareURL = `${THREADS_SHARE_BASE_URL}?text=${encodeURIComponent(message)}`;
   window.open(threadsShareURL, "_blank");
-  toast.success("Shared to Threads.");
+  toast.success(currentT("Shared to Threads."));
 }
 
 /**
@@ -98,7 +100,7 @@ export function shareToThreads(url?: string): void {
 export function copyLinkToClipboard(url?: string): void {
   const copyUrl = url ?? window.location.href;
   navigator.clipboard.writeText(copyUrl);
-  toast.success("Link copied to clipboard.", {
+  toast.success(currentT("Link copied to clipboard."), {
     description: copyUrl,
   });
 }
@@ -111,7 +113,7 @@ export function copyLinkToClipboard(url?: string): void {
 export function copyHTMLCode(emoji: string): void {
   const htmlCode = `<span class="mod-emoji"> ${emoji} </span>`;
   navigator.clipboard.writeText(htmlCode);
-  toast.success("HTML code copied to clipboard.", {
+  toast.success(currentT("HTML code copied to clipboard."), {
     description: htmlCode,
   });
 }
@@ -123,7 +125,7 @@ export function copyHTMLCode(emoji: string): void {
  */
 export function copyCSSCode(cssCode: string): void {
   navigator.clipboard.writeText(cssCode);
-  toast.success("CSS code copied to clipboard.");
+  toast.success(currentT("CSS code copied to clipboard."));
 }
 
 /**
@@ -224,7 +226,7 @@ export function downloadSVG(svgData: string, emoji: string): void {
   const url = URL.createObjectURL(svgBlob);
   const filename = `${emojiToUnicode(emoji)}-EmojiSalon.svg`;
   triggerDownload(url, filename);
-  toast.success("Downloading SVG...", {
+  toast.success(currentT("Downloading SVG..."), {
     description: filename,
   });
 }

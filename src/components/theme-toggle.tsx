@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 const TRANSITION_STYLE_ID = "theme-transition-style";
@@ -54,6 +55,7 @@ export function ThemeToggle({
   duration = REVEAL_DURATION_MS,
   ...props
 }: ThemeToggleProps) {
+  const t = useT();
   const { resolvedTheme, setTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const runningRef = useRef(false);
@@ -159,7 +161,7 @@ export function ThemeToggle({
         </motion.span>
       </div>
       <span className="sr-only">
-        {isDark ? "Switch to light mode" : "Switch to dark mode"}
+        {t(isDark ? "Switch to light mode" : "Switch to dark mode")}
       </span>
     </Button>
   );

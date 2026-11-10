@@ -32,6 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEmoji } from "@/contexts/emoji-context";
 import { PRESET_COLORS } from "@/lib/constants";
+import { useT } from "@/lib/translations";
 
 /**
  * EyeDropper button component that uses the browser's EyeDropper API
@@ -41,6 +42,7 @@ import { PRESET_COLORS } from "@/lib/constants";
  * @returns EyeDropper button component or null if not supported.
  */
 function EyeDropperButton() {
+  const t = useT();
   const state = use(ColorPickerStateContext);
   if (!state)
     throw new Error("EyeDropperButton must be used inside ColorPicker");
@@ -53,7 +55,7 @@ function EyeDropperButton() {
 
   return (
     <AriaButton
-      aria-label="Eye dropper"
+      aria-label={t("Eye dropper")}
       className="inline-flex size-8 items-center justify-center rounded-md border border-input bg-background font-medium text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-offset-2"
       onPress={() => {
         // @ts-expect-error - EyeDropper API may not be available
@@ -90,9 +92,10 @@ export function NativeColorPicker({
   color,
   onColorChange,
 }: ColorPickerPopoverProps) {
+  const t = useT();
   return (
     <label
-      aria-label={`Pick color ${color}`}
+      aria-label={`${t("Pick color")} ${color}`}
       className="relative block size-12 cursor-pointer overflow-hidden rounded-lg border-2"
       style={{ backgroundColor: color }}
     >
@@ -118,6 +121,7 @@ export function ColorPickerPopover({
   color,
   onColorChange,
 }: ColorPickerPopoverProps) {
+  const t = useT();
   // Parse the hex color string to a Color object in HSB format
   const colorValue = parseColor(color).toFormat("hsb");
   // Track if user is dragging to prevent popover from closing during drag
@@ -135,7 +139,7 @@ export function ColorPickerPopover({
   return (
     <DialogTrigger>
       <AriaButton
-        aria-label={`Pick color ${color}`}
+        aria-label={`${t("Pick color")} ${color}`}
         className="size-12 cursor-pointer rounded-lg border-2 p-0 outline-none focus:ring-2 focus:ring-offset-2"
         style={{ backgroundColor: color }}
       >
@@ -149,7 +153,7 @@ export function ColorPickerPopover({
       >
         <Dialog
           className="relative flex flex-col gap-4 rounded-lg border bg-popover p-4 shadow-lg outline-none"
-          aria-label="Color picker"
+          aria-label={t("Color picker")}
         >
           <ColorPicker value={colorValue} onChange={handleColorChange}>
             {/* Color Area for saturation and brightness */}
@@ -182,10 +186,10 @@ export function ColorPickerPopover({
 
             {/* Hex Input Field */}
             <ColorField className="flex w-full gap-2">
-              <AriaLabel className="sr-only">Hex Color</AriaLabel>
+              <AriaLabel className="sr-only">{t("Hex Color")}</AriaLabel>
               <AriaInput
                 className="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 font-mono text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                placeholder="Hex"
+                placeholder={t("Hex")}
                 onKeyDown={(e) => {
                   // Blur on Enter to commit the color value
                   if (e.key === "Enter") {
@@ -194,12 +198,12 @@ export function ColorPickerPopover({
                 }}
               />
               <Button
-                aria-label="Copy color code"
+                aria-label={t("Copy color code")}
                 className="size-9"
                 variant="ghost"
                 onClick={() => {
                   navigator.clipboard.writeText(colorValue.toString("hex"));
-                  toast.success("Color copied to clipboard.", {
+                  toast.success(t("Color copied to clipboard."), {
                     description: `${colorValue.toString("hex")}`,
                   });
                 }}

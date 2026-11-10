@@ -34,6 +34,7 @@ import {
   shareToThreads,
   shareToTwitter,
 } from "@/lib/share-utils";
+import { useT } from "@/lib/translations";
 
 const BUTTON_CLASS =
   "h-auto flex-col gap-1.5 py-3 [&_svg:not([class*='size-'])]:size-6";
@@ -80,6 +81,7 @@ export default function ShareDialog({
   originalPaletteColors,
   showSubmitShowcase = true,
 }: ShareDialogProps) {
+  const t = useT();
   const [cssDialogOpen, setCssDialogOpen] = useState(false);
   const hasCodeData = emoji && customizedPaletteColors && originalPaletteColors;
   const { data: cpalMap = null } = useQuery({
@@ -105,7 +107,7 @@ export default function ShareDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Share your emoji</DialogTitle>
+            <DialogTitle>{t("Share your emoji")}</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
@@ -123,7 +125,7 @@ export default function ShareDialog({
 
             <div className={`grid gap-2 ${gridClass}`}>
               <Button
-                aria-label="Share to X (Twitter)"
+                aria-label={t("Share to X (Twitter)")}
                 variant="outline"
                 className={BUTTON_CLASS}
                 onClick={() => shareToTwitter(shareUrl)}
@@ -133,7 +135,7 @@ export default function ShareDialog({
               </Button>
 
               <Button
-                aria-label="Share to Facebook"
+                aria-label={t("Share to Facebook")}
                 variant="outline"
                 className={BUTTON_CLASS}
                 onClick={() => shareToFacebook(shareUrl)}
@@ -143,7 +145,7 @@ export default function ShareDialog({
               </Button>
 
               <Button
-                aria-label="Share to Threads"
+                aria-label={t("Share to Threads")}
                 variant="outline"
                 className={BUTTON_CLASS}
                 onClick={() => shareToThreads(shareUrl)}
@@ -153,18 +155,18 @@ export default function ShareDialog({
               </Button>
 
               <Button
-                aria-label="Copy link to clipboard"
+                aria-label={t("Copy link to clipboard")}
                 variant="outline"
                 className={BUTTON_CLASS}
                 onClick={() => copyLinkToClipboard(shareUrl)}
               >
                 <LinkIcon aria-hidden="true" />
-                <span className="text-base">Copy Link</span>
+                <span className="text-base">{t("Copy Link")}</span>
               </Button>
 
               {hasCodeData && (
                 <Button
-                  aria-label="View HTML/CSS code"
+                  aria-label={t("View HTML/CSS code")}
                   variant="outline"
                   className={BUTTON_CLASS}
                   onClick={() => setCssDialogOpen(true)}
@@ -177,7 +179,7 @@ export default function ShareDialog({
 
             {showSubmitShowcase && (
               <Button
-                aria-label="Submit to showcase"
+                aria-label={t("Submit to showcase")}
                 variant="outline"
                 className="w-full"
                 nativeButton={false}
@@ -201,7 +203,7 @@ export default function ShareDialog({
         <Dialog open={cssDialogOpen} onOpenChange={setCssDialogOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle>HTML / CSS Code</DialogTitle>
+              <DialogTitle>{t("HTML / CSS Code")}</DialogTitle>
             </DialogHeader>
 
             <div className="flex flex-col gap-4">
@@ -214,7 +216,7 @@ export default function ShareDialog({
                   className="ml-auto"
                 >
                   <ClipboardIcon aria-hidden="true" />
-                  <span className="text-base">Copy HTML</span>
+                  <span className="text-base">{t("Copy HTML")}</span>
                 </Button>
               </div>
               <pre className="overflow-x-auto rounded bg-accent px-4 py-4 text-xs">
@@ -230,7 +232,7 @@ export default function ShareDialog({
                   className="ml-auto"
                 >
                   <ClipboardIcon aria-hidden="true" />
-                  <span className="text-base">Copy CSS</span>
+                  <span className="text-base">{t("Copy CSS")}</span>
                 </Button>
               </div>
               <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-accent px-4 py-4 text-xs">

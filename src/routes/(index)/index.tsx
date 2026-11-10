@@ -12,7 +12,8 @@ import DesktopEmojiPicker from "@/components/create/emoji-picker";
 import ShareModal from "@/components/create/share-modal";
 import { EmojiProvider, useEmoji } from "@/contexts/emoji-context";
 import PageLayout from "@/layout";
-import { SITE_URL } from "@/lib/constants";
+import { pageHead } from "@/lib/page-meta";
+import { useT } from "@/lib/translations";
 
 /**
  * Search parameters for the emoji customization page.
@@ -36,36 +37,7 @@ export const Route = createFileRoute("/(index)/")({
       palette: typeof search.palette === "string" ? search.palette : undefined,
     };
   },
-  head: () => ({
-    meta: [
-      {
-        title: "Create | EmojiSalon - Coloring Your Emoji",
-      },
-      {
-        name: "description",
-        content:
-          "Choose any emoji, pick your own colors, and save the result as SVG or PNG.",
-      },
-      {
-        property: "og:title",
-        content: "Create | EmojiSalon - Coloring Your Emoji",
-      },
-      {
-        property: "og:description",
-        content:
-          "Choose any emoji, pick your own colors, and save the result as SVG or PNG.",
-      },
-      {
-        property: "og:url",
-        content: `${SITE_URL}/`,
-      },
-      {
-        property: "og:image",
-        content: `${SITE_URL}/social.png`,
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
-  }),
+  head: () => pageHead("en", "create"),
 });
 
 /**
@@ -75,7 +47,7 @@ export const Route = createFileRoute("/(index)/")({
  *
  * @returns Emoji customization page component.
  */
-function EmojiSalonPage() {
+export function EmojiSalonPage() {
   return (
     <EmojiProvider>
       <EmojiSalonContent />
@@ -85,6 +57,7 @@ function EmojiSalonPage() {
 
 function EmojiSalonContent() {
   const { canvasRef } = useEmoji();
+  const t = useT();
 
   return (
     <PageLayout>
@@ -92,7 +65,7 @@ function EmojiSalonContent() {
       <canvas ref={canvasRef} className="hidden" width={256} height={256} />
 
       <div className="flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-16 py-6 sm:py-12 lg:w-[calc(100vw-3rem)] lg:max-w-5xl lg:flex-none">
-        <h1 className="sr-only">Create Your Custom Emoji</h1>
+        <h1 className="sr-only">{t("Create Your Custom Emoji")}</h1>
         <div className="grid grid-cols-1 items-center lg:grid-cols-3 lg:gap-16">
           <DesktopEmojiPicker />
           <ActionButtons variant="mobile" />

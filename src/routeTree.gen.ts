@@ -12,7 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as indexIndexRouteImport } from './routes/(index)/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as JaIndexRouteImport } from './routes/ja/index'
 import { Route as ShowcaseIndexRouteImport } from './routes/showcase/index'
+import { Route as Zh_twIndexRouteImport } from './routes/zh_tw/index'
+import { Route as JaAboutIndexRouteImport } from './routes/ja/about/index'
+import { Route as JaShowcaseIndexRouteImport } from './routes/ja/showcase/index'
+import { Route as Zh_twAboutIndexRouteImport } from './routes/zh_tw/about/index'
+import { Route as Zh_twShowcaseIndexRouteImport } from './routes/zh_tw/showcase/index'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
@@ -29,9 +35,39 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JaIndexRoute = JaIndexRouteImport.update({
+  id: '/ja/',
+  path: '/ja/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShowcaseIndexRoute = ShowcaseIndexRouteImport.update({
   id: '/showcase/',
   path: '/showcase/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Zh_twIndexRoute = Zh_twIndexRouteImport.update({
+  id: '/zh_tw/',
+  path: '/zh_tw/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JaAboutIndexRoute = JaAboutIndexRouteImport.update({
+  id: '/ja/about/',
+  path: '/ja/about/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JaShowcaseIndexRoute = JaShowcaseIndexRouteImport.update({
+  id: '/ja/showcase/',
+  path: '/ja/showcase/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Zh_twAboutIndexRoute = Zh_twAboutIndexRouteImport.update({
+  id: '/zh_tw/about/',
+  path: '/zh_tw/about/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Zh_twShowcaseIndexRoute = Zh_twShowcaseIndexRouteImport.update({
+  id: '/zh_tw/showcase/',
+  path: '/zh_tw/showcase/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -39,34 +75,89 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/': typeof indexIndexRoute
   '/about/': typeof AboutIndexRoute
+  '/ja/': typeof JaIndexRoute
   '/showcase/': typeof ShowcaseIndexRoute
+  '/zh_tw/': typeof Zh_twIndexRoute
+  '/ja/about/': typeof JaAboutIndexRoute
+  '/ja/showcase/': typeof JaShowcaseIndexRoute
+  '/zh_tw/about/': typeof Zh_twAboutIndexRoute
+  '/zh_tw/showcase/': typeof Zh_twShowcaseIndexRoute
 }
 export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/': typeof indexIndexRoute
   '/about': typeof AboutIndexRoute
+  '/ja': typeof JaIndexRoute
   '/showcase': typeof ShowcaseIndexRoute
+  '/zh_tw': typeof Zh_twIndexRoute
+  '/ja/about': typeof JaAboutIndexRoute
+  '/ja/showcase': typeof JaShowcaseIndexRoute
+  '/zh_tw/about': typeof Zh_twAboutIndexRoute
+  '/zh_tw/showcase': typeof Zh_twShowcaseIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$': typeof SplatRoute
   '/(index)/': typeof indexIndexRoute
   '/about/': typeof AboutIndexRoute
+  '/ja/': typeof JaIndexRoute
   '/showcase/': typeof ShowcaseIndexRoute
+  '/zh_tw/': typeof Zh_twIndexRoute
+  '/ja/about/': typeof JaAboutIndexRoute
+  '/ja/showcase/': typeof JaShowcaseIndexRoute
+  '/zh_tw/about/': typeof Zh_twAboutIndexRoute
+  '/zh_tw/showcase/': typeof Zh_twShowcaseIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/$' | '/' | '/about/' | '/showcase/'
+  fullPaths:
+    | '/$'
+    | '/'
+    | '/about/'
+    | '/ja/'
+    | '/showcase/'
+    | '/zh_tw/'
+    | '/ja/about/'
+    | '/ja/showcase/'
+    | '/zh_tw/about/'
+    | '/zh_tw/showcase/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/$' | '/' | '/about' | '/showcase'
-  id: '__root__' | '/$' | '/(index)/' | '/about/' | '/showcase/'
+  to:
+    | '/$'
+    | '/'
+    | '/about'
+    | '/ja'
+    | '/showcase'
+    | '/zh_tw'
+    | '/ja/about'
+    | '/ja/showcase'
+    | '/zh_tw/about'
+    | '/zh_tw/showcase'
+  id:
+    | '__root__'
+    | '/$'
+    | '/(index)/'
+    | '/about/'
+    | '/ja/'
+    | '/showcase/'
+    | '/zh_tw/'
+    | '/ja/about/'
+    | '/ja/showcase/'
+    | '/zh_tw/about/'
+    | '/zh_tw/showcase/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   indexIndexRoute: typeof indexIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
+  JaIndexRoute: typeof JaIndexRoute
   ShowcaseIndexRoute: typeof ShowcaseIndexRoute
+  Zh_twIndexRoute: typeof Zh_twIndexRoute
+  JaAboutIndexRoute: typeof JaAboutIndexRoute
+  JaShowcaseIndexRoute: typeof JaShowcaseIndexRoute
+  Zh_twAboutIndexRoute: typeof Zh_twAboutIndexRoute
+  Zh_twShowcaseIndexRoute: typeof Zh_twShowcaseIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,11 +183,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ja/': {
+      id: '/ja/'
+      path: '/ja'
+      fullPath: '/ja/'
+      preLoaderRoute: typeof JaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/showcase/': {
       id: '/showcase/'
       path: '/showcase'
       fullPath: '/showcase/'
       preLoaderRoute: typeof ShowcaseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/zh_tw/': {
+      id: '/zh_tw/'
+      path: '/zh_tw'
+      fullPath: '/zh_tw/'
+      preLoaderRoute: typeof Zh_twIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ja/about/': {
+      id: '/ja/about/'
+      path: '/ja/about'
+      fullPath: '/ja/about/'
+      preLoaderRoute: typeof JaAboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ja/showcase/': {
+      id: '/ja/showcase/'
+      path: '/ja/showcase'
+      fullPath: '/ja/showcase/'
+      preLoaderRoute: typeof JaShowcaseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/zh_tw/about/': {
+      id: '/zh_tw/about/'
+      path: '/zh_tw/about'
+      fullPath: '/zh_tw/about/'
+      preLoaderRoute: typeof Zh_twAboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/zh_tw/showcase/': {
+      id: '/zh_tw/showcase/'
+      path: '/zh_tw/showcase'
+      fullPath: '/zh_tw/showcase/'
+      preLoaderRoute: typeof Zh_twShowcaseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -106,7 +239,13 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   indexIndexRoute: indexIndexRoute,
   AboutIndexRoute: AboutIndexRoute,
+  JaIndexRoute: JaIndexRoute,
   ShowcaseIndexRoute: ShowcaseIndexRoute,
+  Zh_twIndexRoute: Zh_twIndexRoute,
+  JaAboutIndexRoute: JaAboutIndexRoute,
+  JaShowcaseIndexRoute: JaShowcaseIndexRoute,
+  Zh_twAboutIndexRoute: Zh_twAboutIndexRoute,
+  Zh_twShowcaseIndexRoute: Zh_twShowcaseIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

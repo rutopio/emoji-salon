@@ -5,6 +5,7 @@
 
 import ShareDialog from "@/components/shared/share-dialog";
 import { useEmoji } from "@/contexts/emoji-context";
+import { useT } from "@/lib/translations";
 
 /**
  * Share modal for the Create page. Reads state from EmojiContext and delegates
@@ -13,6 +14,7 @@ import { useEmoji } from "@/contexts/emoji-context";
  * @returns Share modal dialog component.
  */
 export default function ShareModal() {
+  const t = useT();
   const {
     currentEmoji,
     currentEmojiLabel,
@@ -29,7 +31,7 @@ export default function ShareModal() {
       onOpenChange={setShareModalOpen}
       shareUrl={window.location.href}
       svgHTML={svgHTML}
-      emojiLabel={`Customized ${currentEmojiLabel || currentEmoji} emoji`}
+      emojiLabel={`${t("Customized emoji")} ${t(currentEmojiLabel || currentEmoji)}`}
       emoji={currentEmoji}
       customizedPaletteColors={customizedPaletteColors}
       originalPaletteColors={originalPaletteColors}

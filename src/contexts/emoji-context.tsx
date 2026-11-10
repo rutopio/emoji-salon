@@ -26,6 +26,7 @@ import {
   unicodeToEmoji,
 } from "@/lib/emoji-utils";
 import { downloadSVG } from "@/lib/share-utils";
+import { currentT } from "@/lib/translations";
 
 /**
  * Search parameters for emoji and palette from URL.
@@ -181,9 +182,19 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   const updateURL = useCallback(
     (emojiUnicode: string, paletteCode?: string) => {
       // Only update URL if we're on the home page
-      if (location.pathname === "/") {
+      if (
+        location.pathname === "/" ||
+        location.pathname === "/zh_tw" ||
+        location.pathname === "/ja" ||
+        location.pathname === "/zh_tw/" ||
+        location.pathname === "/ja/"
+      ) {
         navigate({
-          to: "/",
+          to: location.pathname.startsWith("/zh_tw")
+            ? "/zh_tw"
+            : location.pathname.startsWith("/ja")
+              ? "/ja"
+              : "/",
           search: {
             emoji: emojiUnicode,
             palette: paletteCode || undefined,
@@ -245,7 +256,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       } else {
         // fetchEmojiData already logged the cause; surface it to the user so a
         // broken URL palette or missing asset doesn't just silently do nothing.
-        toast.error("Could not load this emoji. Try another one.");
+        toast.error(currentT("Could not load this emoji. Try another one."));
       }
     },
     [updateURL]
@@ -402,7 +413,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleReset = useCallback(() => {
     updateEmoji(currentEmoji, false);
-    toast.success("Colors reset to original.");
+    toast.success(currentT("Colors reset to original."));
   }, [currentEmoji, updateEmoji]);
 
   /**
@@ -496,13 +507,13 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         } else if (action === CANVAS_ACTION.COPY) {
           canvas.toBlob((blob) => {
             if (!blob) {
-              toast.error("Failed to copy image.");
+              toast.error(currentT("Failed to copy image."));
               return;
             }
             navigator.clipboard
               .write([new ClipboardItem({ "image/png": blob })])
-              .then(() => toast.success("Image copied to clipboard."))
-              .catch(() => toast.error("Failed to copy image."));
+              .then(() => toast.success(currentT("Image copied to clipboard.")))
+              .catch(() => toast.error(currentT("Failed to copy image.")));
           });
         } else if (action === CANVAS_ACTION.SHARE) {
           const dataUrl = canvas.toDataURL();
@@ -515,11 +526,11 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
           ];
           try {
             await navigator.share({ files: filesArray });
-            toast.success("Image shared.");
+            toast.success(currentT("Image shared."));
           } catch (err) {
             // AbortError = user cancelled the share sheet; not a failure.
             if (!(err instanceof Error) || err.name !== "AbortError") {
-              toast.error("Failed to share image.");
+              toast.error(currentT("Failed to share image."));
             }
           }
         } else if (action === CANVAS_ACTION.GENERATE_PREVIEW) {
@@ -544,7 +555,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         return;
       }
       updateCanvas(CANVAS_ACTION.DOWNLOAD, format);
-      toast.success("Downloading image...", {
+      toast.success(currentT("Downloading image..."), {
         description: `${emojiToUnicode(currentEmoji)}-EmojiSalon.${format}`,
       });
     },
@@ -573,7 +584,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW);
     if (navigator.share && window.innerWidth < 768) {
       const shareData = {
-        title: "Share with friends",
+        title: currentT("Share with friends"),
         text: "#EmojiSalon",
         url: window.location.href,
       };

@@ -12,6 +12,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useMountEffect } from "@/hooks/use-mount-effect";
+import { useT } from "@/lib/translations";
 
 interface OutlineItem {
   id: string;
@@ -53,6 +54,7 @@ function prefersReducedMotion() {
 }
 
 export function AboutPageActions() {
+  const t = useT();
   const [items, setItems] = useState<OutlineItem[]>([]);
   const [activeId, setActiveId] = useState("");
   const [progress, setProgress] = useState(0);
@@ -127,15 +129,15 @@ export function AboutPageActions() {
         await navigator.share({ title: document.title, url });
       } catch (error) {
         if (!(error instanceof Error && error.name === "AbortError"))
-          toast.error("Could not share this page.");
+          toast.error(t("Could not share this page."));
       }
       return;
     }
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Page link copied.");
+      toast.success(t("Page link copied."));
     } catch {
-      toast.error("Could not copy the page link.");
+      toast.error(t("Could not copy the page link."));
     }
   };
 
@@ -150,7 +152,7 @@ export function AboutPageActions() {
       <Button
         variant="outline"
         size="icon-lg"
-        aria-label="Share or copy page link"
+        aria-label={t("Share or copy page link")}
         onClick={sharePage}
       >
         <ShareNetworkIcon aria-hidden="true" />
@@ -158,7 +160,7 @@ export function AboutPageActions() {
       <Button
         variant="outline"
         size="icon-lg"
-        aria-label="Scroll to top"
+        aria-label={t("Scroll to top")}
         onClick={scrollToTop}
       >
         <ArrowBendRightUpIcon aria-hidden="true" />
@@ -170,7 +172,7 @@ export function AboutPageActions() {
     <>
       <ButtonGroup
         orientation="horizontal"
-        aria-label="About page actions"
+        aria-label={t("About page actions")}
         className="fixed right-4 bottom-[calc(2rem+env(safe-area-inset-bottom))] z-10 h-fit min-[50rem]:hidden"
       >
         <Drawer open={outlineOpen} onOpenChange={setOutlineOpen}>
@@ -179,7 +181,7 @@ export function AboutPageActions() {
               <Button
                 variant="outline"
                 size="icon-lg"
-                aria-label={`${Math.round(progress * 100)}% · Table of contents`}
+                aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
               />
             }
           >
@@ -187,10 +189,10 @@ export function AboutPageActions() {
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader className="border-border border-b pb-4">
-              <DrawerTitle>About EmojiSalon</DrawerTitle>
+              <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
             </DrawerHeader>
             <nav
-              aria-label="Table of contents"
+              aria-label={t("Table of contents")}
               className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
             >
               <ul className="flex flex-col">
@@ -227,7 +229,7 @@ export function AboutPageActions() {
 
       <ButtonGroup
         orientation="vertical"
-        aria-label="About page actions"
+        aria-label={t("About page actions")}
         className="fixed top-1/2 left-[var(--gutter-offset)] z-10 hidden h-fit -translate-y-1/2 min-[50rem]:flex"
       >
         <MenuPrimitive.Root>
@@ -236,7 +238,7 @@ export function AboutPageActions() {
               <Button
                 variant="outline"
                 size="icon-lg"
-                aria-label={`${Math.round(progress * 100)}% · Table of contents`}
+                aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
               />
             }
           >
@@ -250,7 +252,7 @@ export function AboutPageActions() {
               className="isolate z-50 outline-none"
             >
               <MenuPrimitive.Popup
-                aria-label="Table of contents"
+                aria-label={t("Table of contents")}
                 className="max-h-[50dvh] w-64 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none ring-1 ring-foreground/10"
               >
                 {items.map((item) => (

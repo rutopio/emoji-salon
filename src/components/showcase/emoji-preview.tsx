@@ -5,6 +5,7 @@
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useT } from "@/lib/translations";
 
 /**
  * Props for the EmojiPreview component.
@@ -30,6 +31,7 @@ export default function EmojiPreview({
   label,
   isLoading = false,
 }: EmojiPreviewProps) {
+  const t = useT();
   if (isLoading) {
     return (
       <div
@@ -39,7 +41,7 @@ export default function EmojiPreview({
         <div className="flex size-24 items-center justify-center lg:size-32">
           <Skeleton
             className="size-24 lg:size-32"
-            aria-label={`Loading ${label}`}
+            aria-label={`${t("Loading")} ${label}`}
           />
         </div>
         <span className="text-center text-sm">{label}</span>

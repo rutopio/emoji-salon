@@ -17,6 +17,8 @@ import {
 import { useTheme } from "next-themes";
 
 import { useEmoji } from "@/contexts/emoji-context";
+import { useT } from "@/lib/translations";
+import { useLocale } from "@/lib/use-locale";
 
 /** Maps an emoji character to its Twemoji filename stem (from index.json). */
 type CharMap = Record<string, string>;
@@ -131,6 +133,8 @@ interface EmojiPickerProps {
  * @returns Emoji picker UI component.
  */
 export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
+  const t = useT();
+  const locale = useLocale();
   const { resolvedTheme } = useTheme();
   const { isSuccess: charMapReady } = useQuery({
     queryKey: ["emoji-char-map"],
@@ -141,21 +145,22 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   return (
     <Frimousse.Root
       key={charMapReady ? "ready" : "loading"}
+      locale={locale === "zh-TW" ? "zh-hant" : locale}
       onEmojiSelect={({ emoji, label }) => onEmojiSelect(emoji, label)}
       columns={8}
       className="isolate flex h-[352px] w-[312px] flex-col rounded-[var(--radius)] border bg-popover text-popover-foreground shadow-md"
       data-theme={resolvedTheme === "dark" ? "dark" : "light"}
     >
       <Frimousse.Search
-        placeholder="Search emoji"
+        placeholder={t("Search emoji")}
         className="z-10 mx-2 mt-2 appearance-none rounded-md bg-secondary px-2.5 py-2 text-secondary-foreground text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
       <Frimousse.Viewport className="relative flex-1 outline-none">
         <Frimousse.Loading className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
-          Loading…
+          {t("Loading…")}
         </Frimousse.Loading>
         <Frimousse.Empty className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
-          No emoji found.
+          {t("No emoji found.")}
         </Frimousse.Empty>
         <Frimousse.List
           className="select-none pb-2"

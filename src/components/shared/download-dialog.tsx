@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { GITHUB_REPO_URL } from "@/lib/constants";
+import { useT } from "@/lib/translations";
 
 /**
  * Props for the DownloadDialog component.
@@ -58,6 +59,7 @@ export default function DownloadDialog({
   onDownloadJPG,
   onCopy,
 }: DownloadDialogProps) {
+  const t = useT();
   const handleAndClose = (action: () => void) => {
     action();
     onOpenChange(false);
@@ -67,7 +69,7 @@ export default function DownloadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="lg:max-w-md">
         <DialogHeader>
-          <DialogTitle>Save Image</DialogTitle>
+          <DialogTitle>{t("Save Image")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-center justify-center py-2">
@@ -110,7 +112,7 @@ export default function DownloadDialog({
             onClick={() => handleAndClose(onCopy)}
           >
             <ClipboardIcon className="size-5" aria-hidden="true" />
-            <span className="text-base">Copy</span>
+            <span className="text-base">{t("Copy")}</span>
           </Button>
         </div>
 
@@ -123,7 +125,7 @@ export default function DownloadDialog({
               rel="noreferrer noopener"
               className="underline"
             >
-              Free for personal and commercial use
+              {t("Free for personal and commercial use")}
             </a>
           </p>
         </div>

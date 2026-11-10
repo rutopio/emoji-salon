@@ -1,5 +1,6 @@
 import { LinkIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
+import { useT } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 interface ArticleHeadingProps {
@@ -13,14 +14,15 @@ export function ArticleHeading({
   children,
   level = 2,
 }: ArticleHeadingProps) {
+  const t = useT();
   const Heading = level === 3 ? "h3" : "h2";
 
   const copySectionLink = () => {
     const url = new URL(window.location.href);
     url.hash = id;
     navigator.clipboard.writeText(url.href).then(
-      () => toast.success("Section link copied."),
-      () => toast.error("Could not copy the section link.")
+      () => toast.success(t("Section link copied.")),
+      () => toast.error(t("Could not copy the section link."))
     );
   };
 
@@ -34,7 +36,7 @@ export function ArticleHeading({
     >
       <a
         href={`#${id}`}
-        title="Copy link to this section"
+        title={t("Copy link to this section")}
         onClick={copySectionLink}
         className="relative inline text-inherit no-underline"
       >

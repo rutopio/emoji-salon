@@ -33,7 +33,10 @@ import {
   CANVAS_SCALE_FACTOR,
 } from "@/lib/constants";
 import { triggerDownload, unicodeToEmoji } from "@/lib/emoji-utils";
+import { withLocale } from "@/lib/locale";
 import { downloadSVG } from "@/lib/share-utils";
+import { useT } from "@/lib/translations";
+import { useLocale } from "@/lib/use-locale";
 
 /**
  * Variant data structure for emoji customization.
@@ -75,9 +78,12 @@ interface VariantPreviewProps {
  * @returns Emoji preview component for the variant.
  */
 function VariantPreview({ emoji, variant }: VariantPreviewProps) {
+  const t = useT();
   const { svg, isLoading } = useVariantSVG(emoji, variant.palette);
 
-  return <EmojiPreview svg={svg} label={variant.name} isLoading={isLoading} />;
+  return (
+    <EmojiPreview svg={svg} label={t(variant.name)} isLoading={isLoading} />
+  );
 }
 
 /**
@@ -93,6 +99,8 @@ export default function ShowcaseSection({
   className = "",
 }: ShowcaseSectionProps) {
   const navigate = useNavigate();
+  const locale = useLocale();
+  const t = useT();
   const firstVariant = variants[0];
   const {
     originalSvg,
@@ -113,7 +121,7 @@ export default function ShowcaseSection({
    */
   const handleNavigate = (palette?: string) => {
     navigate({
-      to: "/",
+      to: withLocale("/", locale),
       search: {
         emoji: emoji,
         palette: palette || undefined,
@@ -224,9 +232,9 @@ export default function ShowcaseSection({
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.png`;
       triggerDownload(dataUrl, filename);
-      toast.success("Downloading image...", { description: filename });
+      toast.success(t("Downloading image..."), { description: filename });
     }, "png");
-  }, [emoji, generateImage]);
+  }, [emoji, generateImage, t]);
 
   /**
    * Renders the emoji to canvas (white background) and triggers a JPG download.
@@ -235,9 +243,9 @@ export default function ShowcaseSection({
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.jpg`;
       triggerDownload(dataUrl, filename);
-      toast.success("Downloading image...", { description: filename });
+      toast.success(t("Downloading image..."), { description: filename });
     }, "jpg");
-  }, [emoji, generateImage]);
+  }, [emoji, generateImage, t]);
 
   /**
    * Copies the emoji image to the clipboard.
@@ -249,11 +257,11 @@ export default function ShowcaseSection({
         .then((blob) => {
           navigator.clipboard
             .write([new ClipboardItem({ "image/png": blob })])
-            .then(() => toast.success("Image copied to clipboard."))
-            .catch(() => toast.error("Failed to copy image."));
+            .then(() => toast.success(t("Image copied to clipboard.")))
+            .catch(() => toast.error(t("Failed to copy image.")));
         });
     }, "png");
-  }, [generateImage]);
+  }, [generateImage, t]);
 
   /**
    * Handles sharing the emoji by opening the share modal.
@@ -278,11 +286,11 @@ export default function ShowcaseSection({
             {unicodeDisplay}
           </span>
           <ButtonGroup
-            aria-label="Emoji actions"
+            aria-label={t("Emoji actions")}
             className="absolute -top-1 right-0"
           >
             <Button
-              aria-label="Edit emoji"
+              aria-label={t("Edit emoji")}
               variant="outline"
               size="icon"
               onClick={() => handleNavigate(firstVariant.palette)}
@@ -290,7 +298,7 @@ export default function ShowcaseSection({
               <PencilSimpleIcon aria-hidden="true" />
             </Button>
             <Button
-              aria-label="Download image"
+              aria-label={t("Download image")}
               variant="outline"
               size="icon"
               onClick={handleDownload}
@@ -298,7 +306,7 @@ export default function ShowcaseSection({
               <DownloadSimpleIcon aria-hidden="true" />
             </Button>
             <Button
-              aria-label="Share emoji"
+              aria-label={t("Share emoji")}
               variant="outline"
               size="icon"
               onClick={handleShare}
@@ -313,7 +321,7 @@ export default function ShowcaseSection({
           {/* Original emoji */}
           <EmojiPreview
             svg={originalSvg}
-            label={originalName}
+            label={t(originalName)}
             isLoading={isLoading}
           />
 
@@ -348,7 +356,7 @@ export default function ShowcaseSection({
             ) : (
               <EmojiPreview
                 svg={modifiedSvg}
-                label={firstVariant.name}
+                label={t(firstVariant.name)}
                 isLoading={isLoading}
               />
             )}
@@ -360,7 +368,7 @@ export default function ShowcaseSection({
           open={downloadOpen}
           onOpenChange={setDownloadOpen}
           svgHTML={modifiedSvg}
-          emojiLabel={`Customized ${emojiChar} emoji`}
+          emojiLabel={`${t("Customized emoji")} ${emojiChar}`}
           onDownloadSVG={handleDownloadSVG}
           onDownloadPNG={handleDownloadPNG}
           onDownloadJPG={handleDownloadJPG}
@@ -374,7 +382,7 @@ export default function ShowcaseSection({
           emoji={emojiChar}
           palette={firstVariant.palette}
           svgHTML={modifiedSvg}
-          emojiLabel={`Customized ${emojiChar} emoji`}
+          emojiLabel={`${t("Customized emoji")} ${emojiChar}`}
           customizedPaletteColors={customizedPaletteColors}
           originalPaletteColors={originalPaletteColors}
         />
