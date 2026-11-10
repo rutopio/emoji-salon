@@ -69,10 +69,7 @@
     "cv09" 2;
 }
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
-  text-autospace: normal;
   /* z-index scale */
   --z-base: 0;
   --z-dropdown: 10;
@@ -85,67 +82,8 @@
 
   --font-sans: "Inter Variable", "Noto Sans TC Variable", "Noto Sans JP Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Paper Mono", ui-monospace, monospace;
-  --spacing: 0.25rem;
 }
 
 html:lang(ja) {
   --font-sans: "Inter Variable", "Noto Sans JP Variable", "Noto Sans TC Variable", ui-sans-serif, system-ui, sans-serif;
-}
-
-.dark {
-  --font-sans: "Inter Variable", "Noto Sans TC Variable", "Noto Sans JP Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Paper Mono", ui-monospace, monospace;
-}
-
-@theme inline {
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-}
-
-@layer base {
-  body {
-    @apply font-sans;
-    font-optical-sizing: auto;
-  }
-  html {
-    @apply bg-background font-sans;
-    scrollbar-gutter: stable;
-  }
-
-  html,
-  body {
-    /* Prevent iOS Chrome's collapsing toolbar from exposing a strip of
-       body background below the footer when rubber-band scrolling. */
-    overscroll-behavior-y: contain;
-  }
-}
-
-@utility container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-
-  @media (min-width: 640px) {
-    max-width: 640px;
-  }
-
-  @media (min-width: 768px) {
-    max-width: 768px;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 1024px;
-  }
-
-  @media (min-width: 1280px) {
-    max-width: 1280px;
-  }
-
-  @media (min-width: 1536px) {
-    max-width: 1536px;
-  }
 }
