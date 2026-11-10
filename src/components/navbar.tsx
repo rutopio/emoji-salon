@@ -56,6 +56,7 @@ export default function Navbar() {
               label={t("Pages")}
               trigger={<ListIcon aria-hidden="true" />}
               align="start"
+              currentValue="page"
               selectedId={
                 isHome
                   ? "create"
@@ -132,6 +133,7 @@ export default function Navbar() {
             items={locales.map((item) => ({
               id: item.code,
               label: item.label,
+              lang: item.htmlLang,
               onSelect: () =>
                 navigate({
                   to: withLocale(pathname, item.code),

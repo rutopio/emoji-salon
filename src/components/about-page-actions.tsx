@@ -214,7 +214,7 @@ export function AboutPageActions() {
                         event.preventDefault();
                         navigateToHeading(item.id);
                       }}
-                      className="block py-1 text-base text-foreground aria-[current=location]:font-semibold"
+                      className="block py-1 text-base text-foreground aria-[current=location]:font-bold"
                     >
                       {item.label}
                     </a>
@@ -240,6 +240,7 @@ export function AboutPageActions() {
             onSelect: () => navigateToHeading(item.id),
           }))}
           selectedId={activeId}
+          currentValue="location"
           side="left"
           variant="outline"
           size="icon-lg"

@@ -13,6 +13,7 @@ export type ActionDropdownItem = {
   id: string;
   label: string;
   depth?: 2 | 3;
+  lang?: string;
   onSelect: () => void;
 };
 
@@ -21,6 +22,7 @@ export function ActionDropdown({
   trigger,
   items,
   selectedId,
+  currentValue = "true",
   side = "bottom",
   align = "end",
   variant = "ghost",
@@ -32,6 +34,7 @@ export function ActionDropdown({
   trigger: ReactNode;
   items: ActionDropdownItem[];
   selectedId?: string;
+  currentValue?: "true" | "page" | "location";
   side?: "bottom" | "left";
   align?: "start" | "end";
   variant?: "ghost" | "outline";
@@ -263,8 +266,11 @@ export function ActionDropdown({
                       ref={itemRefCallbacks[index]}
                       type="button"
                       role="menuitem"
+                      lang={item.lang}
                       data-active={selectedId === item.id || undefined}
-                      aria-current={selectedId === item.id ? "true" : undefined}
+                      aria-current={
+                        selectedId === item.id ? currentValue : undefined
+                      }
                       onPointerMove={() => setFocusedIndex(index)}
                       onFocus={() => {
                         setFocusedIndex(index);
@@ -276,7 +282,7 @@ export function ActionDropdown({
                       }}
                       className={cn(
                         "relative flex min-h-8 w-full min-w-0 items-center justify-between gap-3 rounded-md px-2.5 py-1.5 text-left text-base focus-visible:outline-none",
-                        selectedId === item.id && "font-semibold text-primary"
+                        selectedId === item.id && "font-bold text-primary"
                       )}
                     >
                       <span
