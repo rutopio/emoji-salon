@@ -239,11 +239,17 @@ function main() {
     join(OUT_DIR, "index.json"),
     JSON.stringify({ version: TWEMOJI_TAG, emojis, chars })
   );
+  // Bundle the small character map with the picker, so its first rendered
+  // emoji grid already uses Twemoji instead of briefly showing the OS font.
+  writeFileSync(
+    join(REPO_ROOT, "src", "data", "twemoji-chars.json"),
+    `${JSON.stringify(chars)}\n`
+  );
 
   console.log(`\nSource: jdecked/twemoji ${TWEMOJI_TAG}`);
   console.log(`Emojis: ${emojis.length} | Skipped: ${skipped}`);
   console.log(
-    `Output: public/data/emoji/*.json, public/data/index.json, public/twemoji/*.svg`
+    `Output: public/data/emoji/*.json, public/data/index.json, public/twemoji/*.svg, src/data/twemoji-chars.json`
   );
 }
 

@@ -31,14 +31,15 @@ This will:
 
 ## Output
 
-Served as static assets from `public/data/`, fetched on demand by both the app
-(emoji picker / editor) and the Cloudflare Pages OG image function. Nothing is
-bundled into the JS or the worker.
+Emoji path data is served from `public/data/` and fetched on demand by the
+editor and Cloudflare Pages OG image function. The small character-to-SVG map
+is bundled with the picker so its first grid uses Twemoji thumbnails.
 
 | File                            | Description                                  |
 | ------------------------------- | -------------------------------------------- |
 | `public/data/emoji/u<code>.json`| One emoji's paths, fills, editable colors    |
 | `public/data/index.json`        | `{ version, emojis, chars }` — list + source |
+| `src/data/twemoji-chars.json`   | Character-to-SVG map bundled with the picker |
 
 ### Per-emoji JSON shape
 

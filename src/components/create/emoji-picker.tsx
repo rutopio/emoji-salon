@@ -7,7 +7,6 @@
  * @see https://frimousse.liveblocks.io
  */
 
-import { useQuery } from "@tanstack/react-query";
 import {
   type EmojiPickerListCategoryHeaderProps,
   type EmojiPickerListEmojiProps,
@@ -17,31 +16,11 @@ import {
 import { useTheme } from "next-themes";
 
 import { useEmoji } from "@/contexts/emoji-context";
+import charMap from "@/data/twemoji-chars.json";
 import { useT } from "@/lib/translations";
 import { useLocale } from "@/lib/use-locale";
 
-/** Maps an emoji character to its Twemoji filename stem (from index.json). */
-type CharMap = Record<string, string>;
-
-/**
- * Session-global char -> filename map. Loaded once; read by the hoisted Emoji
- * button (frimousse fixes the component signature, so we can't pass it as a
- * prop). It is immutable after load, so a module-level value is safe.
- */
-let charMap: CharMap = {};
-let charMapPromise: Promise<CharMap> | null = null;
-function loadCharMap(): Promise<CharMap> {
-  if (!charMapPromise) {
-    charMapPromise = fetch("/data/index.json")
-      .then((res) => res.json())
-      .then((json: { chars?: CharMap }) => {
-        charMap = json.chars ?? {};
-        return charMap;
-      })
-      .catch(() => charMap);
-  }
-  return charMapPromise;
-}
+const twemojiCharMap: Record<string, string> = charMap;
 
 /** Sticky category header. */
 function CategoryHeader({
@@ -77,9 +56,9 @@ const FE0F = "️";
  */
 function stemFor(char: string): string | undefined {
   return (
-    charMap[char] ??
-    charMap[char.replace(new RegExp(`${FE0F}$`), "")] ??
-    charMap[char.replaceAll(FE0F, "")]
+    twemojiCharMap[char] ??
+    twemojiCharMap[char.replace(new RegExp(`${FE0F}$`), "")] ??
+    twemojiCharMap[char.replaceAll(FE0F, "")]
   );
 }
 
@@ -136,15 +115,8 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   const t = useT();
   const locale = useLocale();
   const { resolvedTheme } = useTheme();
-  const { isSuccess: charMapReady } = useQuery({
-    queryKey: ["emoji-char-map"],
-    queryFn: loadCharMap,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
   return (
     <Frimousse.Root
-      key={charMapReady ? "ready" : "loading"}
       locale={locale === "zh-TW" ? "zh-hant" : locale}
       onEmojiSelect={({ emoji, label }) => onEmojiSelect(emoji, label)}
       columns={8}
