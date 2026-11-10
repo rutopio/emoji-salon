@@ -1,9 +1,22 @@
-import { GithubLogoIcon, ListIcon, TranslateIcon } from "@phosphor-icons/react";
+import {
+  CheckIcon,
+  GithubLogoIcon,
+  ListIcon,
+  TranslateIcon,
+} from "@phosphor-icons/react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { ActionDropdown } from "@/components/action-dropdown";
 import { FluidHoverControls } from "@/components/fluid-hover-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
@@ -12,6 +25,8 @@ import { cn } from "@/lib/utils";
 
 const routeLinkClass =
   "flex h-9 items-center whitespace-nowrap rounded-lg px-3 font-medium text-base text-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
+const drawerLinkClass =
+  "flex min-h-12 items-center justify-between rounded-lg px-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-[current=page]:bg-muted";
 const headerActionClass =
   "cursor-default transition-[background-color,border-color,color,opacity,box-shadow,scale] duration-150 ease-in-out active:scale-[0.96] active:translate-y-0!";
 
@@ -19,6 +34,7 @@ export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();
+  const [navOpen, setNavOpen] = useState(false);
   const locale = localeForPath(pathname);
   const barePath = stripLocale(pathname);
   const isHome = barePath === "/";
@@ -52,38 +68,57 @@ export default function Navbar() {
             </span>
           </Link>
           <div className="md:hidden">
-            <ActionDropdown
-              label={t("Pages")}
-              trigger={<ListIcon aria-hidden="true" />}
-              align="start"
-              currentValue="page"
-              selectedId={
-                isHome
-                  ? "create"
-                  : isShowcase
-                    ? "showcase"
-                    : isAbout
-                      ? "about"
-                      : undefined
-              }
-              items={[
-                {
-                  id: "create",
-                  label: t("Create"),
-                  onSelect: () => navigate({ to: localized("/") }),
-                },
-                {
-                  id: "showcase",
-                  label: t("Showcase"),
-                  onSelect: () => navigate({ to: localized("/showcase") }),
-                },
-                {
-                  id: "about",
-                  label: t("About"),
-                  onSelect: () => navigate({ to: localized("/about") }),
-                },
-              ]}
-            />
+            <Drawer open={navOpen} onOpenChange={setNavOpen}>
+              <DrawerTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    aria-label={t("Pages")}
+                  >
+                    <ListIcon aria-hidden="true" />
+                  </Button>
+                }
+              />
+              <DrawerContent>
+                <DrawerHeader className="border-border border-b pb-4">
+                  <DrawerTitle className="text-lg">EmojiSalon</DrawerTitle>
+                </DrawerHeader>
+                <nav
+                  aria-label={t("Pages")}
+                  className="flex flex-col gap-1 px-4 pb-6"
+                >
+                  <Link
+                    to={localized("/")}
+                    aria-current={isHome ? "page" : undefined}
+                    onClick={() => setNavOpen(false)}
+                    className={drawerLinkClass}
+                  >
+                    {t("Create")}
+                    {isHome && <CheckIcon aria-hidden="true" />}
+                  </Link>
+                  <Link
+                    to={localized("/showcase")}
+                    aria-current={isShowcase ? "page" : undefined}
+                    onClick={() => setNavOpen(false)}
+                    className={drawerLinkClass}
+                  >
+                    {t("Showcase")}
+                    {isShowcase && <CheckIcon aria-hidden="true" />}
+                  </Link>
+                  <Link
+                    to={localized("/about")}
+                    aria-current={isAbout ? "page" : undefined}
+                    onClick={() => setNavOpen(false)}
+                    className={drawerLinkClass}
+                  >
+                    {t("About")}
+                    {isAbout && <CheckIcon aria-hidden="true" />}
+                  </Link>
+                </nav>
+              </DrawerContent>
+            </Drawer>
           </div>
           <div className="hidden items-center gap-2 md:flex">
             <Link
