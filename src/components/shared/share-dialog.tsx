@@ -14,15 +14,15 @@ import {
   ThreadsLogoIcon,
   XLogoIcon,
 } from "@phosphor-icons/react";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@rutopio/base-component/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@rutopio/base-component/dialog";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";
 import {
   copyCSSCode,
@@ -107,7 +107,9 @@ export default function ShareDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t("Share your emoji")}</DialogTitle>
+            <DialogTitle className="cn-font-heading">
+              {t("Share your emoji")}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
@@ -203,7 +205,9 @@ export default function ShareDialog({
         <Dialog open={cssDialogOpen} onOpenChange={setCssDialogOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle>{t("HTML / CSS Code")}</DialogTitle>
+              <DialogTitle className="cn-font-heading">
+                {t("HTML / CSS Code")}
+              </DialogTitle>
             </DialogHeader>
 
             <div className="flex flex-col gap-4">

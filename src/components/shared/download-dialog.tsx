@@ -11,13 +11,13 @@ import {
   FileSvgIcon,
 } from "@phosphor-icons/react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@rutopio/base-component/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@rutopio/base-component/dialog";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { useT } from "@/lib/translations";
 
@@ -69,7 +69,9 @@ export default function DownloadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="lg:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t("Save Image")}</DialogTitle>
+          <DialogTitle className="cn-font-heading">
+            {t("Save Image")}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="flex items-center justify-center py-2">

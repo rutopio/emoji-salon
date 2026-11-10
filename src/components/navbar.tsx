@@ -5,6 +5,14 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react";
 import { ActionMenu } from "@rutopio/base-component/action-menu";
+import { Button, buttonVariants } from "@rutopio/base-component/button";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@rutopio/base-component/drawer";
 import {
   HeaderNavigation,
   SiteHeader,
@@ -12,14 +20,6 @@ import {
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useState, useSyncExternalStore } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
@@ -147,7 +147,9 @@ export default function Navbar() {
               />
               <DrawerContent>
                 <DrawerHeader className="border-border border-b pb-4">
-                  <DrawerTitle>{t("Language")}</DrawerTitle>
+                  <DrawerTitle className="cn-font-heading">
+                    {t("Language")}
+                  </DrawerTitle>
                 </DrawerHeader>
                 <div className="flex flex-col gap-1 px-4 pt-4 pb-6">
                   {locales.map((item) => (

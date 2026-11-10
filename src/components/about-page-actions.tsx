@@ -4,21 +4,21 @@ import {
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
 import { ActionMenu } from "@rutopio/base-component/action-menu";
-import { OutlineList } from "@rutopio/base-component/outline-list";
-import { PageActionRail } from "@rutopio/base-component/page-action-rail";
-import { shareOrCopyCurrentPage } from "@rutopio/base-component/page-share";
-import { navigateToSection } from "@rutopio/base-component/section-navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@rutopio/base-component/button";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { useMountEffect } from "@/hooks/use-mount-effect";
+} from "@rutopio/base-component/drawer";
+import { OutlineList } from "@rutopio/base-component/outline-list";
+import { PageActionRail } from "@rutopio/base-component/page-action-rail";
+import { shareOrCopyCurrentPage } from "@rutopio/base-component/page-share";
+import { navigateToSection } from "@rutopio/base-component/section-navigation";
+import { useMountEffect } from "@rutopio/base-component/use-mount-effect";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useT } from "@/lib/translations";
 
 interface OutlineItem {
@@ -173,7 +173,9 @@ export function AboutPageActions() {
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader className="border-border border-b pb-4">
-                <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
+                <DrawerTitle className="cn-font-heading">
+                  {t("About EmojiSalon")}
+                </DrawerTitle>
               </DrawerHeader>
               <nav
                 aria-label={t("Table of contents")}

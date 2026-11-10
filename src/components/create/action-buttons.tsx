@@ -12,18 +12,17 @@ import {
   ShareNetworkIcon,
   SmileyWinkIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
-
-import { EmojiPicker } from "@/components/create/emoji-picker";
-import DownloadDialog from "@/components/shared/download-dialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@rutopio/base-component/button";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@rutopio/base-component/drawer";
+import { useState } from "react";
+import { EmojiPicker } from "@/components/create/emoji-picker";
+import DownloadDialog from "@/components/shared/download-dialog";
 import {
   Tooltip,
   TooltipContent,
@@ -110,7 +109,9 @@ export default function ActionButtons({
         <Drawer open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{t("Select Emoji")}</DrawerTitle>
+              <DrawerTitle className="cn-font-heading">
+                {t("Select Emoji")}
+              </DrawerTitle>
               <DrawerDescription className="sr-only">
                 {t("Choose an emoji to customize")}
               </DrawerDescription>

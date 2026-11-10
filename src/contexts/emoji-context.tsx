@@ -4,10 +4,10 @@
  * SVG generation, and sharing functionality in the EmojiSalon application.
  */
 
+import { useMountEffect } from "@rutopio/base-component/use-mount-effect";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { createContext, use, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
-import { useMountEffect } from "@/hooks/use-mount-effect";
 import {
   CANVAS_BASE_SIZE,
   CANVAS_IMAGE_PADDING,

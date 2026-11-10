@@ -18,6 +18,7 @@ import {
   PencilSimpleIcon,
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
+import { Button } from "@rutopio/base-component/button";
 import { ButtonGroup } from "@rutopio/base-component/button-group";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
@@ -25,7 +26,6 @@ import { toast } from "sonner";
 import DownloadDialog from "@/components/shared/download-dialog";
 import EmojiPreview from "@/components/showcase/emoji-preview";
 import ShowcaseShareModal from "@/components/showcase/showcase-share-modal";
-import { Button } from "@/components/ui/button";
 import { useEmojiSVG, useVariantSVG } from "@/hooks/use-emoji-svg";
 import {
   CANVAS_BASE_SIZE,

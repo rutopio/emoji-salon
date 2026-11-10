@@ -4,9 +4,9 @@
  */
 
 import { MagicWandIcon } from "@phosphor-icons/react";
+import { Button } from "@rutopio/base-component/button";
 import { createFileRoute } from "@tanstack/react-router";
 import ShowcaseSection from "@/components/showcase/showcase-section";
-import { Button } from "@/components/ui/button";
 import showcaseData from "@/data/showcase/showcase-data.json";
 import PageLayout from "@/layout";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";

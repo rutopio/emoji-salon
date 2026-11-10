@@ -5,6 +5,7 @@
  */
 
 import { CopyIcon, EyedropperIcon } from "@phosphor-icons/react";
+import { Button } from "@rutopio/base-component/button";
 import { use, useRef } from "react";
 import type { Color } from "react-aria-components";
 import {
@@ -29,7 +30,6 @@ import {
   ColorThumb,
   SliderTrack,
 } from "@/components/color";
-import { Button } from "@/components/ui/button";
 import { useEmoji } from "@/contexts/emoji-context";
 import { PRESET_COLORS } from "@/lib/constants";
 import { useT } from "@/lib/translations";

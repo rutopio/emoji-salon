@@ -4,10 +4,10 @@
  * copyright, and open source details.
  */
 
+import { GithubMarkIcon } from "@rutopio/base-component/github-mark-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { AboutPageActions } from "@/components/about-page-actions";
 import { ArticleHeading } from "@/components/article-heading";
-import { GithubMarkIcon } from "@/components/github-mark-icon";
 import PageLayout from "@/layout";
 import { aboutCopy } from "@/lib/about-copy";
 import { GITHUB_REPO_URL } from "@/lib/constants";
