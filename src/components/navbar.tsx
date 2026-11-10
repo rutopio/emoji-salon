@@ -108,6 +108,7 @@ export default function Navbar() {
                 >
                   <Link
                     to={localized("/")}
+                    activeOptions={{ exact: true }}
                     aria-current={isHome ? "page" : undefined}
                     onClick={() => setNavOpen(false)}
                     className={drawerLinkClass}
@@ -117,6 +118,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to={localized("/showcase")}
+                    activeOptions={{ exact: true }}
                     aria-current={isShowcase ? "page" : undefined}
                     onClick={() => setNavOpen(false)}
                     className={drawerLinkClass}
@@ -126,6 +128,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to={localized("/about")}
+                    activeOptions={{ exact: true }}
                     aria-current={isAbout ? "page" : undefined}
                     onClick={() => setNavOpen(false)}
                     className={drawerLinkClass}
