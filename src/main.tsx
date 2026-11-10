@@ -39,6 +39,11 @@ router.subscribe("onResolved", ({ fromLocation, toLocation }) => {
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element #root not found");
+// The server keeps these tags for crawlers. TanStack Router owns their client
+// versions, so remove the static copies before HeadContent mounts.
+for (const node of document.querySelectorAll("[data-static-meta]")) {
+  node.remove();
+}
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

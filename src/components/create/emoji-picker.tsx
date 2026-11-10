@@ -68,7 +68,7 @@ function EmojiButton({ emoji, ...props }: EmojiPickerListEmojiProps) {
   return (
     <button
       type="button"
-      className="flex size-9 items-center justify-center rounded-md data-[active]:bg-secondary"
+      className="flex size-9 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[active]:bg-secondary"
       {...props}
     >
       {stem ? (
@@ -124,6 +124,7 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
       data-theme={resolvedTheme === "dark" ? "dark" : "light"}
     >
       <Frimousse.Search
+        aria-label={t("Search emoji")}
         placeholder={t("Search emoji")}
         className="z-10 mx-2 mt-2 appearance-none rounded-md bg-secondary px-2.5 py-2 text-secondary-foreground text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />

@@ -96,7 +96,7 @@ export function NativeColorPicker({
   return (
     <label
       aria-label={`${t("Pick color")} ${color}`}
-      className="relative block size-12 cursor-pointer overflow-hidden rounded-lg border-2"
+      className="relative block size-12 cursor-pointer overflow-hidden rounded-lg border-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
       style={{ backgroundColor: color }}
     >
       <input
