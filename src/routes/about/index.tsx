@@ -133,7 +133,7 @@ function AboutPage() {
               <ArticleHeading id="commonly-confused-emoji" level={3}>
                 Commonly Confused Emoji
               </ArticleHeading>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-6">
                 <p>
                   <strong>Flag emoji</strong> with similar color schemes are
                   particularly problematic:
@@ -179,7 +179,7 @@ function AboutPage() {
             </div>
 
             {/* See more */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-6">
               <ArticleHeading id="see-more" level={3}>
                 See more
               </ArticleHeading>

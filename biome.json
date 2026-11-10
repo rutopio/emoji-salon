@@ -93,6 +93,21 @@
           },
           "style": {
             "noCommonJs": "error",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "react": {
+                    "importNames": [
+                      "useEffect",
+                      "useLayoutEffect",
+                      "useInsertionEffect"
+                    ],
+                    "message": "Use derived state, event handlers, subscriptions, or useMountEffect instead."
+                  }
+                }
+              }
+            },
             "noNamespace": "error",
             "useArrayLiterals": "error",
             "useAsConstAssertion": "error",

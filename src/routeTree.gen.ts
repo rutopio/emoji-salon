@@ -10,18 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplatRouteImport } from './routes/$'
-import { Route as ShowcaseIndexRouteImport } from './routes/showcase/index'
-import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as indexIndexRouteImport } from './routes/(index)/index'
+import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as ShowcaseIndexRouteImport } from './routes/showcase/index'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShowcaseIndexRoute = ShowcaseIndexRouteImport.update({
-  id: '/showcase/',
-  path: '/showcase/',
+const indexIndexRoute = indexIndexRouteImport.update({
+  id: '/(index)/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -29,9 +29,9 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const indexIndexRoute = indexIndexRouteImport.update({
-  id: '/(index)/',
-  path: '/',
+const ShowcaseIndexRoute = ShowcaseIndexRouteImport.update({
+  id: '/showcase/',
+  path: '/showcase/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -78,11 +78,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/showcase/': {
-      id: '/showcase/'
-      path: '/showcase'
-      fullPath: '/showcase/'
-      preLoaderRoute: typeof ShowcaseIndexRouteImport
+    '/(index)/': {
+      id: '/(index)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/': {
@@ -92,11 +92,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(index)/': {
-      id: '/(index)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof indexIndexRouteImport
+    '/showcase/': {
+      id: '/showcase/'
+      path: '/showcase'
+      fullPath: '/showcase/'
+      preLoaderRoute: typeof ShowcaseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

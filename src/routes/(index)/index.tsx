@@ -10,7 +10,7 @@ import ColorPalettePickers from "@/components/create/color-palette-pickers";
 import EmojiDisplay from "@/components/create/emoji-display";
 import DesktopEmojiPicker from "@/components/create/emoji-picker";
 import ShareModal from "@/components/create/share-modal";
-import { useEmoji } from "@/contexts/emoji-context";
+import { EmojiProvider, useEmoji } from "@/contexts/emoji-context";
 import PageLayout from "@/layout";
 import { SITE_URL } from "@/lib/constants";
 
@@ -76,6 +76,14 @@ export const Route = createFileRoute("/(index)/")({
  * @returns Emoji customization page component.
  */
 function EmojiSalonPage() {
+  return (
+    <EmojiProvider>
+      <EmojiSalonContent />
+    </EmojiProvider>
+  );
+}
+
+function EmojiSalonContent() {
   const { canvasRef } = useEmoji();
 
   return (

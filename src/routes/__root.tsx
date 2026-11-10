@@ -5,12 +5,13 @@ import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
+  useLocation,
 } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "motion/react";
 import { lazy, Suspense } from "react";
 import { ScreenSize } from "@/components/screen-size";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { EmojiProvider } from "@/contexts/emoji-context";
 
 const TanStackDevtools = import.meta.env.DEV
   ? lazy(() =>
@@ -47,11 +48,9 @@ function RootComponent() {
     <>
       <HeadContent />
       <ThemeProvider>
-        <EmojiProvider>
-          <Outlet />
-          <Toaster position="top-center" />
-          <ScreenSize />
-        </EmojiProvider>
+        <AnimatedOutlet />
+        <Toaster position="top-center" />
+        <ScreenSize />
         <Suspense>
           <TanStackDevtools
             plugins={[
@@ -68,5 +67,22 @@ function RootComponent() {
         </Suspense>
       </ThemeProvider>
     </>
+  );
+}
+
+function AnimatedOutlet() {
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      key={pathname}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="min-h-full"
+    >
+      <Outlet />
+    </motion.div>
   );
 }

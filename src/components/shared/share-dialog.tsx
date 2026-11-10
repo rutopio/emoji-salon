@@ -14,7 +14,8 @@ import {
   ThreadsLogoIcon,
   XLogoIcon,
 } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/dialog";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";
 import {
-  type CpalMap,
   copyCSSCode,
   copyHTMLCode,
   copyLinkToClipboard,
@@ -81,13 +81,13 @@ export default function ShareDialog({
   showSubmitShowcase = true,
 }: ShareDialogProps) {
   const [cssDialogOpen, setCssDialogOpen] = useState(false);
-  const [cpalMap, setCpalMap] = useState<CpalMap | null>(null);
-
-  useEffect(() => {
-    fetchCpalMap().then(setCpalMap);
-  }, []);
-
   const hasCodeData = emoji && customizedPaletteColors && originalPaletteColors;
+  const { data: cpalMap = null } = useQuery({
+    queryKey: ["cpal-map"],
+    queryFn: fetchCpalMap,
+    enabled: open && Boolean(hasCodeData),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
 
   const cssCode = hasCodeData
     ? generateCSSCode(customizedPaletteColors, originalPaletteColors, cpalMap)
@@ -96,7 +96,9 @@ export default function ShareDialog({
   const handleCopyHTMLCode = () => emoji && copyHTMLCode(emoji);
   const handleCopyCSSCode = () => copyCSSCode(cssCode);
 
-  const gridClass = hasCodeData ? "grid-cols-5" : "grid-cols-4";
+  const gridClass = hasCodeData
+    ? "grid-cols-3 sm:grid-cols-5"
+    : "grid-cols-2 sm:grid-cols-4";
 
   return (
     <>
@@ -127,7 +129,7 @@ export default function ShareDialog({
                 onClick={() => shareToTwitter(shareUrl)}
               >
                 <XLogoIcon aria-hidden="true" />
-                <span className="text-xs">X</span>
+                <span className="text-base">X</span>
               </Button>
 
               <Button
@@ -137,7 +139,7 @@ export default function ShareDialog({
                 onClick={() => shareToFacebook(shareUrl)}
               >
                 <FacebookLogoIcon aria-hidden="true" />
-                <span className="text-xs">Facebook</span>
+                <span className="text-base">Facebook</span>
               </Button>
 
               <Button
@@ -147,7 +149,7 @@ export default function ShareDialog({
                 onClick={() => shareToThreads(shareUrl)}
               >
                 <ThreadsLogoIcon aria-hidden="true" />
-                <span className="text-xs">Threads</span>
+                <span className="text-base">Threads</span>
               </Button>
 
               <Button
@@ -157,7 +159,7 @@ export default function ShareDialog({
                 onClick={() => copyLinkToClipboard(shareUrl)}
               >
                 <LinkIcon aria-hidden="true" />
-                <span className="text-xs">Copy Link</span>
+                <span className="text-base">Copy Link</span>
               </Button>
 
               {hasCodeData && (
@@ -168,7 +170,7 @@ export default function ShareDialog({
                   onClick={() => setCssDialogOpen(true)}
                 >
                   <CodeIcon aria-hidden="true" />
-                  <span className="text-xs">CSS</span>
+                  <span className="text-base">CSS</span>
                 </Button>
               )}
             </div>
@@ -212,7 +214,7 @@ export default function ShareDialog({
                   className="ml-auto"
                 >
                   <ClipboardIcon aria-hidden="true" />
-                  <span className="text-xs">Copy HTML</span>
+                  <span className="text-base">Copy HTML</span>
                 </Button>
               </div>
               <pre className="overflow-x-auto rounded bg-accent px-4 py-4 text-xs">
@@ -228,7 +230,7 @@ export default function ShareDialog({
                   className="ml-auto"
                 >
                   <ClipboardIcon aria-hidden="true" />
-                  <span className="text-xs">Copy CSS</span>
+                  <span className="text-base">Copy CSS</span>
                 </Button>
               </div>
               <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-accent px-4 py-4 text-xs">

@@ -83,7 +83,7 @@ function ShowcasePage() {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-4">
+        <div className="mt-16 grid grid-cols-1 gap-16">
           {showcaseData.sections.map((section) => (
             <ShowcaseSection
               key={section.emoji}

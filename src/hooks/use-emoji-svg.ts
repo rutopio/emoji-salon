@@ -1,12 +1,7 @@
-/**
- * @fileoverview Hooks for generating emoji SVG independently from EmojiContext.
- * Used in Showcase page where multiple emojis need to be rendered simultaneously.
- * These hooks allow loading and rendering emoji variants without using the global context.
- */
-
-import { useEffect, useState } from "react";
-
+/** Load showcase emoji data through React Query and derive each SVG from it. */
+import { useQuery } from "@tanstack/react-query";
 import {
+  type EmojiSVGData,
   fetchEmojiData,
   getEmojiLabel,
   getOriginalPaletteData,
@@ -14,117 +9,56 @@ import {
   unicodeToEmoji,
 } from "@/lib/emoji-utils";
 
-/**
- * Return type for useEmojiSVG hook.
- */
-interface UseEmojiSVGResult {
-  /** SVG HTML for the original emoji. */
-  originalSvg: string;
-  /** SVG HTML for the modified emoji with custom palette. */
-  modifiedSvg: string;
-  /** Display name/label for the emoji. */
-  originalName: string;
-  /** Whether the emoji data is currently loading. */
-  isLoading: boolean;
-  /** Array of customized palette colors. */
-  customizedPaletteColors: string[];
-  /** Array of original palette colors. */
-  originalPaletteColors: string[];
-  /** Array of indices mapping to original palette colors. */
-  originalPaletteIndex: number[];
+function useShowcaseEmojiData(unicode: string) {
+  const emoji = unicodeToEmoji(unicode);
+  const query = useQuery({
+    queryKey: ["showcase-emoji", unicode],
+    queryFn: () => fetchEmojiData(emoji ?? ""),
+    enabled: Boolean(emoji),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+  return {
+    emoji,
+    data: query.data,
+    isLoading: Boolean(emoji) && query.isPending,
+  };
 }
 
-/**
- * Hook for generating SVG HTML for an emoji with optional palette modifications.
- * Loads emoji data and generates both original and modified SVG versions.
- *
- * @param unicode - Emoji unicode identifier (e.g., "u1f349").
- * @param palette - Optional palette override string (e.g., "674_210390-649_247792").
- * @returns Object containing original SVG, modified SVG, and loading state.
- */
-export function useEmojiSVG(
-  unicode: string,
-  palette?: string
-): UseEmojiSVGResult {
-  const [originalSvg, setOriginalSvg] = useState("");
-  const [modifiedSvg, setModifiedSvg] = useState("");
-  const [originalName, setOriginalName] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [customizedPaletteColors, setCustomizedPaletteColors] = useState<
-    string[]
-  >([]);
-  const [originalPaletteColors, setOriginalPaletteColors] = useState<string[]>(
-    []
-  );
-  const [originalPaletteIndex, setOriginalPaletteIndex] = useState<number[]>(
-    []
-  );
+function renderSvg(data: EmojiSVGData, colors: string[]) {
+  const original = getOriginalPaletteData(data).originalPaletteColors;
+  const paths = data.d.map((path, index) => {
+    const originalColor = data.f[index];
+    const colorIndex = original.indexOf(originalColor);
+    const fill =
+      colorIndex < 0 ? originalColor : (colors[colorIndex] ?? originalColor);
+    return `<path fill="${fill}" d="${path}" />`;
+  });
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">${paths.join("")}</svg>`;
+}
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadEmoji() {
-      setIsLoading(true);
-
-      const emoji = unicodeToEmoji(unicode);
-      if (!emoji) {
-        setIsLoading(false);
-        return;
-      }
-
-      const label = getEmojiLabel(emoji);
-      const data = await fetchEmojiData(emoji);
-
-      if (cancelled || !data) {
-        setIsLoading(false);
-        return;
-      }
-
-      const { originalPaletteIndex: opIndex, originalPaletteColors: opColors } =
-        getOriginalPaletteData(data);
-
-      // Generate original SVG with original palette colors
-      const originalPaths = data.d.map((d, index) => {
-        return `<path fill="${data.f[index]}" d="${d}" />`;
-      });
-      const originalSvgHtml = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">${originalPaths.join("")}</svg>`;
-
-      // Generate modified SVG with customized colors
-      let customizedColors = [...opColors];
-      if (palette) {
-        customizedColors = parsePaletteString(palette, opColors, opIndex);
-      }
-
-      const modifiedPaths = data.d.map((d, index) => {
-        const colorIndex = opColors.indexOf(data.f[index]);
-        const fillColor =
-          colorIndex !== -1
-            ? customizedColors[colorIndex] || data.f[index]
-            : data.f[index];
-        return `<path fill="${fillColor}" d="${d}" />`;
-      });
-      const modifiedSvgHtml = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">${modifiedPaths.join("")}</svg>`;
-
-      setOriginalName(label);
-      setOriginalSvg(originalSvgHtml);
-      setModifiedSvg(modifiedSvgHtml);
-      setCustomizedPaletteColors(customizedColors);
-      setOriginalPaletteColors(opColors);
-      setOriginalPaletteIndex(opIndex);
-      setIsLoading(false);
-    }
-
-    loadEmoji();
-
-    return () => {
-      cancelled = true;
+export function useEmojiSVG(unicode: string, palette?: string) {
+  const { emoji, data, isLoading } = useShowcaseEmojiData(unicode);
+  if (!data) {
+    return {
+      originalSvg: "",
+      modifiedSvg: "",
+      originalName: emoji ? getEmojiLabel(emoji) : "",
+      isLoading,
+      customizedPaletteColors: [] as string[],
+      originalPaletteColors: [] as string[],
+      originalPaletteIndex: [] as number[],
     };
-  }, [unicode, palette]);
+  }
 
+  const { originalPaletteColors, originalPaletteIndex } =
+    getOriginalPaletteData(data);
+  const customizedPaletteColors = palette
+    ? parsePaletteString(palette, originalPaletteColors, originalPaletteIndex)
+    : originalPaletteColors;
   return {
-    originalSvg,
-    modifiedSvg,
-    originalName,
+    originalSvg: renderSvg(data, originalPaletteColors),
+    modifiedSvg: renderSvg(data, customizedPaletteColors),
+    originalName: getEmojiLabel(emoji ?? ""),
     isLoading,
     customizedPaletteColors,
     originalPaletteColors,
@@ -132,80 +66,15 @@ export function useEmojiSVG(
   };
 }
 
-/**
- * Return type for useVariantSVG hook.
- */
-interface UseVariantSVGResult {
-  /** SVG HTML for the variant emoji. */
-  svg: string;
-  /** Whether the emoji data is currently loading. */
-  isLoading: boolean;
-}
-
-/**
- * Hook for generating only the modified SVG for a single variant.
- * Used when rendering multiple variants of the same emoji in showcase.
- * More efficient than useEmojiSVG when only the modified version is needed.
- *
- * @param unicode - Emoji unicode identifier (e.g., "u1f349").
- * @param palette - Palette override string (e.g., "674_210390-649_247792").
- * @returns Object containing variant SVG and loading state.
- */
-export function useVariantSVG(
-  unicode: string,
-  palette: string
-): UseVariantSVGResult {
-  const [svg, setSvg] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadVariant() {
-      setIsLoading(true);
-
-      const emoji = unicodeToEmoji(unicode);
-      if (!emoji) {
-        setIsLoading(false);
-        return;
-      }
-
-      const data = await fetchEmojiData(emoji);
-      if (cancelled || !data) {
-        setIsLoading(false);
-        return;
-      }
-
-      const { originalPaletteIndex, originalPaletteColors } =
-        getOriginalPaletteData(data);
-
-      const customizedColors = parsePaletteString(
-        palette,
-        originalPaletteColors,
-        originalPaletteIndex
-      );
-
-      const paths = data.d.map((d, index) => {
-        const colorIndex = originalPaletteColors.indexOf(data.f[index]);
-        const fillColor =
-          colorIndex !== -1
-            ? customizedColors[colorIndex] || data.f[index]
-            : data.f[index];
-        return `<path fill="${fillColor}" d="${d}" />`;
-      });
-
-      setSvg(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">${paths.join("")}</svg>`
-      );
-      setIsLoading(false);
-    }
-
-    loadVariant();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [unicode, palette]);
-
-  return { svg, isLoading };
+export function useVariantSVG(unicode: string, palette: string) {
+  const { data, isLoading } = useShowcaseEmojiData(unicode);
+  if (!data) return { svg: "", isLoading };
+  const { originalPaletteColors, originalPaletteIndex } =
+    getOriginalPaletteData(data);
+  const colors = parsePaletteString(
+    palette,
+    originalPaletteColors,
+    originalPaletteIndex
+  );
+  return { svg: renderSvg(data, colors), isLoading };
 }

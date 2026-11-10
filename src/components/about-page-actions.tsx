@@ -1,6 +1,6 @@
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ArrowBendRightUpIcon, ShareNetworkIcon } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 
 interface OutlineItem {
   id: string;
@@ -57,7 +58,7 @@ export function AboutPageActions() {
   const [progress, setProgress] = useState(0);
   const [outlineOpen, setOutlineOpen] = useState(false);
 
-  useEffect(() => {
+  useMountEffect(() => {
     const headings = Array.from(
       document.querySelectorAll<HTMLElement>(
         "main article h2[id], main article h3[id]"
@@ -103,7 +104,7 @@ export function AboutPageActions() {
       window.removeEventListener("resize", schedule);
       observer.disconnect();
     };
-  }, []);
+  });
 
   const navigateToHeading = (id: string) => {
     setOutlineOpen(false);

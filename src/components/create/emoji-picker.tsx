@@ -7,6 +7,7 @@
  * @see https://frimousse.liveblocks.io
  */
 
+import { useQuery } from "@tanstack/react-query";
 import {
   type EmojiPickerListCategoryHeaderProps,
   type EmojiPickerListEmojiProps,
@@ -14,7 +15,6 @@ import {
   EmojiPicker as Frimousse,
 } from "frimousse";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 import { useEmoji } from "@/contexts/emoji-context";
 
@@ -132,22 +132,15 @@ interface EmojiPickerProps {
  */
 export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   const { resolvedTheme } = useTheme();
-  // Trigger the one-time char-map load; re-render once it's ready so the first
-  // paint of thumbnails has the map.
-  const [, setReady] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    loadCharMap().then(() => {
-      if (!cancelled) setReady(true);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { isSuccess: charMapReady } = useQuery({
+    queryKey: ["emoji-char-map"],
+    queryFn: loadCharMap,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
 
   return (
     <Frimousse.Root
+      key={charMapReady ? "ready" : "loading"}
       onEmojiSelect={({ emoji, label }) => onEmojiSelect(emoji, label)}
       columns={8}
       className="isolate flex h-[352px] w-[312px] flex-col rounded-[var(--radius)] border bg-popover text-popover-foreground shadow-md"

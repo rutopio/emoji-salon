@@ -45,29 +45,6 @@ export function rgbaToHexColor(rgbaColorArray: number[]): string {
 }
 
 /**
- * Normalizes a color string to lowercase 6-digit hex format.
- * Handles null values (returns "#000000"), 3-digit hex colors (expands to 6-digit),
- * and case normalization.
- *
- * @param color - The color to normalize.
- * @returns Normalized hex color string.
- *
- * @example
- * normalizeColor(null);      // Returns "#000000"
- * normalizeColor("#FFF");    // Returns "#ffffff"
- * normalizeColor("#FF0000"); // Returns "#ff0000"
- */
-export function normalizeColor(color: string | null): string {
-  if (color === null) return "#000000";
-  // Expand 3-digit hex to 6-digit
-  const match = color.match(/^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$/);
-  if (match) {
-    return `#${match[1]}${match[1]}${match[2]}${match[2]}${match[3]}${match[3]}`.toLowerCase();
-  }
-  return color.toLowerCase();
-}
-
-/**
  * Checks if two color strings are equal.
  *
  * @param color1 - First color to compare.
@@ -167,38 +144,6 @@ export function unicodeToEmoji(urlCode: string): string | null {
   } catch {
     return null;
   }
-}
-
-/**
- * Encodes a palette override string for URL storage.
- * Compresses the palette information by removing spaces,
- * replacing '#' with '(', and replacing ',' with ')'.
- *
- * @param str - The palette override string to encode.
- * @returns URL-safe encoded string.
- *
- * @example
- * encodeURL("3 #ff0000, 5 #00ff00"); // Returns "3(ff0000)5(00ff00)"
- */
-export function encodeURL(str: string): string {
-  return `${str.replaceAll(" ", "").replaceAll("#", "(").replaceAll(",", ")")})`;
-}
-
-/**
- * Decodes a URL-encoded palette override string.
- * Reverses the encoding performed by encodeURL().
- *
- * @param str - The encoded string to decode.
- * @returns Decoded palette override string.
- *
- * @example
- * decodeURL("3(ff0000)5(00ff00)"); // Returns "3 #ff0000, 5 #00ff00"
- */
-export function decodeURL(str: string): string {
-  return str
-    .substring(0, str.length - 1)
-    .replaceAll(")", ", ")
-    .replaceAll("(", " #");
 }
 
 /**
@@ -351,7 +296,6 @@ export function parsePaletteString(
 }
 
 // Re-export from constants for backward compatibility
-export { DEFAULT_EMOJIS as defaultEmojis } from "@/lib/constants";
 
 /**
  * Gets the label/name for an emoji character.

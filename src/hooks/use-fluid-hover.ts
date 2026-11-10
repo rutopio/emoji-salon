@@ -5,8 +5,6 @@ import {
   type RefObject,
   type SetStateAction,
   useCallback,
-  useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -114,7 +112,7 @@ export interface UseFluidHoverReturn {
   measureItems: () => void;
 }
 
-export interface PickNearestInput {
+interface PickNearestInput {
   axis: "x" | "y" | "xy";
   /** The pointer, in viewport coordinates. */
   point: { x: number; y: number };
@@ -141,7 +139,7 @@ export interface PickNearestInput {
  * first item. The hook calls this once per animation frame; the docs page
  * times it.
  */
-export function pickNearest({
+function pickNearest({
   axis,
   point,
   rects,
@@ -221,7 +219,7 @@ export function pickNearest({
  * point with no target (a caller re-picking at a remembered position)
  * counts as the list's own.
  */
-export function isOwnEvent(e: {
+function isOwnEvent(e: {
   currentTarget?: EventTarget | null;
   target?: EventTarget | null;
 }) {
@@ -232,9 +230,9 @@ export function isOwnEvent(e: {
 }
 
 /** Set on the highlighted item (boolean attribute). */
-export const ACTIVE_ATTR = "data-fluid-hover-active";
+const ACTIVE_ATTR = "data-fluid-hover-active";
 /** Set on the container: the highlighted index, or absent. */
-export const ACTIVE_INDEX_ATTR = "data-fluid-hover-active-index";
+const ACTIVE_INDEX_ATTR = "data-fluid-hover-active-index";
 
 const ACTIVATOR_SELECTOR =
   "a[href], button, [role='menuitem'], [role='menuitemradio'], [role='menuitemcheckbox'], [role='option'], [role='radio'], [role='checkbox'], [role='tab'], [role='link'], [role='button']";
@@ -251,9 +249,6 @@ function resolveActivator(element: HTMLElement): HTMLElement {
   }
   return element.querySelector<HTMLElement>(ACTIVATOR_SELECTOR) ?? element;
 }
-
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * How many frames the coalesced remeasure retries while the registered items
@@ -278,37 +273,26 @@ export function useFluidHover<T extends HTMLElement>(
       ? (gapClick.maxDistance ?? Infinity)
       : Infinity;
   const itemsRef = useRef(new Map<number, HTMLElement>());
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  // Mirrored for handlers that read it outside a render (the gap click, a
-  // row registering). Written in a layout effect, which runs before any
-  // row's registration effect in the same commit.
+  const [activeIndex, setActiveIndexState] = useState<number | null>(null);
+  // Event handlers and item registration need the current index synchronously.
   const activeIndexRef = useRef<number | null>(null);
-  useIsoLayoutEffect(() => {
-    activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
-
-  // The state, in the DOM: `data-fluid-hover-active` on the highlighted item
-  // and `data-fluid-hover-active-index` on the container. Devtools shows it
-  // and a test asserts on it without waiting for a frame. React does not
-  // manage these attributes, so it never clobbers them.
-  useEffect(() => {
-    const container = containerRef.current;
-    // The registry map itself, which is never replaced: the cleanup reads
-    // who holds the index by then, not who held it now.
-    const items = itemsRef.current;
-    if (activeIndex === null) container?.removeAttribute(ACTIVE_INDEX_ATTR);
-    else container?.setAttribute(ACTIVE_INDEX_ATTR, String(activeIndex));
-    const active = activeIndex === null ? undefined : items.get(activeIndex);
-    active?.setAttribute(ACTIVE_ATTR, "");
-    return () => {
-      active?.removeAttribute(ACTIVE_ATTR);
-      // A row that re-registered under this index while it was highlighted
-      // (a remount under a new key) was marked by registerItem, not by this
-      // effect: drop the mark from whatever element holds the index now.
-      if (activeIndex !== null)
-        items.get(activeIndex)?.removeAttribute(ACTIVE_ATTR);
-    };
-  }, [activeIndex, containerRef]);
+  const setActiveIndex = useCallback<Dispatch<SetStateAction<number | null>>>(
+    (value) => {
+      const previous = activeIndexRef.current;
+      const next = typeof value === "function" ? value(previous) : value;
+      if (previous === next) return;
+      if (previous !== null)
+        itemsRef.current.get(previous)?.removeAttribute(ACTIVE_ATTR);
+      const container = containerRef.current;
+      if (next === null) container?.removeAttribute(ACTIVE_INDEX_ATTR);
+      else container?.setAttribute(ACTIVE_INDEX_ATTR, String(next));
+      if (next !== null)
+        itemsRef.current.get(next)?.setAttribute(ACTIVE_ATTR, "");
+      activeIndexRef.current = next;
+      setActiveIndexState(next);
+    },
+    [containerRef]
+  );
   const [itemRects, setItemRects] = useState<ItemRect[]>([]);
   const [isMeasured, setIsMeasured] = useState(false);
   const itemRectsRef = useRef<ItemRect[]>([]);
@@ -464,14 +448,16 @@ export function useFluidHover<T extends HTMLElement>(
         // index (a filtering list re-ordering) must not carry it there.
         previous?.removeAttribute(ACTIVE_ATTR);
         itemsRef.current.delete(index);
-        // The highlighted row is gone: nothing should stay lit or receive a
-        // routed click until the pointer picks again. Decided when the
-        // update applies, after this commit's registrations, so a row that
-        // only moved index hands the highlight to the row now under it.
+        // Wait until this commit's registrations finish: a row may be
+        // replaced at the same index before the registry settles.
         if (index === activeIndexRef.current) {
-          setActiveIndex((current) =>
-            current === index && !itemsRef.current.has(index) ? null : current
-          );
+          queueMicrotask(() => {
+            if (
+              activeIndexRef.current === index &&
+              !itemsRef.current.has(index)
+            )
+              setActiveIndex(null);
+          });
         }
       }
       // Coalesce rapid register/unregister calls (e.g. when an AnimatePresence
@@ -480,7 +466,7 @@ export function useFluidHover<T extends HTMLElement>(
       // container's children swap.
       remeasure();
     },
-    [remeasure, getItemRo]
+    [remeasure, getItemRo, setActiveIndex]
   );
 
   const handleMouseMove = useCallback(
@@ -542,7 +528,7 @@ export function useFluidHover<T extends HTMLElement>(
         setActiveIndex(next);
       });
     },
-    [axis, containerRef, isItemDisabled, nearest]
+    [axis, containerRef, isItemDisabled, nearest, setActiveIndex]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -555,7 +541,7 @@ export function useFluidHover<T extends HTMLElement>(
       rafIdRef.current = null;
     }
     setActiveIndex(null);
-  }, []);
+  }, [setActiveIndex]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -605,7 +591,7 @@ export function useFluidHover<T extends HTMLElement>(
   // stale. Coalesced through the same rAF as register/unregister. Readiness is
   // deliberately not dropped: the item set is unchanged, so the published rects
   // stay usable, and hiding overlays on every reflow would flicker them.
-  useEffect(() => {
+  useMountEffect(() => {
     const container = containerRef.current;
     if (!container || typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(() =>
@@ -613,7 +599,7 @@ export function useFluidHover<T extends HTMLElement>(
     );
     ro.observe(container);
     return () => ro.disconnect();
-  }, [containerRef, scheduleMeasurement]);
+  });
 
   // Clean up rAF and the item observer on unmount
   useMountEffect(() => {

@@ -5,15 +5,9 @@
  */
 
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, use, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useMountEffect } from "@/hooks/use-mount-effect";
 import {
   CANVAS_BASE_SIZE,
   CANVAS_IMAGE_PADDING,
@@ -175,6 +169,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     null
   );
   const isInitializedRef = useRef(false);
+  const loadIdRef = useRef(0);
 
   /**
    * Updates the URL and localStorage with current emoji and palette.
@@ -218,9 +213,11 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const updateEmoji = useCallback(
     async (emoji: string, keepPalette: boolean, paletteFromURL?: string) => {
+      const loadId = ++loadIdRef.current;
       setCurrentEmoji(emoji);
 
       const data = await fetchEmojiData(emoji);
+      if (loadId !== loadIdRef.current) return;
       if (data) {
         setPathArray(data.d);
         setPaletteArray(data.f);
@@ -270,15 +267,12 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
 
   /**
    * Initializes emoji from URL, localStorage, or random selection.
-   * Only runs on the home page route. Tries to load emoji in order:
+   * Runs when the home page mounts. Tries to load emoji in order:
    * 1. From URL search parameters
    * 2. From localStorage
    * 3. Random emoji if neither available
    */
-  useEffect(() => {
-    // Skip initialization if not on home page
-    if (location.pathname !== "/") return;
-
+  useMountEffect(() => {
     const timer = setTimeout(() => {
       let emojiLoaded = false;
 
@@ -325,8 +319,11 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       isInitializedRef.current = true;
     }, 0);
 
-    return () => clearTimeout(timer);
-  }, [search.emoji, search.palette, updateEmoji, location.pathname]);
+    return () => {
+      clearTimeout(timer);
+      loadIdRef.current++;
+    };
+  });
 
   /**
    * Handles color change at a specific palette index.

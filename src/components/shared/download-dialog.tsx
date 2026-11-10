@@ -86,7 +86,7 @@ export default function DownloadDialog({
             onClick={() => handleAndClose(onDownloadSVG)}
           >
             <FileSvgIcon className="size-5" aria-hidden="true" />
-            <span className="text-xs">SVG</span>
+            <span className="text-base">SVG</span>
           </Button>
           <Button
             variant="outline"
@@ -94,7 +94,7 @@ export default function DownloadDialog({
             onClick={() => handleAndClose(onDownloadPNG)}
           >
             <DownloadSimpleIcon className="size-5" aria-hidden="true" />
-            <span className="text-xs">PNG</span>
+            <span className="text-base">PNG</span>
           </Button>
           <Button
             variant="outline"
@@ -102,7 +102,7 @@ export default function DownloadDialog({
             onClick={() => handleAndClose(onDownloadJPG)}
           >
             <DownloadSimpleIcon className="size-5" aria-hidden="true" />
-            <span className="text-xs">JPG</span>
+            <span className="text-base">JPG</span>
           </Button>
           <Button
             variant="outline"
@@ -110,7 +110,7 @@ export default function DownloadDialog({
             onClick={() => handleAndClose(onCopy)}
           >
             <ClipboardIcon className="size-5" aria-hidden="true" />
-            <span className="text-xs">Copy</span>
+            <span className="text-base">Copy</span>
           </Button>
         </div>
 
