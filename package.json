@@ -25,7 +25,7 @@
     "@fontsource-variable/noto-sans-tc": "5.2.10",
     "@phosphor-icons/react": "2.1.10",
     "@resvg/resvg-wasm": "2.6.2",
-    "@rutopio/base-component": "github:rutopio/base-component#v0.6.0",
+    "@rutopio/base-component": "github:rutopio/base-component#v0.8.0",
     "@tanstack/react-query": "5.107.1",
     "@tanstack/react-router": "1.170.46",
     "class-variance-authority": "0.7.1",
