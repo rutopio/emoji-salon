@@ -13,6 +13,7 @@ import DesktopEmojiPicker from "@/components/create/emoji-picker";
 import { EmojiProvider } from "@/contexts/emoji-context";
 import PageLayout from "@/layout";
 import { pageHead } from "@/lib/page-meta";
+import { prepareEmojiRoute } from "@/lib/prepare-emoji-route";
 import { useT } from "@/lib/translations";
 
 /**
@@ -31,6 +32,7 @@ interface EmojiSearchParams {
  */
 export const Route = createFileRoute("/(index)/")({
   component: EmojiSalonPage,
+  beforeLoad: prepareEmojiRoute,
   validateSearch: (search: Record<string, unknown>): EmojiSearchParams => {
     return {
       emoji: typeof search.emoji === "string" ? search.emoji : undefined,

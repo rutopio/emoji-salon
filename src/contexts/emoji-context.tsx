@@ -5,40 +5,72 @@
  */
 
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
   createContext,
   use,
   useCallback,
-  useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { toast } from "sonner";
+import type { EmojiPathData } from "@/lib/emoji-path-data";
+import { emojiQueryOptions } from "@/lib/emoji-query";
 import {
   emojiToUnicode,
-  fetchEmojiData,
-  getEmojiLabel,
   getOriginalPaletteData,
   getOverrideStyleString,
   getRandomColor,
   getRandomEmojiWithLabel,
   parsePaletteString,
   triggerDownload,
-  unicodeToEmoji,
 } from "@/lib/emoji-utils";
+import { resolveInitialEmoji } from "@/lib/prepare-emoji-route";
 import { canvasToPng, rasterizeSvg } from "@/lib/rasterize-svg";
 import { downloadSVG } from "@/lib/share-utils";
 import { currentT } from "@/lib/translations";
 
-/**
- * Search parameters for emoji and palette from URL.
- */
-interface EmojiSearchParams {
-  /** Unicode emoji identifier from URL. */
-  emoji?: string;
-  /** Palette override string from URL. */
-  palette?: string;
+interface EmojiSnapshot {
+  currentEmoji: string;
+  currentEmojiLabel: string;
+  customizedPaletteColors: string[];
+  pathArray: string[];
+  paletteArray: string[];
+  originalPaletteColors: string[];
+  originalPaletteIndex: number[];
+}
+
+const EMPTY_EMOJI: EmojiSnapshot = {
+  currentEmoji: "",
+  currentEmojiLabel: "",
+  customizedPaletteColors: [],
+  pathArray: [],
+  paletteArray: [],
+  originalPaletteColors: [],
+  originalPaletteIndex: [],
+};
+
+function createEmojiSnapshot(
+  emoji: string,
+  label: string,
+  data: EmojiPathData,
+  palette?: string
+): EmojiSnapshot {
+  const { originalPaletteColors, originalPaletteIndex } =
+    getOriginalPaletteData(data);
+  return {
+    currentEmoji: emoji,
+    currentEmojiLabel: label,
+    pathArray: data.d,
+    paletteArray: data.f,
+    originalPaletteColors,
+    originalPaletteIndex,
+    customizedPaletteColors: palette
+      ? parsePaletteString(palette, originalPaletteColors, originalPaletteIndex)
+      : [...originalPaletteColors],
+  };
 }
 
 /**
@@ -122,37 +154,43 @@ interface EmojiProviderProps {
  * @returns Emoji context provider component.
  */
 export function EmojiProvider({ children }: EmojiProviderProps) {
+  const pathname = useLocation({ select: (location) => location.pathname });
+  return <EmojiEditor key={pathname}>{children}</EmojiEditor>;
+}
+
+function EmojiEditor({ children }: EmojiProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Parse search parameters from current location
-  const search: EmojiSearchParams = {
-    emoji:
-      typeof location.search.emoji === "string"
-        ? location.search.emoji
-        : undefined,
-    palette:
-      typeof location.search.palette === "string"
-        ? location.search.palette
-        : undefined,
-  };
-
-  // Basic emoji state
-  const [currentEmoji, setCurrentEmoji] = useState<string>("");
-  const [currentEmojiLabel, setCurrentEmojiLabel] = useState<string>("");
-  const [customizedPaletteColors, setCustomizedPaletteColors] = useState<
-    string[]
-  >([]);
-
-  // SVG data state
-  const [pathArray, setPathArray] = useState<string[]>([]);
-  const [paletteArray, setPaletteArray] = useState<string[]>([]);
-  const [originalPaletteColors, setOriginalPaletteColors] = useState<string[]>(
-    []
+  const queryClient = useQueryClient();
+  const [initialSelection] = useState(() =>
+    resolveInitialEmoji(location.search)
   );
-  const [originalPaletteIndex, setOriginalPaletteIndex] = useState<number[]>(
-    []
+  const initialQuery = useQuery(emojiQueryOptions(initialSelection.emoji));
+  const initialSnapshot = useMemo(
+    () =>
+      initialQuery.data
+        ? createEmojiSnapshot(
+            initialSelection.emoji,
+            initialSelection.label,
+            initialQuery.data,
+            initialSelection.palette
+          )
+        : EMPTY_EMOJI,
+    [initialSelection, initialQuery.data]
   );
+  const [editedSnapshot, setEditedSnapshot] = useState<EmojiSnapshot | null>(
+    null
+  );
+  const snapshot = editedSnapshot ?? initialSnapshot;
+  const {
+    currentEmoji,
+    currentEmojiLabel,
+    customizedPaletteColors,
+    pathArray,
+    paletteArray,
+    originalPaletteColors,
+    originalPaletteIndex,
+  } = snapshot;
 
   // Dialog and UI state
   const [shareDialogOpen, setShareDialogOpenState] = useState(false);
@@ -167,13 +205,18 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   const urlUpdateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
-  const isInitializedRef = useRef(false);
   const loadIdRef = useRef(0);
-  const paletteColorsRef = useRef<string[]>([]);
-  const applyPaletteColors = useCallback((colors: string[]) => {
-    paletteColorsRef.current = colors;
-    setCustomizedPaletteColors(colors);
-  }, []);
+  const paletteColorsRef = useRef<string[] | null>(null);
+  const applyPaletteColors = useCallback(
+    (colors: string[]) => {
+      paletteColorsRef.current = colors;
+      setEditedSnapshot((previous) => ({
+        ...(previous ?? initialSnapshot),
+        customizedPaletteColors: colors,
+      }));
+    },
+    [initialSnapshot]
+  );
   const cancelPendingURL = useCallback(() => {
     if (urlUpdateTimeoutRef.current !== null) {
       clearTimeout(urlUpdateTimeoutRef.current);
@@ -181,15 +224,11 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     }
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: a route change invalidates work owned by the previous route.
-  useEffect(
-    () => () => {
-      cancelPendingURL();
-      loadIdRef.current++;
-      previewIdRef.current++;
-    },
-    [location.pathname, cancelPendingURL]
-  );
+  useMountEffect(() => () => {
+    cancelPendingURL();
+    loadIdRef.current++;
+    previewIdRef.current++;
+  });
 
   /**
    * Updates the URL and localStorage with current emoji and palette.
@@ -236,60 +275,24 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     [navigate, location.pathname]
   );
 
-  /**
-   * Updates the current emoji and loads its data.
-   * Fetches emoji data, sets up palette colors, and optionally preserves or applies palette.
-   *
-   * @param emoji - The emoji character to load.
-   * @param keepPalette - Whether to preserve current palette or reset to original.
-   * @param paletteFromURL - Optional palette string from URL to apply.
-   */
   const updateEmoji = useCallback(
-    async (
-      emoji: string,
-      keepPalette: boolean,
-      paletteFromURL?: string,
-      label = getEmojiLabel(emoji)
-    ) => {
+    async (emoji: string, label: string) => {
       cancelPendingURL();
       const loadId = ++loadIdRef.current;
-
-      const data = await fetchEmojiData(emoji);
-      if (loadId !== loadIdRef.current) return;
-      if (data) {
+      try {
+        const data = await queryClient.fetchQuery(emojiQueryOptions(emoji));
+        if (loadId !== loadIdRef.current) return;
         cancelPendingURL();
-        setCurrentEmoji(emoji);
-        setCurrentEmojiLabel(label);
-        setPathArray(data.d);
-        setPaletteArray(data.f);
-
-        const {
-          originalPaletteIndex: opIndex,
-          originalPaletteColors: opColors,
-        } = getOriginalPaletteData(data);
-        setOriginalPaletteIndex(opIndex);
-        setOriginalPaletteColors(opColors);
-
-        if (!keepPalette) {
-          applyPaletteColors([...opColors]);
-          updateURL(emojiToUnicode(emoji));
-        } else if (paletteFromURL) {
-          const modifiedColors = parsePaletteString(
-            paletteFromURL,
-            opColors,
-            opIndex
-          );
-          applyPaletteColors(modifiedColors);
-        } else {
-          applyPaletteColors([...opColors]);
-        }
-      } else {
-        // fetchEmojiData already logged the cause; surface it to the user so a
-        // broken URL palette or missing asset doesn't just silently do nothing.
-        toast.error(currentT("Could not load this emoji. Try another one."));
+        const next = createEmojiSnapshot(emoji, label, data);
+        paletteColorsRef.current = next.customizedPaletteColors;
+        setEditedSnapshot(next);
+        updateURL(emojiToUnicode(emoji));
+      } catch {
+        if (loadId === loadIdRef.current)
+          toast.error(currentT("Could not load this emoji. Try another one."));
       }
     },
-    [updateURL, cancelPendingURL, applyPaletteColors]
+    [queryClient, updateURL, cancelPendingURL]
   );
 
   /**
@@ -300,75 +303,10 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleEmojiSelect = useCallback(
     (emoji: string, label: string) => {
-      void updateEmoji(emoji, false, undefined, label);
+      void updateEmoji(emoji, label);
     },
     [updateEmoji]
   );
-
-  /**
-   * Initializes emoji from URL, localStorage, or random selection.
-   * Runs when the home page mounts. Tries to load emoji in order:
-   * 1. From URL search parameters
-   * 2. From localStorage
-   * 3. Random emoji if neither available
-   */
-  useMountEffect(() => {
-    const timer = setTimeout(() => {
-      let emojiLoaded = false;
-
-      // Try to load from URL search parameters
-      if (search.emoji) {
-        try {
-          const emoji = unicodeToEmoji(search.emoji);
-          if (emoji) {
-            updateEmoji(emoji, !!search.palette, search.palette);
-            emojiLoaded = true;
-          }
-        } catch {
-          // URL parsing failed, continue to localStorage
-        }
-      }
-
-      // If URL failed and not yet initialized, try localStorage
-      if (!emojiLoaded && !isInitializedRef.current) {
-        let storedEmoji: string | null = null;
-        let storedPalette: string | null = null;
-        try {
-          storedEmoji = localStorage.getItem("emojisalon:emoji");
-          storedPalette = localStorage.getItem("emojisalon:palette");
-        } catch {
-          // Continue with a random emoji when storage is unavailable.
-        }
-
-        if (storedEmoji) {
-          try {
-            const emoji = unicodeToEmoji(storedEmoji);
-            if (emoji) {
-              updateEmoji(emoji, !!storedPalette, storedPalette || undefined);
-              emojiLoaded = true;
-            }
-          } catch {
-            // localStorage parsing failed, continue to random
-          }
-        }
-      }
-
-      // If both URL and localStorage failed and not yet initialized, use random emoji
-      if (!emojiLoaded && !isInitializedRef.current) {
-        const { emoji: randomEmoji, label } = getRandomEmojiWithLabel();
-        void updateEmoji(randomEmoji, false, undefined, label);
-      }
-
-      isInitializedRef.current = true;
-    }, 0);
-
-    return () => {
-      clearTimeout(timer);
-      cancelPendingURL();
-      loadIdRef.current++;
-      previewIdRef.current++;
-    };
-  });
 
   /**
    * Handles color change at a specific palette index.
@@ -380,8 +318,9 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleColorChange = useCallback(
     (index: number, color: string) => {
-      if (index < 0 || index >= paletteColorsRef.current.length) return;
-      const newColors = [...paletteColorsRef.current];
+      const colors = paletteColorsRef.current ?? customizedPaletteColors;
+      if (index < 0 || index >= colors.length) return;
+      const newColors = [...colors];
       newColors[index] = color;
       applyPaletteColors(newColors);
       cancelPendingURL();
@@ -397,6 +336,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     },
     [
       currentEmoji,
+      customizedPaletteColors,
       originalPaletteColors,
       originalPaletteIndex,
       updateURL,
@@ -411,7 +351,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleRandomEmoji = useCallback(() => {
     const { emoji, label } = getRandomEmojiWithLabel();
-    void updateEmoji(emoji, false, undefined, label);
+    void updateEmoji(emoji, label);
   }, [updateEmoji]);
 
   /**
@@ -419,8 +359,11 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * Generates random colors for each position in the palette and updates the URL.
    */
   const handleRandomColors = useCallback(() => {
+    if (!currentEmoji) return;
     cancelPendingURL();
-    const newColors = paletteColorsRef.current.map(() => getRandomColor());
+    const newColors = (paletteColorsRef.current ?? customizedPaletteColors).map(
+      () => getRandomColor()
+    );
     applyPaletteColors(newColors);
 
     const overrideColors = getOverrideStyleString(
@@ -432,6 +375,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   }, [
     cancelPendingURL,
     applyPaletteColors,
+    customizedPaletteColors,
     currentEmoji,
     originalPaletteColors,
     originalPaletteIndex,
@@ -649,7 +593,16 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     handleShare,
   };
 
-  return <EmojiContext value={value}>{children}</EmojiContext>;
+  return (
+    <EmojiContext value={value}>
+      {initialQuery.isError && !editedSnapshot && (
+        <p role="alert">
+          {currentT("Could not load this emoji. Try another one.")}
+        </p>
+      )}
+      {children}
+    </EmojiContext>
+  );
 }
 
 /**

@@ -1,4 +1,5 @@
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
+import * as query from "@tanstack/react-query";
 import { Window } from "happy-dom";
 import * as React from "react";
 import * as jsx from "react/jsx-runtime";
@@ -65,18 +66,47 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
     clearTimeout: (id) => timers.delete(id),
     ...extraGlobals,
   };
+  query.notifyManager.setScheduler(queueMicrotask);
+  query.notifyManager.setNotifyFunction((callback) => {
+    React.act(callback);
+  });
+  const queryClient = new query.QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: Infinity } },
+  });
+  const emojiQuery = await loadSource(
+    new URL("../../src/lib/emoji-query.ts", import.meta.url),
+    {
+      globals,
+      imports: { "@tanstack/react-query": query, "./emoji-utils": utils },
+    }
+  );
+  const emojiRoute = await loadSource(
+    new URL("../../src/lib/prepare-emoji-route.ts", import.meta.url),
+    {
+      globals,
+      imports: {
+        "@tanstack/react-router": { redirect: (value) => value },
+        "./emoji-query": emojiQuery,
+        "./emoji-utils": utils,
+      },
+    }
+  );
   const { EmojiProvider, useEmoji } = await loadSource(
     new URL("../../src/contexts/emoji-context.tsx", import.meta.url),
     {
       globals,
       imports: {
         react: React,
+        "@tanstack/react-query": query,
+        "@/lib/emoji-query": emojiQuery,
+        "@/lib/prepare-emoji-route": emojiRoute,
         "react/jsx-runtime": jsx,
         "@rutopio/ui/use-mount-effect": {
           useMountEffect,
         },
         "@tanstack/react-router": {
-          useLocation: () => location,
+          useLocation: (options) =>
+            options?.select ? options.select(location) : location,
           useNavigate: () => navigate,
         },
         sonner: { toast: { error: (text) => errors.push(text), success() {} } },
@@ -103,14 +133,18 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
   const render = () =>
     root.render(
       React.createElement(
-        EmojiProvider,
-        null,
-        React.createElement(Probe, {
-          useValue: useEmoji,
-          onRender: (next) => {
-            value = next;
-          },
-        })
+        query.QueryClientProvider,
+        { client: queryClient },
+        React.createElement(
+          EmojiProvider,
+          null,
+          React.createElement(Probe, {
+            useValue: useEmoji,
+            onRender: (next) => {
+              value = next;
+            },
+          })
+        )
       )
     );
   await React.act(render);
@@ -127,7 +161,10 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
     emoji,
     data = { d: [`path-${emoji}`], f: ["#000000"], c: ["#000000"] }
   ) => {
-    await React.act(async () => requests.get(emoji).resolve(data));
+    await React.act(async () => {
+      requests.get(emoji).resolve(data);
+      await new Promise((done) => setImmediate(done));
+    });
   };
   return {
     get value() {
@@ -136,6 +173,7 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
     requests,
     navigations,
     errors,
+    queryClient,
     timers,
     location,
     utils,
@@ -145,6 +183,7 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
     rerender: () => React.act(render),
     async close() {
       await React.act(() => root.unmount());
+      queryClient.clear();
       await window.happyDOM.abort();
     },
   };

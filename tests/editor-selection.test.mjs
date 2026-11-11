@@ -83,3 +83,64 @@ test("blocked localStorage does not interrupt a successful selection", async () 
     await app.close();
   }
 });
+
+test("initial query data cannot overwrite a later user selection", async () => {
+  const app = await editorHarness();
+  try {
+    assert.equal(app.timers.size, 0);
+    await app.act(() => app.value.handleEmojiSelect("b", "Bee"));
+    await app.resolve("b");
+    await app.resolve("a");
+    assert.equal(app.value.currentEmoji, "b");
+    assert.equal(app.value.currentEmojiLabel, "Bee");
+    assert.equal(app.value.pathArray[0], "path-b");
+    assert.equal(app.navigations.at(-1).search.emoji, "b");
+  } finally {
+    await app.close();
+  }
+});
+
+test("a failed initial query remains retryable through selection", async () => {
+  const app = await editorHarness();
+  try {
+    await app.resolve("a", null);
+    assert.equal(app.value.currentEmoji, "");
+    assert.equal(app.queryClient.getQueryState(["emoji", "a"]).status, "error");
+    await app.act(() => app.value.handleEmojiSelect("a", "Again"));
+    await app.resolve("a");
+    assert.equal(app.value.currentEmoji, "a");
+    assert.equal(app.value.currentEmojiLabel, "Again");
+    assert.equal(
+      app.queryClient.getQueryState(["emoji", "a"]).status,
+      "success"
+    );
+  } finally {
+    await app.close();
+  }
+});
+
+test("leaving the editor rejects delayed selection results", async () => {
+  const app = await editorHarness();
+  await app.resolve("a");
+  await app.act(() => app.value.handleEmojiSelect("b", "Bee"));
+  const count = app.navigations.length;
+  await app.close();
+  await app.resolve("b");
+  assert.equal(app.navigations.length, count);
+  assert.equal(app.timers.size, 0);
+});
+
+test("palette actions before initial data arrives cannot replace the pending snapshot", async () => {
+  const app = await editorHarness();
+  try {
+    await app.act(() => app.value.handleRandomColors());
+    await app.act(() => app.value.handleReset());
+    await app.act(() => app.value.handleColorChange(0, "#ffffff"));
+    assert.equal(app.navigations.length, 0);
+    await app.resolve("a");
+    assert.equal(app.value.currentEmoji, "a");
+    assert.equal(app.value.pathArray[0], "path-a");
+  } finally {
+    await app.close();
+  }
+});
