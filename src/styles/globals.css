@@ -5,15 +5,3 @@
 @import "@rutopio/ui/neutral-theme.css";
 @import "@rutopio/ui/article.css";
 @import "./fonts.css";
-
-:root {
-  /* z-index scale */
-  --z-base: 0;
-  --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-fixed: 30;
-  --z-modal-backdrop: 40;
-  --z-modal: 50;
-  --z-popover: 50;
-  --z-tooltip: 60;
-}

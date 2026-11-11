@@ -168,7 +168,7 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
                 yChannel="brightness"
                 className="h-48 w-full rounded-b-none border-b-0"
               >
-                <ColorThumb className="z-(--z-modal)" />
+                <ColorThumb className="z-50" />
               </ColorArea>
               {/* Hue Slider */}
               <ColorSlider colorSpace="hsb" channel="hue">
