@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import { PageTransition } from "@rutopio/ui/page-transition";
+import { ScreenSize } from "@rutopio/ui/screen-size";
 import { Toaster } from "@rutopio/ui/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -9,7 +10,7 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
-import { ScreenSize } from "@/components/screen-size";
+import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const TanStackDevtools = import.meta.env.DEV
@@ -40,6 +41,7 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
   component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 function RootComponent() {
@@ -49,7 +51,7 @@ function RootComponent() {
       <ThemeProvider>
         <AnimatedOutlet />
         <Toaster position="top-center" />
-        <ScreenSize />
+        {import.meta.env.DEV && <ScreenSize />}
         <Suspense>
           <TanStackDevtools
             plugins={[

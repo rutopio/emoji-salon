@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SplatRouteImport } from './routes/$'
 import { Route as indexIndexRouteImport } from './routes/(index)/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as JaIndexRouteImport } from './routes/ja/index'
@@ -20,11 +19,6 @@ import { Route as JaShowcaseIndexRouteImport } from './routes/ja/showcase/index'
 import { Route as Zh_twAboutIndexRouteImport } from './routes/zh_tw/about/index'
 import { Route as Zh_twShowcaseIndexRouteImport } from './routes/zh_tw/showcase/index'
 
-const SplatRoute = SplatRouteImport.update({
-  id: '/$',
-  path: '/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const indexIndexRoute = indexIndexRouteImport.update({
   id: '/(index)/',
   path: '/',
@@ -72,7 +66,6 @@ const Zh_twShowcaseIndexRoute = Zh_twShowcaseIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/$': typeof SplatRoute
   '/': typeof indexIndexRoute
   '/about/': typeof AboutIndexRoute
   '/ja/': typeof JaIndexRoute
@@ -84,7 +77,6 @@ export interface FileRoutesByFullPath {
   '/zh_tw/showcase/': typeof Zh_twShowcaseIndexRoute
 }
 export interface FileRoutesByTo {
-  '/$': typeof SplatRoute
   '/': typeof indexIndexRoute
   '/about': typeof AboutIndexRoute
   '/ja': typeof JaIndexRoute
@@ -97,7 +89,6 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/$': typeof SplatRoute
   '/(index)/': typeof indexIndexRoute
   '/about/': typeof AboutIndexRoute
   '/ja/': typeof JaIndexRoute
@@ -111,7 +102,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/$'
     | '/'
     | '/about/'
     | '/ja/'
@@ -123,7 +113,6 @@ export interface FileRouteTypes {
     | '/zh_tw/showcase/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/$'
     | '/'
     | '/about'
     | '/ja'
@@ -135,7 +124,6 @@ export interface FileRouteTypes {
     | '/zh_tw/showcase'
   id:
     | '__root__'
-    | '/$'
     | '/(index)/'
     | '/about/'
     | '/ja/'
@@ -148,7 +136,6 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  SplatRoute: typeof SplatRoute
   indexIndexRoute: typeof indexIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
   JaIndexRoute: typeof JaIndexRoute
@@ -162,13 +149,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$': {
-      id: '/$'
-      path: '/$'
-      fullPath: '/$'
-      preLoaderRoute: typeof SplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(index)/': {
       id: '/(index)/'
       path: '/'
@@ -236,7 +216,6 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  SplatRoute: SplatRoute,
   indexIndexRoute: indexIndexRoute,
   AboutIndexRoute: AboutIndexRoute,
   JaIndexRoute: JaIndexRoute,
