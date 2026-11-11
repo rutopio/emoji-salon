@@ -30,3 +30,15 @@ preprocess/twemoji
 # Downloaded COLR font files used for CPAL map extraction
 preprocess/fonts
 /tasks
+
+# Local credentials and machine-specific metadata
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.pfx
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
