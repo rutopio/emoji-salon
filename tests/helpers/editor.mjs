@@ -55,6 +55,8 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
     document: window.document,
     localStorage: window.localStorage,
     navigator: window.navigator,
+    Error,
+    File,
     setTimeout: (callback, delay) => {
       const id = ++timerId;
       timers.set(id, { callback, delay });
@@ -85,6 +87,12 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
         },
         "@/lib/emoji-utils": utils,
         "@/lib/share-utils": { downloadSVG() {} },
+        "@/lib/rasterize-svg": {
+          rasterizeSvg() {
+            throw new Error("Unexpected rasterization");
+          },
+          canvasToPng() {},
+        },
         "@/lib/translations": { currentT: (text) => text },
         ...extraImports,
       },

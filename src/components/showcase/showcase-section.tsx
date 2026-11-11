@@ -21,19 +21,15 @@ import {
 import { Button } from "@rutopio/ui/button";
 import { ButtonGroup } from "@rutopio/ui/button-group";
 import { useNavigate } from "@tanstack/react-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import DownloadDialog from "@/components/shared/download-dialog";
 import EmojiPreview from "@/components/showcase/emoji-preview";
 import ShowcaseShareDialog from "@/components/showcase/showcase-share-dialog";
 import { useEmojiSVG, useVariantSVG } from "@/hooks/use-emoji-svg";
-import {
-  CANVAS_BASE_SIZE,
-  CANVAS_IMAGE_PADDING,
-  CANVAS_SCALE_FACTOR,
-} from "@/lib/constants";
 import { triggerDownload, unicodeToEmoji } from "@/lib/emoji-utils";
 import { withLocale } from "@/lib/locale";
+import { rasterizeSvg } from "@/lib/rasterize-svg";
 import { downloadSVG } from "@/lib/share-utils";
 import { useT } from "@/lib/translations";
 import { useLocale } from "@/lib/use-locale";
@@ -110,7 +106,6 @@ export default function ShowcaseSection({
     customizedPaletteColors,
     originalPaletteColors,
   } = useEmojiSVG(emoji, firstVariant?.palette);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
@@ -137,47 +132,21 @@ export default function ShowcaseSection({
    * @param format - Output image format ("png" or "jpg"). Defaults to "png".
    */
   const generateImage = useCallback(
-    (callback: (dataUrl: string) => void, format: "png" | "jpg" = "png") => {
-      const canvas = canvasRef.current;
-      if (!canvas || !modifiedSvg) return;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const imagePadding = CANVAS_IMAGE_PADDING;
-      const scaleFactor = CANVAS_SCALE_FACTOR;
-      const baseSize = CANVAS_BASE_SIZE;
-
-      canvas.width = baseSize * scaleFactor + imagePadding;
-      canvas.height = baseSize * scaleFactor + imagePadding;
-      ctx.scale(scaleFactor, scaleFactor);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (format === "jpg") {
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(
-          img,
-          imagePadding / scaleFactor / 2,
-          imagePadding / scaleFactor / 2,
-          baseSize,
-          baseSize
+    async (
+      callback: (dataUrl: string) => void | Promise<void>,
+      format: "png" | "jpg" = "png"
+    ) => {
+      if (!modifiedSvg) return;
+      try {
+        const canvas = await rasterizeSvg(modifiedSvg, format);
+        await callback(
+          canvas.toDataURL(format === "jpg" ? "image/jpeg" : "image/png")
         );
-        const mime = format === "jpg" ? "image/jpeg" : "image/png";
-        callback(canvas.toDataURL(mime));
-      };
-
-      const svgBlob = new Blob([modifiedSvg], {
-        type: "image/svg+xml;charset=utf-8",
-      });
-      const url = URL.createObjectURL(svgBlob);
-      img.src = url;
+      } catch {
+        toast.error(t("Could not generate this image."));
+      }
     },
-    [modifiedSvg]
+    [modifiedSvg, t]
   );
 
   /**
@@ -251,15 +220,17 @@ export default function ShowcaseSection({
    * Copies the emoji image to the clipboard.
    */
   const handleCopy = useCallback(() => {
-    generateImage((dataUrl) => {
-      fetch(dataUrl)
-        .then((r) => r.blob())
-        .then((blob) => {
-          navigator.clipboard
-            .write([new ClipboardItem({ "image/png": blob })])
-            .then(() => toast.success(t("Image copied to clipboard.")))
-            .catch(() => toast.error(t("Failed to copy image.")));
-        });
+    void generateImage(async (dataUrl) => {
+      try {
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob }),
+        ]);
+        toast.success(t("Image copied to clipboard."));
+      } catch {
+        toast.error(t("Failed to copy image."));
+      }
     }, "png");
   }, [generateImage, t]);
 
@@ -278,9 +249,6 @@ export default function ShowcaseSection({
 
   return (
     <div className={`bg-card rounded-lg border p-4 lg:p-6 ${className}`}>
-      {/* Hidden canvas for image generation */}
-      <canvas ref={canvasRef} className="hidden" />
-
       <div className="flex flex-col gap-4 lg:gap-8">
         {/* Unicode label and action buttons */}
         <div className="relative flex w-full items-center justify-start lg:justify-center">

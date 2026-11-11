@@ -10,7 +10,7 @@ import ColorPalettePickers from "@/components/create/color-palette-pickers";
 import CreateShareDialog from "@/components/create/create-share-dialog";
 import EmojiDisplay from "@/components/create/emoji-display";
 import DesktopEmojiPicker from "@/components/create/emoji-picker";
-import { EmojiProvider, useEmoji } from "@/contexts/emoji-context";
+import { EmojiProvider } from "@/contexts/emoji-context";
 import PageLayout from "@/layout";
 import { pageHead } from "@/lib/page-meta";
 import { useT } from "@/lib/translations";
@@ -56,14 +56,10 @@ export function EmojiSalonPage() {
 }
 
 function EmojiSalonContent() {
-  const { canvasRef } = useEmoji();
   const t = useT();
 
   return (
     <PageLayout>
-      {/* Hidden canvas for image export */}
-      <canvas ref={canvasRef} className="hidden" width={256} height={256} />
-
       <div className="flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-16 py-6 sm:py-12 lg:w-[calc(100vw-3rem)] lg:max-w-5xl lg:flex-none">
         <h1 className="sr-only">{t("Create Your Custom Emoji")}</h1>
         <div className="grid grid-cols-1 items-center lg:grid-cols-3 lg:gap-16">

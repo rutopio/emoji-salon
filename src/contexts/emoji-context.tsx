@@ -16,11 +16,6 @@ import {
 } from "react";
 import { toast } from "sonner";
 import {
-  CANVAS_BASE_SIZE,
-  CANVAS_IMAGE_PADDING,
-  CANVAS_SCALE_FACTOR,
-} from "@/lib/constants";
-import {
   emojiToUnicode,
   fetchEmojiData,
   getEmojiLabel,
@@ -32,6 +27,7 @@ import {
   triggerDownload,
   unicodeToEmoji,
 } from "@/lib/emoji-utils";
+import { canvasToPng, rasterizeSvg } from "@/lib/rasterize-svg";
 import { downloadSVG } from "@/lib/share-utils";
 import { currentT } from "@/lib/translations";
 
@@ -71,9 +67,6 @@ interface EmojiContextValue {
   setShareDialogOpen: (open: boolean) => void;
   /** Data URL of the generated result image. */
   resultImageSrc: string;
-
-  /** Reference to the hidden canvas element for image generation. */
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 
   /** Generated SVG HTML for customized emoji. */
   svgHTML: string;
@@ -166,7 +159,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   const [resultImageSrc, setResultImageSrc] = useState<string>("");
 
   // Refs
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewIdRef = useRef(0);
   const urlUpdateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -189,6 +182,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     () => () => {
       cancelPendingURL();
       loadIdRef.current++;
+      previewIdRef.current++;
     },
     [location.pathname, cancelPendingURL]
   );
@@ -368,6 +362,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       clearTimeout(timer);
       cancelPendingURL();
       loadIdRef.current++;
+      previewIdRef.current++;
     };
   });
 
@@ -505,83 +500,63 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const updateCanvas = useCallback(
     async (action: number, format: "png" | "jpg" = "png") => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
       const svgData = generateSVGData();
-      if (!svgData) return;
-
-      const imagePadding = CANVAS_IMAGE_PADDING;
-      const scaleFactor = CANVAS_SCALE_FACTOR;
-      const baseSize = CANVAS_BASE_SIZE;
-
-      canvas.width = baseSize * scaleFactor + imagePadding;
-      canvas.height = baseSize * scaleFactor + imagePadding;
-      ctx.scale(scaleFactor, scaleFactor);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // JPG has no alpha channel; fill a white background so transparent
-      // areas don't render as black.
-      const isJpg = action === CANVAS_ACTION.DOWNLOAD && format === "jpg";
-      if (isJpg) {
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      const img = new Image();
-      img.onload = async () => {
-        ctx.drawImage(
-          img,
-          imagePadding / scaleFactor / 2,
-          imagePadding / scaleFactor / 2,
-          baseSize,
-          baseSize
-        );
-
+      if (!svgData) return false;
+      const previewId =
+        action === CANVAS_ACTION.GENERATE_PREVIEW ? ++previewIdRef.current : 0;
+      const loadId = loadIdRef.current;
+      const colors = paletteColorsRef.current;
+      try {
+        const canvas = await rasterizeSvg(svgData, format);
         if (action === CANVAS_ACTION.DOWNLOAD) {
-          const mime = isJpg ? "image/jpeg" : "image/png";
-          const ext = isJpg ? "jpg" : "png";
           triggerDownload(
-            canvas.toDataURL(mime),
-            `${emojiToUnicode(currentEmoji)}-EmojiSalon.${ext}`
+            canvas.toDataURL(format === "jpg" ? "image/jpeg" : "image/png"),
+            `${emojiToUnicode(currentEmoji)}-EmojiSalon.${format}`
           );
-        } else if (action === CANVAS_ACTION.COPY) {
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              toast.error(currentT("Failed to copy image."));
-              return;
-            }
-            navigator.clipboard
-              .write([new ClipboardItem({ "image/png": blob })])
-              .then(() => toast.success(currentT("Image copied to clipboard.")))
-              .catch(() => toast.error(currentT("Failed to copy image.")));
-          });
-        } else if (action === CANVAS_ACTION.SHARE) {
-          const dataUrl = canvas.toDataURL();
-          const blob = await (await fetch(dataUrl)).blob();
-          const filesArray = [
-            new File([blob], `${currentEmoji}.png`, {
-              type: "image/png",
-              lastModified: Date.now(),
-            }),
+        } else if (
+          action === CANVAS_ACTION.COPY ||
+          action === CANVAS_ACTION.SHARE
+        ) {
+          const blob = await canvasToPng(canvas);
+          const files = [
+            new File([blob], `${currentEmoji}.png`, { type: "image/png" }),
           ];
-          try {
-            await navigator.share({ files: filesArray });
+          if (
+            action === CANVAS_ACTION.SHARE &&
+            navigator.canShare?.({ files })
+          ) {
+            await navigator.share({ files });
             toast.success(currentT("Image shared."));
-          } catch (err) {
-            // AbortError = user cancelled the share sheet; not a failure.
-            if (!(err instanceof Error) || err.name !== "AbortError") {
-              toast.error(currentT("Failed to share image."));
-            }
+          } else {
+            await navigator.clipboard.write([
+              new ClipboardItem({ "image/png": blob }),
+            ]);
+            toast.success(currentT("Image copied to clipboard."));
           }
         } else if (action === CANVAS_ACTION.GENERATE_PREVIEW) {
+          if (
+            previewId !== previewIdRef.current ||
+            loadId !== loadIdRef.current ||
+            colors !== paletteColorsRef.current
+          )
+            return false;
           setResultImageSrc(canvas.toDataURL("image/png"));
         }
-      };
-      img.src = `data:image/svg+xml,${encodeURIComponent(svgData)}`;
+        return true;
+      } catch (error) {
+        if (!(error instanceof Error && error.name === "AbortError")) {
+          toast.error(
+            currentT(
+              action === CANVAS_ACTION.COPY
+                ? "Failed to copy image."
+                : action === CANVAS_ACTION.SHARE
+                  ? "Failed to share image."
+                  : "Could not generate this image."
+            )
+          );
+        }
+        return false;
+      }
     },
     [generateSVGData, currentEmoji]
   );
@@ -625,15 +600,20 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * On mobile, uses native share dialog. On desktop, opens share dialog.
    */
   const handleShare = useCallback(async () => {
-    await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW);
     if (navigator.share && window.innerWidth < 768) {
       const shareData = {
         title: currentT("Share with friends"),
         text: "#EmojiSalon",
         url: window.location.href,
       };
-      await navigator.share(shareData);
-    } else {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        if (!(error instanceof Error && error.name === "AbortError")) {
+          toast.error(currentT("Could not share this page."));
+        }
+      }
+    } else if (await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW)) {
       setShareDialogOpen(true);
     }
   }, [updateCanvas]);
@@ -653,7 +633,6 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     shareDialogOpen,
     setShareDialogOpen,
     resultImageSrc,
-    canvasRef,
     svgHTML,
     referenceSvgHTML,
     handleEmojiSelect,
