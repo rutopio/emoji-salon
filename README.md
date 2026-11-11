@@ -109,7 +109,7 @@ one JSON file per emoji, plus an index. Each emoji file contains its paths,
 fills, and editable colors. The app and social preview image function load
 these files as needed.
 
-See the [preprocessing guide](./preprocess/README.md) for the source version,
+See the [preprocessing guide](./docs/preprocessing.md) for the source version,
 output format, and palette data.
 
 ## Copyright
@@ -164,3 +164,8 @@ Tailwind class sorting uses `src/styles/globals.css` and the shared design token
 `pnpm-workspace.yaml` records dependency overrides and the security advisories
 they address. Remove the `seroval` override when upstream dependencies resolve
 a version compatible with `seroval-plugins`.
+
+## Repository structure
+
+See [Repository structure](docs/repository-structure.md) for shared directory
+roles, naming rules, asset placement, and the exceptions used by these sites.

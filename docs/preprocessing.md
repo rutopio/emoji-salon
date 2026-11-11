@@ -10,7 +10,7 @@ community-maintained continuation of Twemoji. A pinned release makes the output
 reproducible.
 
 - Pinned tag: `v17.0.3` (Unicode 17). Bump `TWEMOJI_TAG` in
-  `preprocess/scripts/build-emoji-data.mjs` to update, then re-run.
+  `scripts/build-emoji-data.mjs` to update, then re-run.
 - SVGs come from `assets/svg/*.svg` in that repo.
 
 ## Run
@@ -21,7 +21,7 @@ pnpm preprocess
 
 This will:
 
-1. Shallow-clone `jdecked/twemoji` at the pinned tag into `preprocess/twemoji/`
+1. Shallow-clone `jdecked/twemoji` at the pinned tag into `assets/vendor/twemoji/`
    (git-ignored). If the clone already exists, the script reuses it. Delete that folder
    when changing the pinned release so the script fetches the new version.
 2. Parse every `assets/svg/*.svg`, skipping skin-tone-modifier files (they reuse
@@ -85,14 +85,14 @@ emit the correct `override-colors` indices.
 Only needed when the COLR font version changes.
 
 ```bash
-# 1. Download the font into preprocess/fonts/
-mkdir -p preprocess/fonts
+# 1. Download the font into assets/fonts/
+mkdir -p assets/fonts
 curl -sL "https://cdn.jsdelivr.net/npm/@sableclient/twemoji-font@1.0.2/dist/files/twemoji.woff2" \
-  -o preprocess/fonts/twemoji-sable-1.0.2.woff2
+  -o assets/fonts/twemoji-sable-1.0.2.woff2
 
 # 2. Extract the map (requires Python 3 + fonttools)
-python3 preprocess/scripts/extract-cpal-map.py \
-  preprocess/fonts/twemoji-sable-1.0.2.woff2 \
+python3 scripts/extract-cpal-map.py \
+  assets/fonts/twemoji-sable-1.0.2.woff2 \
   --out public/data/cpal-map.json \
   --verify-dir public/data/emoji
 ```

@@ -1,5 +1,5 @@
 # Self-hosted font is content-stable (manual woff2, path not hashed) → immutable.
-/font/*
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
 # Twemoji SVGs are named by codepoint (not content-hashed) and their content is

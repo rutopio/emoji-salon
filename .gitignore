@@ -58,5 +58,5 @@ Desktop.ini
 /skills-lock.json
 
 # Downloaded sources used by emoji preprocessing
-/preprocess/twemoji/
-/preprocess/fonts/
+/assets/vendor/twemoji/
+/assets/fonts/

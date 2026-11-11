@@ -45,13 +45,12 @@ const SVG_EXTENSION_RE = /\.svg$/;
 const HYPHEN_RE = /-/g;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PREPROCESS_DIR = resolve(__dirname, "..");
-const REPO_ROOT = resolve(PREPROCESS_DIR, "..");
+const REPO_ROOT = resolve(__dirname, "..");
 
 /** Pinned upstream version. Bump this (and re-run) to update emoji. */
 const TWEMOJI_TAG = "v17.0.3";
 const TWEMOJI_REPO = "https://github.com/jdecked/twemoji.git";
-const TWEMOJI_DIR = join(PREPROCESS_DIR, "twemoji");
+const TWEMOJI_DIR = join(REPO_ROOT, "assets", "vendor", "twemoji");
 const SVG_DIR = join(TWEMOJI_DIR, "assets", "svg");
 
 const OUT_DIR = join(REPO_ROOT, "public", "data");

@@ -10,7 +10,7 @@ import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
 
-export default function Navbar() {
+export default function Header() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();

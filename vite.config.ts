@@ -44,8 +44,8 @@ function ogImagePlugin(): Plugin {
 
 // Preload the self-hosted fonts used on first paint.
 const PUBLIC_PRELOAD_FONTS = [
-  "/font/inter-normal-core.woff2",
-  "/font/PaperMono%5Bwght%5D.woff2",
+  "/fonts/inter-normal-core.woff2",
+  "/fonts/PaperMono%5Bwght%5D.woff2",
 ];
 
 function fontPreloadPlugin(): Plugin {

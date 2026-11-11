@@ -14,7 +14,7 @@
     "format": "biome check --write .",
     "check": "biome check . && tsc --noEmit -p tsconfig.json && tsc --noEmit -p functions/tsconfig.json",
     "preview:cf": "pnpm build && wrangler pages dev dist",
-    "preprocess": "node preprocess/scripts/build-emoji-data.mjs"
+    "preprocess": "node scripts/build-emoji-data.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",

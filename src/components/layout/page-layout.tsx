@@ -1,7 +1,7 @@
 import { SiteLayout } from "@rutopio/ui/site-layout";
 import type { ReactNode } from "react";
 import Footer from "@/components/layout/footer";
-import Navbar from "@/components/layout/header";
+import Header from "@/components/layout/header";
 import { useT } from "@/hooks/use-translation";
 
 interface PageLayoutProps {
@@ -19,7 +19,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
         >
           {t("Skip to main content")}
         </a>
-        <Navbar />
+        <Header />
         <main
           id="main-content"
           tabIndex={-1}
