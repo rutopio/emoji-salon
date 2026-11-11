@@ -23,6 +23,7 @@ import {
 } from "@rutopio/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useT } from "@/hooks/use-translation";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";
 import {
   copyCSSCode,
@@ -34,7 +35,6 @@ import {
   shareToThreads,
   shareToTwitter,
 } from "@/lib/share-utils";
-import { useT } from "@/lib/translations";
 
 const BUTTON_CLASS =
   "h-auto flex-col gap-1.5 py-3 [&_svg:not([class*='size-'])]:size-6";

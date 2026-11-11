@@ -1,8 +1,8 @@
 import { SiteLayout } from "@rutopio/ui/site-layout";
 import type { ReactNode } from "react";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
-import { useT } from "@/lib/translations";
+import Footer from "@/components/layout/footer";
+import Navbar from "@/components/layout/header";
+import { useT } from "@/hooks/use-translation";
 
 interface PageLayoutProps {
   children: ReactNode;

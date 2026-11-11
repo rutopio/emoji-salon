@@ -5,7 +5,7 @@
  * emoji and palette pre-selected.
  */
 
-import ShareDialog from "@/components/shared/share-dialog";
+import ShareDialog from "@/components/feedback/share-dialog";
 import { generateShareURL } from "@/lib/share-utils";
 
 /**

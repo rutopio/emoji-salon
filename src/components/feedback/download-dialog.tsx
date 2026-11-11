@@ -18,8 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@rutopio/ui/dialog";
+import { useT } from "@/hooks/use-translation";
 import { GITHUB_REPO_URL } from "@/lib/constants";
-import { useT } from "@/lib/translations";
 
 /**
  * Props for the DownloadDialog component.

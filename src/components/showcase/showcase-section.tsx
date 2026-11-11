@@ -23,16 +23,16 @@ import { ButtonGroup } from "@rutopio/ui/button-group";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import DownloadDialog from "@/components/shared/download-dialog";
+import DownloadDialog from "@/components/feedback/download-dialog";
 import EmojiPreview from "@/components/showcase/emoji-preview";
 import ShowcaseShareDialog from "@/components/showcase/showcase-share-dialog";
 import { useEmojiSVG, useVariantSVG } from "@/hooks/use-emoji-svg";
+import { useLocale } from "@/hooks/use-locale";
+import { useT } from "@/hooks/use-translation";
 import { triggerDownload, unicodeToEmoji } from "@/lib/emoji-utils";
 import { withLocale } from "@/lib/locale";
 import { rasterizeSvg } from "@/lib/rasterize-svg";
 import { downloadSVG } from "@/lib/share-utils";
-import { useT } from "@/lib/translations";
-import { useLocale } from "@/lib/use-locale";
 
 /**
  * Variant data structure for emoji customization.

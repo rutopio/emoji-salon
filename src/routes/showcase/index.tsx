@@ -6,12 +6,12 @@
 import { MagicWandIcon } from "@phosphor-icons/react";
 import { Button } from "@rutopio/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
+import PageLayout from "@/components/layout/page-layout";
 import ShowcaseSection from "@/components/showcase/showcase-section";
 import showcaseData from "@/data/showcase/showcase-data.json";
-import PageLayout from "@/layout";
+import { useT } from "@/hooks/use-translation";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";
 import { pageHead } from "@/lib/page-meta";
-import { useT } from "@/lib/translations";
 
 /**
  * Showcase page route configuration.

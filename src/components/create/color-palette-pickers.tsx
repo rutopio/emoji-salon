@@ -29,10 +29,10 @@ import {
   ColorSwatchPickerItem,
   ColorThumb,
   SliderTrack,
-} from "@/components/color";
+} from "@/components/ui/color";
 import { useEmoji } from "@/contexts/emoji-context";
+import { useT } from "@/hooks/use-translation";
 import { PRESET_COLORS } from "@/lib/constants";
-import { useT } from "@/lib/translations";
 
 /**
  * EyeDropper button component that uses the browser's EyeDropper API

@@ -20,7 +20,7 @@ import { scrollToSection } from "@rutopio/ui/section-navigation";
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 interface OutlineItem {
   id: string;

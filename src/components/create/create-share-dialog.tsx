@@ -3,9 +3,9 @@
  * Wraps the shared ShareDialog with data sourced from EmojiContext.
  */
 
-import ShareDialog from "@/components/shared/share-dialog";
+import ShareDialog from "@/components/feedback/share-dialog";
 import { useEmoji } from "@/contexts/emoji-context";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 /**
  * Share dialog for the Create page. Reads state from EmojiContext and delegates

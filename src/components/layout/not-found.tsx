@@ -1,6 +1,6 @@
 import { NotFound as NotFoundPage } from "@rutopio/ui/not-found";
 import { Link, useLocation } from "@tanstack/react-router";
-import PageLayout from "@/layout";
+import PageLayout from "@/components/layout/page-layout";
 import { localeForPath, withLocale } from "@/lib/locale";
 
 export function NotFound() {

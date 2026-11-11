@@ -10,11 +10,11 @@ import ColorPalettePickers from "@/components/create/color-palette-pickers";
 import CreateShareDialog from "@/components/create/create-share-dialog";
 import EmojiDisplay from "@/components/create/emoji-display";
 import DesktopEmojiPicker from "@/components/create/emoji-picker";
+import PageLayout from "@/components/layout/page-layout";
 import { EmojiProvider } from "@/contexts/emoji-context";
-import PageLayout from "@/layout";
+import { useT } from "@/hooks/use-translation";
 import { pageHead } from "@/lib/page-meta";
 import { prepareEmojiRoute } from "@/lib/prepare-emoji-route";
-import { useT } from "@/lib/translations";
 
 /**
  * Search parameters for the emoji customization page.

@@ -4,11 +4,11 @@ import { LanguageToggle } from "@rutopio/ui/language-toggle";
 import { HeaderNavigation, SiteHeader } from "@rutopio/ui/site-header";
 import { useIsNarrowViewport } from "@rutopio/ui/use-is-narrow-viewport";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/navigation/theme-toggle";
+import { useT } from "@/hooks/use-translation";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
-import { useT } from "@/lib/translations";
 
 export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });

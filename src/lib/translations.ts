@@ -1,5 +1,4 @@
 import type { Locale } from "./locale";
-import { useLocale } from "./use-locale";
 
 const translations: Record<Exclude<Locale, "en">, Record<string, string>> = {
   "zh-TW": {
@@ -267,13 +266,8 @@ Object.assign(translations.ja, {
   "Red Rank": "赤帯",
 });
 
-function translate(locale: Locale, english: string): string {
+export function translate(locale: Locale, english: string): string {
   return locale === "en" ? english : (translations[locale][english] ?? english);
-}
-
-export function useT() {
-  const locale = useLocale();
-  return (english: string) => translate(locale, english);
 }
 
 export function currentT(english: string): string {

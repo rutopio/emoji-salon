@@ -11,8 +11,8 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
-import { NotFound } from "@/components/not-found";
-import { ThemeProvider } from "@/components/theme-provider";
+import { NotFound } from "@/components/layout/not-found";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const TanStackDevtools = import.meta.env.DEV
   ? lazy(() =>

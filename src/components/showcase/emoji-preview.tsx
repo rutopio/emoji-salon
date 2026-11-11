@@ -5,7 +5,7 @@
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 /**
  * Props for the EmojiPreview component.

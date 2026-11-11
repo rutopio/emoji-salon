@@ -22,14 +22,14 @@ import {
 } from "@rutopio/ui/drawer";
 import { useState } from "react";
 import { EmojiPicker } from "@/components/create/emoji-picker";
-import DownloadDialog from "@/components/shared/download-dialog";
+import DownloadDialog from "@/components/feedback/download-dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useEmoji } from "@/contexts/emoji-context";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 /**
  * Props for the ActionButtons component.

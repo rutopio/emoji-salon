@@ -1,6 +1,6 @@
 import { ThemeToggle as BaseThemeToggle } from "@rutopio/ui/theme-toggle";
 import type { ComponentProps } from "react";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 export function ThemeToggle(props: ComponentProps<typeof BaseThemeToggle>) {
   const t = useT();

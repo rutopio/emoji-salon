@@ -8,13 +8,13 @@ import { PageIntro } from "@rutopio/ui/page-intro";
 
 import { GithubMarkIcon } from "@rutopio/ui/github-mark-icon";
 import { createFileRoute } from "@tanstack/react-router";
-import { AboutPageActions } from "@/components/about-page-actions";
-import { ArticleHeading } from "@/components/article-heading";
-import PageLayout from "@/layout";
+import { ArticleHeading } from "@/components/article/article-heading";
+import PageLayout from "@/components/layout/page-layout";
+import { AboutPageActions } from "@/components/navigation/about-page-actions";
+import { useLocale } from "@/hooks/use-locale";
 import { aboutCopy } from "@/lib/about-copy";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { pageHead } from "@/lib/page-meta";
-import { useLocale } from "@/lib/use-locale";
 
 /**
  * About page route configuration.

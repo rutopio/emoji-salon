@@ -17,8 +17,8 @@ import { useTheme } from "next-themes";
 
 import { useEmoji } from "@/contexts/emoji-context";
 import charMap from "@/data/twemoji-chars.json";
-import { useT } from "@/lib/translations";
-import { useLocale } from "@/lib/use-locale";
+import { useLocale } from "@/hooks/use-locale";
+import { useT } from "@/hooks/use-translation";
 
 const TRAILING_VARIATION_SELECTOR_RE = /\uFE0F$/;
 

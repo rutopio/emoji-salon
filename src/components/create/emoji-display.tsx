@@ -4,7 +4,7 @@
  */
 
 import { useEmoji } from "@/contexts/emoji-context";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 /**
  * Props for the EmojiDisplay component.

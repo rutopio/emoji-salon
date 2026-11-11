@@ -1,7 +1,7 @@
 import { SectionHeading } from "@rutopio/ui/section-heading";
 import { copySectionLink } from "@rutopio/ui/section-navigation";
 import { toast } from "sonner";
-import { useT } from "@/lib/translations";
+import { useT } from "@/hooks/use-translation";
 
 interface ArticleHeadingProps {
   id: string;
