@@ -6,7 +6,14 @@
 
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { createContext, use, useCallback, useRef, useState } from "react";
+import {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
 import {
   CANVAS_BASE_SIZE,
@@ -44,16 +51,10 @@ interface EmojiSearchParams {
 interface EmojiContextValue {
   /** Current emoji character. */
   currentEmoji: string;
-  /** Setter for current emoji. */
-  setCurrentEmoji: (emoji: string) => void;
   /** Display label for current emoji. */
   currentEmojiLabel: string;
-  /** Setter for emoji label. */
-  setCurrentEmojiLabel: (label: string) => void;
   /** Array of customized palette colors. */
   customizedPaletteColors: string[];
-  /** Setter for customized palette colors. */
-  setCustomizedPaletteColors: React.Dispatch<React.SetStateAction<string[]>>;
 
   /** Array of SVG path data strings. */
   pathArray: string[];
@@ -171,6 +172,26 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   );
   const isInitializedRef = useRef(false);
   const loadIdRef = useRef(0);
+  const paletteColorsRef = useRef<string[]>([]);
+  const applyPaletteColors = useCallback((colors: string[]) => {
+    paletteColorsRef.current = colors;
+    setCustomizedPaletteColors(colors);
+  }, []);
+  const cancelPendingURL = useCallback(() => {
+    if (urlUpdateTimeoutRef.current !== null) {
+      clearTimeout(urlUpdateTimeoutRef.current);
+      urlUpdateTimeoutRef.current = null;
+    }
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a route change invalidates work owned by the previous route.
+  useEffect(
+    () => () => {
+      cancelPendingURL();
+      loadIdRef.current++;
+    },
+    [location.pathname, cancelPendingURL]
+  );
 
   /**
    * Updates the URL and localStorage with current emoji and palette.
@@ -202,12 +223,15 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
           replace: true,
         });
 
-        // Save to localStorage for persistence
-        localStorage.setItem("emojisalon:emoji", emojiUnicode);
-        if (paletteCode) {
-          localStorage.setItem("emojisalon:palette", paletteCode);
-        } else {
-          localStorage.removeItem("emojisalon:palette");
+        try {
+          localStorage.setItem("emojisalon:emoji", emojiUnicode);
+          if (paletteCode) {
+            localStorage.setItem("emojisalon:palette", paletteCode);
+          } else {
+            localStorage.removeItem("emojisalon:palette");
+          }
+        } catch {
+          // The editor and share URL still work when storage is unavailable.
         }
       }
     },
@@ -223,13 +247,21 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * @param paletteFromURL - Optional palette string from URL to apply.
    */
   const updateEmoji = useCallback(
-    async (emoji: string, keepPalette: boolean, paletteFromURL?: string) => {
+    async (
+      emoji: string,
+      keepPalette: boolean,
+      paletteFromURL?: string,
+      label = getEmojiLabel(emoji)
+    ) => {
+      cancelPendingURL();
       const loadId = ++loadIdRef.current;
-      setCurrentEmoji(emoji);
 
       const data = await fetchEmojiData(emoji);
       if (loadId !== loadIdRef.current) return;
       if (data) {
+        cancelPendingURL();
+        setCurrentEmoji(emoji);
+        setCurrentEmojiLabel(label);
         setPathArray(data.d);
         setPaletteArray(data.f);
 
@@ -241,7 +273,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         setOriginalPaletteColors(opColors);
 
         if (!keepPalette) {
-          setCustomizedPaletteColors([...opColors]);
+          applyPaletteColors([...opColors]);
           updateURL(emojiToUnicode(emoji));
         } else if (paletteFromURL) {
           const modifiedColors = parsePaletteString(
@@ -249,9 +281,9 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
             opColors,
             opIndex
           );
-          setCustomizedPaletteColors(modifiedColors);
+          applyPaletteColors(modifiedColors);
         } else {
-          setCustomizedPaletteColors([...opColors]);
+          applyPaletteColors([...opColors]);
         }
       } else {
         // fetchEmojiData already logged the cause; surface it to the user so a
@@ -259,7 +291,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         toast.error(currentT("Could not load this emoji. Try another one."));
       }
     },
-    [updateURL]
+    [updateURL, cancelPendingURL, applyPaletteColors]
   );
 
   /**
@@ -270,8 +302,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleEmojiSelect = useCallback(
     (emoji: string, label: string) => {
-      setCurrentEmojiLabel(label);
-      updateEmoji(emoji, false);
+      void updateEmoji(emoji, false, undefined, label);
     },
     [updateEmoji]
   );
@@ -292,7 +323,6 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
         try {
           const emoji = unicodeToEmoji(search.emoji);
           if (emoji) {
-            setCurrentEmojiLabel(getEmojiLabel(emoji));
             updateEmoji(emoji, !!search.palette, search.palette);
             emojiLoaded = true;
           }
@@ -303,14 +333,19 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
 
       // If URL failed and not yet initialized, try localStorage
       if (!emojiLoaded && !isInitializedRef.current) {
-        const storedEmoji = localStorage.getItem("emojisalon:emoji");
-        const storedPalette = localStorage.getItem("emojisalon:palette");
+        let storedEmoji: string | null = null;
+        let storedPalette: string | null = null;
+        try {
+          storedEmoji = localStorage.getItem("emojisalon:emoji");
+          storedPalette = localStorage.getItem("emojisalon:palette");
+        } catch {
+          // Continue with a random emoji when storage is unavailable.
+        }
 
         if (storedEmoji) {
           try {
             const emoji = unicodeToEmoji(storedEmoji);
             if (emoji) {
-              setCurrentEmojiLabel(getEmojiLabel(emoji));
               updateEmoji(emoji, !!storedPalette, storedPalette || undefined);
               emojiLoaded = true;
             }
@@ -323,8 +358,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       // If both URL and localStorage failed and not yet initialized, use random emoji
       if (!emojiLoaded && !isInitializedRef.current) {
         const { emoji: randomEmoji, label } = getRandomEmojiWithLabel();
-        setCurrentEmojiLabel(label);
-        updateEmoji(randomEmoji, false);
+        void updateEmoji(randomEmoji, false, undefined, label);
       }
 
       isInitializedRef.current = true;
@@ -332,6 +366,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
 
     return () => {
       clearTimeout(timer);
+      cancelPendingURL();
       loadIdRef.current++;
     };
   });
@@ -346,31 +381,29 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleColorChange = useCallback(
     (index: number, color: string) => {
-      setCustomizedPaletteColors((prev) => {
-        const newColors = [...prev];
-        newColors[index] = color;
-
-        // Debounce URL update to avoid excessive updates during drag
-        if (urlUpdateTimeoutRef.current) {
-          clearTimeout(urlUpdateTimeoutRef.current);
-        }
-        urlUpdateTimeoutRef.current = setTimeout(() => {
-          const overrideColors = getOverrideStyleString(
-            newColors,
-            originalPaletteColors,
-            originalPaletteIndex
-          );
-          if (overrideColors) {
-            updateURL(emojiToUnicode(currentEmoji), overrideColors);
-          } else {
-            updateURL(emojiToUnicode(currentEmoji));
-          }
-        }, 500);
-
-        return newColors;
-      });
+      if (index < 0 || index >= paletteColorsRef.current.length) return;
+      const newColors = [...paletteColorsRef.current];
+      newColors[index] = color;
+      applyPaletteColors(newColors);
+      cancelPendingURL();
+      urlUpdateTimeoutRef.current = setTimeout(() => {
+        urlUpdateTimeoutRef.current = null;
+        const overrides = getOverrideStyleString(
+          newColors,
+          originalPaletteColors,
+          originalPaletteIndex
+        );
+        updateURL(emojiToUnicode(currentEmoji), overrides);
+      }, 500);
     },
-    [currentEmoji, originalPaletteColors, originalPaletteIndex, updateURL]
+    [
+      currentEmoji,
+      originalPaletteColors,
+      originalPaletteIndex,
+      updateURL,
+      applyPaletteColors,
+      cancelPendingURL,
+    ]
   );
 
   /**
@@ -379,8 +412,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    */
   const handleRandomEmoji = useCallback(() => {
     const { emoji, label } = getRandomEmojiWithLabel();
-    setCurrentEmojiLabel(label);
-    updateEmoji(emoji, false);
+    void updateEmoji(emoji, false, undefined, label);
   }, [updateEmoji]);
 
   /**
@@ -388,19 +420,19 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * Generates random colors for each position in the palette and updates the URL.
    */
   const handleRandomColors = useCallback(() => {
-    const newColors = customizedPaletteColors.map(() => getRandomColor());
-    setCustomizedPaletteColors(newColors);
+    cancelPendingURL();
+    const newColors = paletteColorsRef.current.map(() => getRandomColor());
+    applyPaletteColors(newColors);
 
     const overrideColors = getOverrideStyleString(
       newColors,
       originalPaletteColors,
       originalPaletteIndex
     );
-    if (overrideColors) {
-      updateURL(emojiToUnicode(currentEmoji), overrideColors);
-    }
+    updateURL(emojiToUnicode(currentEmoji), overrideColors);
   }, [
-    customizedPaletteColors,
+    cancelPendingURL,
+    applyPaletteColors,
     currentEmoji,
     originalPaletteColors,
     originalPaletteIndex,
@@ -412,9 +444,19 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * Reloads the current emoji with original palette colors.
    */
   const handleReset = useCallback(() => {
-    updateEmoji(currentEmoji, false);
+    if (!currentEmoji) return;
+    cancelPendingURL();
+    loadIdRef.current++;
+    applyPaletteColors([...originalPaletteColors]);
+    updateURL(emojiToUnicode(currentEmoji));
     toast.success(currentT("Colors reset to original."));
-  }, [currentEmoji, updateEmoji]);
+  }, [
+    currentEmoji,
+    originalPaletteColors,
+    updateURL,
+    applyPaletteColors,
+    cancelPendingURL,
+  ]);
 
   /**
    * Generates SVG HTML for the customized emoji.
@@ -602,11 +644,8 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
 
   const value: EmojiContextValue = {
     currentEmoji,
-    setCurrentEmoji,
     currentEmojiLabel,
-    setCurrentEmojiLabel,
     customizedPaletteColors,
-    setCustomizedPaletteColors,
     pathArray,
     paletteArray,
     originalPaletteColors,
