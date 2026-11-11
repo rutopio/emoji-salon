@@ -130,60 +130,56 @@ export function AboutPageActions() {
     <PageActionRail
       label={t("About page actions")}
       mobileOutline={
-        <>
-          <Drawer open={outlineOpen} onOpenChange={setOutlineOpen}>
-            <DrawerTrigger
-              render={
-                <Button
-                  variant="outline"
-                  size="icon-lg"
-                  aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
-                />
-              }
+        <Drawer open={outlineOpen} onOpenChange={setOutlineOpen}>
+          <DrawerTrigger
+            render={
+              <Button
+                variant="outline"
+                size="icon-lg"
+                aria-label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
+              />
+            }
+          >
+            <ReadingProgressRing progress={progress} />
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader className="border-border border-b pb-4">
+              <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
+            </DrawerHeader>
+            <nav
+              aria-label={t("Table of contents")}
+              className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
             >
-              <ReadingProgressRing progress={progress} />
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader className="border-border border-b pb-4">
-                <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
-              </DrawerHeader>
-              <nav
-                aria-label={t("Table of contents")}
-                className="min-h-0 flex-1 overflow-y-auto px-4 pt-4 pb-6"
-              >
-                <OutlineList
-                  items={items}
-                  activeId={selectedId}
-                  onNavigate={navigateToHeading}
-                  indicator={<ArrowLeftIcon className="size-4" />}
-                />
-              </nav>
-            </DrawerContent>
-          </Drawer>
-        </>
+              <OutlineList
+                items={items}
+                activeId={selectedId}
+                onNavigate={navigateToHeading}
+                indicator={<ArrowLeftIcon className="size-4" />}
+              />
+            </nav>
+          </DrawerContent>
+        </Drawer>
       }
       desktopOutline={
-        <>
-          <ActionMenu
-            label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
-            trigger={<ReadingProgressRing progress={progress} />}
-            items={items.map((item) => ({
-              ...item,
-              active: item.id === selectedId,
-              ariaCurrent:
-                item.id === selectedId ? ("location" as const) : undefined,
-              href: `#${encodeURIComponent(item.id)}`,
-              onSelect: (event) => {
-                event.preventDefault();
-                navigateToHeading(item.id);
-              },
-            }))}
-            indicator={
-              <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
-            }
-            side="left"
-          />
-        </>
+        <ActionMenu
+          label={`${Math.round(progress * 100)}% · ${t("Table of contents")}`}
+          trigger={<ReadingProgressRing progress={progress} />}
+          items={items.map((item) => ({
+            ...item,
+            active: item.id === selectedId,
+            ariaCurrent:
+              item.id === selectedId ? ("location" as const) : undefined,
+            href: `#${encodeURIComponent(item.id)}`,
+            onSelect: (event) => {
+              event.preventDefault();
+              navigateToHeading(item.id);
+            },
+          }))}
+          indicator={
+            <ArrowLeftIcon className="size-4 shrink-0" aria-hidden="true" />
+          }
+          side="left"
+        />
       }
       actions={utilities}
     />

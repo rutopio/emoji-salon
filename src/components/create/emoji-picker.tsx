@@ -29,7 +29,7 @@ function CategoryHeader({
 }: EmojiPickerListCategoryHeaderProps) {
   return (
     <div
-      className="bg-popover px-3 pt-3 pb-1.5 font-semibold text-muted-foreground text-xs"
+      className="bg-popover text-muted-foreground px-3 pt-3 pb-1.5 text-xs font-semibold"
       {...props}
     >
       {category.label}
@@ -68,7 +68,7 @@ function EmojiButton({ emoji, ...props }: EmojiPickerListEmojiProps) {
   return (
     <button
       type="button"
-      className="flex size-9 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[active]:bg-secondary"
+      className="focus-visible:ring-ring data-[active]:bg-secondary flex size-9 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
       {...props}
     >
       {stem ? (
@@ -120,23 +120,23 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
       locale={locale === "zh-TW" ? "zh-hant" : locale}
       onEmojiSelect={({ emoji, label }) => onEmojiSelect(emoji, label)}
       columns={8}
-      className="isolate flex h-[352px] w-[312px] flex-col rounded-[var(--radius)] border bg-popover text-popover-foreground shadow-md"
+      className="bg-popover text-popover-foreground isolate flex h-[352px] w-[312px] flex-col rounded-[var(--radius)] border shadow-md"
       data-theme={resolvedTheme === "dark" ? "dark" : "light"}
     >
       <Frimousse.Search
         aria-label={t("Search emoji")}
         placeholder={t("Search emoji")}
-        className="z-10 mx-2 mt-2 appearance-none rounded-md bg-secondary px-2.5 py-2 text-secondary-foreground text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="bg-secondary text-secondary-foreground placeholder:text-muted-foreground focus-visible:ring-ring z-10 mx-2 mt-2 appearance-none rounded-md px-2.5 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
       />
       <Frimousse.Viewport className="relative flex-1 outline-none">
-        <Frimousse.Loading className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
+        <Frimousse.Loading className="text-muted-foreground absolute inset-0 flex items-center justify-center text-sm">
           {t("Loading…")}
         </Frimousse.Loading>
-        <Frimousse.Empty className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">
+        <Frimousse.Empty className="text-muted-foreground absolute inset-0 flex items-center justify-center text-sm">
           {t("No emoji found.")}
         </Frimousse.Empty>
         <Frimousse.List
-          className="select-none pb-2"
+          className="pb-2 select-none"
           components={LIST_COMPONENTS}
         />
       </Frimousse.Viewport>

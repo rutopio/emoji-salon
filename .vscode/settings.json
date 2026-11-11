@@ -1,0 +1,35 @@
+{
+  "files.eol": "\n",
+  "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][html]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.biome": "explicit",
+      "source.organizeImports.biome": "explicit"
+    }
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true,
+    "pnpm-lock.yaml": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true,
+    "**/.tanstack/**": true,
+    "**/.pnpm-store/**": true
+  },
+  "workbench.colorCustomizations": {
+    "editor.lineHighlightBackground": "#1073cf2d",
+    "editor.lineHighlightBorder": "#9fced11f",
+    "activityBar.background": "#05342D",
+    "titleBar.activeBackground": "#06493F",
+    "titleBar.activeForeground": "#ECFDFB",
+    "titleBar.inactiveBackground": "#05342D",
+    "titleBar.inactiveForeground": "#ECFDFB",
+    "statusBar.background": "#05342D",
+    "statusBar.foreground": "#ECFDFB",
+    "statusBar.debuggingBackground": "#05342D",
+    "statusBar.debuggingForeground": "#ECFDFB",
+    "statusBar.noFolderBackground": "#05342D",
+    "statusBar.noFolderForeground": "#ECFDFB"
+  }
+}

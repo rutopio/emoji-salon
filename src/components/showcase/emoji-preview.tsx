@@ -54,6 +54,7 @@ export default function EmojiPreview({
       <div
         role="img"
         aria-label={label}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is generated from bundled emoji paths and validated palette colors.
         dangerouslySetInnerHTML={{ __html: svg }}
         className="size-24 lg:size-32 [&>svg]:h-full [&>svg]:w-full"
       />

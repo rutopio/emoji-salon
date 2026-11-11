@@ -208,7 +208,7 @@ export default function ShareDialog({
 
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
-                <div className="font-semibold text-sm">HTML</div>
+                <div className="text-sm font-semibold">HTML</div>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -219,12 +219,12 @@ export default function ShareDialog({
                   <span className="text-base">{t("Copy HTML")}</span>
                 </Button>
               </div>
-              <pre className="overflow-x-auto rounded bg-accent px-4 py-4 text-xs">
+              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-xs">
                 <code className="font-mono">{`<span class="mod-emoji"> ${emoji} </span>`}</code>
               </pre>
 
               <div className="flex items-center gap-2">
-                <div className="font-semibold text-sm">CSS</div>
+                <div className="text-sm font-semibold">CSS</div>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -235,7 +235,7 @@ export default function ShareDialog({
                   <span className="text-base">{t("Copy CSS")}</span>
                 </Button>
               </div>
-              <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-accent px-4 py-4 text-xs">
+              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-xs whitespace-pre-wrap">
                 <code className="font-mono">{cssCode}</code>
               </pre>
             </div>

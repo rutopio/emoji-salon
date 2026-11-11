@@ -1,19 +1,29 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "$schema": "https://biomejs.dev/schemas/2.6.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
     "maxSize": 4194304,
     "includes": [
       "**",
-      "!**/dist",
-      "!**/.wrangler",
-      "!**/.output",
-      "!**/build/",
-      "!**/deprecated/",
-      "!**/routeTree.gen.ts",
-      "!**/*.css",
-      "!**/*.html",
-      "!public"
+      "!!**/dist",
+      "!!**/playground-dist",
+      "!!**/public",
+      "!!**/.wrangler",
+      "!!**/.output",
+      "!!**/.pnpm-store",
+      "!!**/routeTree.gen.ts",
+      "!!**/tiles-data.json",
+      "!!**/assets",
+      "!!**/deprecated",
+      "!!**/*.css",
+      "!!**/*.md",
+      "!!**/.agents",
+      "!!**/.claude",
+      "!!**/tasks"
     ]
   },
   "formatter": {
@@ -29,128 +39,48 @@
       "quoteStyle": "double",
       "trailingCommas": "es5",
       "arrowParentheses": "always",
-      "bracketSpacing": true,
       "bracketSameLine": false
-    }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on",
-        "useSortedKeys": "off"
-      }
     }
   },
   "linter": {
     "enabled": true,
     "rules": {
       "preset": "recommended",
-      "correctness": {
-        "useExhaustiveDependencies": "warn",
-        "useHookAtTopLevel": "error"
-      },
       "suspicious": {
-        "noArrayIndexKey": "error"
+        "noConsole": "warn"
       },
       "nursery": {
-        "useSortedClasses": {
+        "useTailwindSortedClasses": {
           "level": "warn",
-          "options": {
-            "functions": ["cn", "cva", "clsx"]
-          }
+          "fix": "safe"
         }
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
       }
     }
   },
   "overrides": [
     {
-      "includes": ["**/*.{ts,tsx}"],
+      "includes": ["**/scripts/**", "**/preprocess/**"],
       "linter": {
         "rules": {
-          "complexity": {
-            "noArguments": "error",
-            "noUselessTypeConstraint": "error"
-          },
-          "correctness": {
-            "noChildrenProp": "warn",
-            "noNestedComponentDefinitions": "error",
-            "noVoidElementsWithChildren": "error",
-            "useJsxKeyInIterable": "error",
-            "noConstAssign": "off",
-            "noGlobalObjectCalls": "off",
-            "noInvalidBuiltinInstantiation": "off",
-            "noInvalidConstructorSuper": "off",
-            "noSetterReturn": "off",
-            "noUndeclaredVariables": "off",
-            "noUnreachable": "off",
-            "noUnreachableSuper": "off",
-            "noUnusedVariables": "error"
-          },
-          "security": {
-            "noDangerouslySetInnerHtml": "warn",
-            "noDangerouslySetInnerHtmlWithChildren": "error"
-          },
-          "style": {
-            "noCommonJs": "error",
-            "noRestrictedImports": {
-              "level": "error",
-              "options": {
-                "paths": {
-                  "react": {
-                    "importNames": [
-                      "useEffect",
-                      "useLayoutEffect",
-                      "useInsertionEffect"
-                    ],
-                    "message": "Use derived state, event handlers, subscriptions, or useMountEffect instead."
-                  }
-                }
-              }
-            },
-            "noNamespace": "error",
-            "useArrayLiterals": "error",
-            "useAsConstAssertion": "error",
-            "useBlockStatements": "off",
-            "useConst": "error"
-          },
           "suspicious": {
-            "noArrayIndexKey": "error",
-            "noClassAssign": "off",
-            "noDuplicateClassMembers": "off",
-            "noDuplicateObjectKeys": "off",
-            "noDuplicateParameters": "off",
-            "noExplicitAny": "error",
-            "noExtraNonNullAssertion": "error",
-            "noFunctionAssign": "off",
-            "noImportAssign": "off",
-            "noMisleadingInstantiator": "error",
-            "noNonNullAssertedOptionalChain": "error",
-            "noReactForwardRef": "warn",
-            "noRedeclare": "off",
-            "noUnsafeDeclarationMerging": "error",
-            "noUnsafeNegation": "off",
-            "noUnusedExpressions": "off",
-            "noVar": "error",
-            "noWith": "off",
-            "useGetterReturn": "off",
-            "useNamespaceKeyword": "error"
+            "noConsole": "off"
           }
         }
       }
-    },
-    {
-      "includes": [
-        "**/emoji-display.tsx",
-        "**/emoji-preview.tsx",
-        "**/action-buttons.tsx",
-        "**/download-dialog.tsx"
-      ],
-      "linter": {
-        "rules": {
-          "security": { "noDangerouslySetInnerHtml": "off" }
-        }
-      }
     }
-  ]
+  ],
+  "tailwind": {
+    "attributes": ["className", "class"],
+    "mergeFunctions": ["cn", "clsx", "cx"],
+    "variantFunctions": ["cva"],
+    "stylesheet": "./src/styles/globals.css"
+  }
 }

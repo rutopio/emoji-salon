@@ -39,6 +39,7 @@ export default function EmojiDisplay({
         <div
           role="img"
           aria-label={label}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is generated from bundled emoji paths and validated palette colors.
           dangerouslySetInnerHTML={{ __html: svgContent }}
           className="size-64"
         />
@@ -51,6 +52,7 @@ export default function EmojiDisplay({
       <div
         role="img"
         aria-label={label}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is generated from bundled emoji paths and validated palette colors.
         dangerouslySetInnerHTML={{ __html: svgContent }}
         className="size-64"
       />

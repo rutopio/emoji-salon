@@ -34,10 +34,10 @@ export function ShowcasePage() {
     <PageLayout>
       <div className="flex min-w-0 flex-1 flex-col py-6 sm:py-12">
         <div className="flex flex-col items-start gap-6">
-          <h1 className="text-balance font-bold text-lg leading-[1.65]">
+          <h1 className="text-lg leading-[1.65] font-bold text-balance">
             {t("Showcase")}
           </h1>
-          <p className="text-pretty text-base text-neutral-800 leading-[1.65] dark:text-neutral-300">
+          <p className="text-base leading-[1.65] text-pretty text-neutral-800 dark:text-neutral-300">
             {t("Browse emoji color variations from the community")}
           </p>
           <div>

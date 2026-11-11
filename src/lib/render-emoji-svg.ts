@@ -37,7 +37,7 @@ function applyOverride(c: string[], override?: string): string[] {
   if (!override) return colors;
   for (const pair of override.split("-")) {
     const m = pair.match(/^(\d+)_([0-9a-fA-F]{6})$/);
-    if (m) {
+    if (m?.[1] && m[2]) {
       const idx = Number(m[1]);
       if (idx >= 0 && idx < colors.length)
         colors[idx] = `#${m[2].toLowerCase()}`;
@@ -62,7 +62,7 @@ export function buildEmojiPair(data: EmojiData, override?: string): EmojiPair {
 
   const customizedInner = data.d
     .map((d, i) => {
-      const ci = data.c.indexOf(data.f[i]);
+      const ci = data.c.indexOf(data.f[i] ?? "none");
       const fill = ci !== -1 ? customized[ci] : data.f[i];
       return `<path fill="${fill}" d="${d}" />`;
     })

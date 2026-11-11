@@ -426,7 +426,9 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     if (pathArray.length === 0 || paletteArray.length === 0) return "";
 
     const svgPaths = pathArray.map((d, index) => {
-      const colorIndex = originalPaletteColors.indexOf(paletteArray[index]);
+      const colorIndex = originalPaletteColors.indexOf(
+        paletteArray[index] ?? "none"
+      );
       const fillColor =
         colorIndex !== -1
           ? customizedPaletteColors[colorIndex] || paletteArray[index]

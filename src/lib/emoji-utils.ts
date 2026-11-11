@@ -174,10 +174,12 @@ export async function fetchEmojiData(
       emojiDataCache.set(unicode, data);
       return data;
     } catch (error) {
+      // biome-ignore lint/suspicious/noConsole: retain diagnostics for missing or failed emoji assets.
       console.warn(`Failed to fetch emoji data for ${emoji} (${id})`, error);
     }
   }
 
+  // biome-ignore lint/suspicious/noConsole: report exhausted asset fallback attempts.
   console.warn(`No data for emoji: ${emoji} (${unicode})`);
   return null;
 }
@@ -267,7 +269,7 @@ export function parsePaletteString(
   const pairs = paletteString.split("-");
   pairs.forEach((pair) => {
     const match = pair.match(/^(\d+)_([A-Fa-f0-9]{6})$/);
-    if (match) {
+    if (match?.[1] && match[2]) {
       const colorIdx = parseInt(match[1], 10);
       const hexColor = `#${match[2]}`;
       const idx = originalPaletteIndex.indexOf(colorIdx);
@@ -304,7 +306,7 @@ export function getEmojiLabel(emoji: string): string {
  */
 function getRandomEmoji(): string {
   const randomIndex = Math.floor(Math.random() * DEFAULT_EMOJIS.length);
-  return DEFAULT_EMOJIS[randomIndex];
+  return DEFAULT_EMOJIS[randomIndex] ?? "😀";
 }
 
 /**

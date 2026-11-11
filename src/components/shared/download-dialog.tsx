@@ -76,6 +76,7 @@ export default function DownloadDialog({
           <div
             role="img"
             aria-label={emojiLabel}
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: SVG is generated from bundled emoji paths and validated palette colors.
             dangerouslySetInnerHTML={{ __html: svgHTML }}
             className="size-32 [&>svg]:size-full"
           />
@@ -116,7 +117,7 @@ export default function DownloadDialog({
           </Button>
         </div>
 
-        <div className="flex items-center justify-center gap-2 text-center text-muted-foreground text-sm">
+        <div className="text-muted-foreground flex items-center justify-center gap-2 text-center text-sm">
           <CheckCircleIcon className="size-4" aria-hidden="true" />
           <p>
             <a

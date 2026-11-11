@@ -109,7 +109,7 @@ export default function ShowcaseSection({
     isLoading,
     customizedPaletteColors,
     originalPaletteColors,
-  } = useEmojiSVG(emoji, firstVariant.palette);
+  } = useEmojiSVG(emoji, firstVariant?.palette);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
@@ -270,12 +270,14 @@ export default function ShowcaseSection({
     setShareModalOpen(true);
   }, []);
 
+  if (!firstVariant) return null;
+
   const unicodeDisplay = `U+${emoji.replace("u", "").toUpperCase()}`;
   const hasMultipleVariants = variants.length > 1;
   const emojiChar = unicodeToEmoji(emoji) || "";
 
   return (
-    <div className={`rounded-lg border bg-card p-4 lg:p-6 ${className}`}>
+    <div className={`bg-card rounded-lg border p-4 lg:p-6 ${className}`}>
       {/* Hidden canvas for image generation */}
       <canvas ref={canvasRef} className="hidden" />
 
@@ -330,13 +332,13 @@ export default function ShowcaseSection({
             size={20}
             weight="bold"
             aria-hidden="true"
-            className="hidden text-muted-foreground text-sm lg:block"
+            className="text-muted-foreground hidden text-sm lg:block"
           />
           <ArrowDownIcon
             size={20}
             weight="bold"
             aria-hidden="true"
-            className="block text-muted-foreground text-sm lg:hidden"
+            className="text-muted-foreground block text-sm lg:hidden"
           />
 
           {/* Variant previews */}

@@ -122,7 +122,7 @@ export function AboutPage() {
                     href="https://veroniiiica.com/emoji-and-low-vision/"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="underline underline-offset-4 hover:text-foreground"
+                    className="hover:text-foreground underline underline-offset-4"
                   >
                     Emoji And Low Vision - Veronica With Four Eyes
                   </a>
@@ -132,7 +132,7 @@ export function AboutPage() {
                     href="https://www.facebook.com/ColourBlindVision/posts/are-you-emoji-colour-blinda-strange-concept-to-say-nevertheless-how-many-times-h/678523570194699/"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="underline underline-offset-4 hover:text-foreground"
+                    className="hover:text-foreground underline underline-offset-4"
                   >
                     Are you emoji colour blind? - Colour Blind Vision
                   </a>
@@ -169,7 +169,7 @@ export function AboutPage() {
                   href="https://github.com/jdecked/twemoji"
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="underline underline-offset-4 hover:text-foreground"
+                  className="hover:text-foreground underline underline-offset-4"
                 >
                   Twemoji
                 </a>
@@ -178,7 +178,7 @@ export function AboutPage() {
                   href="https://creativecommons.org/licenses/by/4.0/"
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="underline underline-offset-4 hover:text-foreground"
+                  className="hover:text-foreground underline underline-offset-4"
                 >
                   CC-BY 4.0
                 </a>
@@ -200,7 +200,7 @@ export function AboutPage() {
                   href="http://opensource.org/licenses/MIT"
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="underline underline-offset-4 hover:text-foreground"
+                  className="hover:text-foreground underline underline-offset-4"
                 >
                   MIT License
                 </a>
@@ -219,7 +219,7 @@ export function AboutPage() {
               href={GITHUB_REPO_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="whitespace-nowrap text-primary underline decoration-[0.5px] underline-offset-4 transition-[color,text-decoration-thickness] duration-150 hover:text-neutral-950 hover:decoration-[1px] dark:hover:text-neutral-50"
+              className="text-primary whitespace-nowrap underline decoration-[0.5px] underline-offset-4 transition-[color,text-decoration-thickness] duration-150 hover:text-neutral-950 hover:decoration-[1px] dark:hover:text-neutral-50"
             >
               <GithubMarkIcon
                 aria-hidden="true"

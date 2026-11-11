@@ -27,7 +27,7 @@ function useShowcaseEmojiData(unicode: string) {
 function renderSvg(data: EmojiSVGData, colors: string[]) {
   const original = getOriginalPaletteData(data).originalPaletteColors;
   const paths = data.d.map((path, index) => {
-    const originalColor = data.f[index];
+    const originalColor = data.f[index] ?? "none";
     const colorIndex = original.indexOf(originalColor);
     const fill =
       colorIndex < 0 ? originalColor : (colors[colorIndex] ?? originalColor);

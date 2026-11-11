@@ -1,10 +1,7 @@
 import { CheckIcon, GithubLogoIcon, ListIcon } from "@phosphor-icons/react";
 import { buttonVariants } from "@rutopio/ui/button";
 import { LanguageToggle } from "@rutopio/ui/language-toggle";
-import {
-  HeaderNavigation,
-  SiteHeader,
-} from "@rutopio/ui/site-header";
+import { HeaderNavigation, SiteHeader } from "@rutopio/ui/site-header";
 import { useIsMobile } from "@rutopio/ui/use-mobile";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -35,12 +32,12 @@ export default function Navbar() {
           to={localized("/")}
           activeOptions={{ exact: true }}
           aria-label={t("EmojiSalon home")}
-          className="flex h-12 shrink-0 items-center rounded-md focus-visible:outline-2 focus-visible:outline-ring"
+          className="focus-visible:outline-ring flex h-12 shrink-0 items-center rounded-md focus-visible:outline-2"
         >
           <span className="flex size-12 items-center justify-center">
             <svg
               aria-hidden="true"
-              className="h-8 w-7 text-foreground"
+              className="text-foreground h-8 w-7"
               fill="currentColor"
               viewBox="0 0 632 739"
               xmlns="http://www.w3.org/2000/svg"

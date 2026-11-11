@@ -54,14 +54,14 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-starting-style:fade-in-0 data-starting-style:zoom-in-95 data-ending-style:fade-out-0 data-ending-style:zoom-out-95 z-50 w-fit max-w-xs origin-(--transform-origin) rounded-md bg-foreground px-3 py-1.5 text-background text-xs data-ending-style:animate-out data-starting-style:animate-in",
+            "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-starting-style:fade-in-0 data-starting-style:zoom-in-95 data-ending-style:fade-out-0 data-ending-style:zoom-out-95 bg-foreground text-background data-ending-style:animate-out data-starting-style:animate-in z-50 w-fit max-w-xs origin-(--transform-origin) rounded-md px-3 py-1.5 text-xs",
             className
           )}
           {...props}
         >
           {children}
           {!hideArrow && (
-            <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-foreground fill-foreground" />
+            <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
           )}
         </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>
