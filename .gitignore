@@ -60,3 +60,7 @@ Desktop.ini
 # Downloaded sources used by emoji preprocessing
 /assets/vendor/twemoji/
 /assets/fonts/
+/.font-source-cache/
+
+# Keep local font audit screenshots and measurements out of commits.
+/docs/font-audit/

@@ -38,7 +38,7 @@ function ogImagePlugin(): Plugin {
 
 const PUBLIC_PRELOAD_FONTS = [
   "/fonts/inter-normal-core.woff2",
-  "/fonts/PaperMono%5Bwght%5D.woff2",
+  "/fonts/PaperMono%5Bwght%5D.woff2?v=fb6978c5",
 ];
 
 function fontPreloadPlugin(): Plugin {

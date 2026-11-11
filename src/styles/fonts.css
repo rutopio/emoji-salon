@@ -1,13 +1,14 @@
 @import "@rutopio/ui/cjk-fonts.css";
 @import "@fontsource-variable/noto-sans-jp";
 @import "@fontsource-variable/noto-sans-tc";
+@import "./generated-noto.css";
 
 @font-face {
   font-family: "Inter Variable";
   font-style: normal;
   font-display: swap;
   font-weight: 100 900;
-  src: url("/fonts/inter-normal-extended.woff2") format("woff2");
+  src: url("/fonts/inter-normal-extended.woff2?v=8268c872") format("woff2");
   unicode-range: U+3A3;
 }
 
@@ -25,7 +26,7 @@
   font-style: italic;
   font-display: swap;
   font-weight: 100 900;
-  src: url("/fonts/inter-italic-extended.woff2") format("woff2");
+  src: url("/fonts/inter-italic-extended.woff2?v=c3b681e9") format("woff2");
   unicode-range: U+3A3;
 }
 
@@ -40,7 +41,7 @@
 
 @font-face {
   font-family: "Paper Mono";
-  src: url("/fonts/PaperMono[wght].woff2") format("woff2");
+  src: url("/fonts/PaperMono[wght].woff2?v=fb6978c5") format("woff2");
   font-weight: 300 800;
   font-style: normal;
   font-display: swap;
