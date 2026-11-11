@@ -1,44 +1,62 @@
-node_modules
+# Dependencies and package-manager caches
+node_modules/
+.pnpm-store/
+.npm/
+package-lock.json
+yarn.lock
+bun.lock
+bun.lockb
+/*.tgz
 
-# Ignore lockfiles we don't use
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-# bun.lock
+# Build output and generated caches
+/dist/
+/dist-ssr/
+/playground-dist/
+.cache/
+.tanstack/
+.wrangler/
+.vite/
+*.tsbuildinfo
+vite.config.*.timestamp-*
+__pycache__/
+*.py[cod]
 
-.DS_Store
-.cache
+# Local environment and credentials (examples may be committed)
 .env
-
-.data
-.vercel
-.output
-.wrangler
-.netlify
-dist
-/build/
-/api/
-/server/build
-/public/build
-
-.tanstack
-.vscode
-
-# Cloned upstream emoji source for preprocessing (re-fetched by `pnpm preprocess`)
-preprocess/twemoji
-
-# Downloaded COLR font files used for CPAL map extraction
-preprocess/fonts
-/tasks
-
-# Local credentials and machine-specific metadata
 .env.*
 !.env.example
+!.env.*.example
 .dev.vars
 .dev.vars.*
+!.dev.vars.example
 *.pem
 *.key
 *.p12
 *.pfx
-.claude/settings.local.json
-.claude/scheduled_tasks.lock
+
+# Logs, diagnostics and coverage
+logs/
+*.log
+*.pid
+*.pid.lock
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+coverage/
+.nyc_output/
+*.lcov
+
+# OS, editor and agent-local files; shared .vscode settings stay tracked
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode-test/
+.history/
+/.agents/
+/.claude/
+/.codex/
+/tasks/
+/skills-lock.json
+
+# Downloaded sources used by emoji preprocessing
+/preprocess/twemoji/
+/preprocess/fonts/
