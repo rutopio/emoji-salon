@@ -24,7 +24,7 @@ function CategoryHeader({
 }: EmojiPickerListCategoryHeaderProps) {
   return (
     <div
-      className="bg-popover text-muted-foreground px-3 pt-3 pb-1.5 text-xs font-semibold"
+      className="bg-popover text-muted-foreground px-3 pt-3 pb-1.5 text-sm font-semibold"
       {...props}
     >
       {category.label}

@@ -194,7 +194,7 @@ export default function ShareDialog({
                   <span className="text-base">{t("Copy HTML")}</span>
                 </Button>
               </div>
-              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-xs">
+              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-base">
                 <code className="font-mono">{`<span class="mod-emoji"> ${emoji} </span>`}</code>
               </pre>
 
@@ -210,7 +210,7 @@ export default function ShareDialog({
                   <span className="text-base">{t("Copy CSS")}</span>
                 </Button>
               </div>
-              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-xs whitespace-pre-wrap">
+              <pre className="bg-accent overflow-x-auto rounded px-4 py-4 text-base whitespace-pre-wrap">
                 <code className="font-mono">{cssCode}</code>
               </pre>
             </div>
