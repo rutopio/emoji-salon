@@ -2,7 +2,7 @@ import { CheckIcon, GithubLogoIcon, ListIcon } from "@phosphor-icons/react";
 import { buttonVariants } from "@rutopio/ui/button";
 import { LanguageToggle } from "@rutopio/ui/language-toggle";
 import { HeaderNavigation, SiteHeader } from "@rutopio/ui/site-header";
-import { useIsMobile } from "@rutopio/ui/use-mobile";
+import { useIsNarrowViewport } from "@rutopio/ui/use-is-narrow-viewport";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
@@ -14,7 +14,7 @@ export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();
-  const isMobile = useIsMobile();
+  const isNarrowViewport = useIsNarrowViewport();
   const locale = localeForPath(pathname);
   const barePath = stripLocale(pathname);
   const isHome = barePath === "/";
@@ -105,7 +105,7 @@ export default function Navbar() {
               label: item.label,
               htmlLang: item.htmlLang,
             }))}
-            isMobile={isMobile}
+            isNarrowViewport={isNarrowViewport}
             onChange={(value) =>
               navigate({
                 to: withLocale(pathname, value),

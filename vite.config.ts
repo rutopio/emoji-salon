@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
-import type { EmojiData } from "./src/lib/render-emoji-svg.ts";
+import type { EmojiPathData } from "./src/lib/emoji-path-data";
 import { renderOgSvg } from "./src/lib/render-og-image.ts";
 
 /**
@@ -32,7 +32,7 @@ function ogImagePlugin(): Plugin {
           res.end("Unknown emoji");
           return;
         }
-        const data = JSON.parse(readFileSync(file, "utf8")) as EmojiData;
+        const data = JSON.parse(readFileSync(file, "utf8")) as EmojiPathData;
         res.setHeader("content-type", "image/svg+xml;charset=utf-8");
         res.end(renderOgSvg({ data, override }));
       });

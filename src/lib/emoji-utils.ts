@@ -6,22 +6,10 @@
 
 import emojiNames from "@/data/emoji-names.json";
 import { DEFAULT_EMOJIS } from "@/lib/constants";
-
-/**
- * Preprocessed data for a single emoji, served as a static asset at
- * `/data/emoji/u<code>.json` and fetched on demand.
- */
-export interface EmojiSVGData {
-  /** Array of SVG path data strings. */
-  d: string[];
-  /** Normalized fill color for each path (same length as d). */
-  f: string[];
-  /** Distinct editable colors, first-seen order; index i is the palette index. */
-  c: string[];
-}
+import type { EmojiPathData } from "./emoji-path-data";
 
 /** In-memory cache of fetched per-emoji data, keyed by unicode id. */
-const emojiDataCache = new Map<string, EmojiSVGData>();
+const emojiDataCache = new Map<string, EmojiPathData>();
 
 /**
  * Converts an RGBA color array to a hex color string.
@@ -148,7 +136,7 @@ export function unicodeToEmoji(urlCode: string): string | null {
  */
 export async function fetchEmojiData(
   emoji: string
-): Promise<EmojiSVGData | null> {
+): Promise<EmojiPathData | null> {
   const unicode = emojiToUnicode(emoji);
 
   const cached = emojiDataCache.get(unicode);
@@ -170,7 +158,7 @@ export async function fetchEmojiData(
       // for JSON rather than trusting the status code.
       const contentType = res.headers.get("content-type") || "";
       if (!res.ok || !contentType.includes("application/json")) continue;
-      const data = (await res.json()) as EmojiSVGData;
+      const data = (await res.json()) as EmojiPathData;
       emojiDataCache.set(unicode, data);
       return data;
     } catch (error) {
@@ -196,7 +184,7 @@ export async function fetchEmojiData(
  * getOriginalPaletteData({ d, f, c: ["#ffcc4d", "#664500"] });
  * // { originalPaletteIndex: [0, 1], originalPaletteColors: ["#ffcc4d", "#664500"] }
  */
-export function getOriginalPaletteData(data: EmojiSVGData): {
+export function getOriginalPaletteData(data: EmojiPathData): {
   originalPaletteIndex: number[];
   originalPaletteColors: string[];
 } {

@@ -25,7 +25,7 @@ import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import DownloadDialog from "@/components/shared/download-dialog";
 import EmojiPreview from "@/components/showcase/emoji-preview";
-import ShowcaseShareModal from "@/components/showcase/showcase-share-modal";
+import ShowcaseShareDialog from "@/components/showcase/showcase-share-dialog";
 import { useEmojiSVG, useVariantSVG } from "@/hooks/use-emoji-svg";
 import {
   CANVAS_BASE_SIZE,
@@ -111,7 +111,7 @@ export default function ShowcaseSection({
     originalPaletteColors,
   } = useEmojiSVG(emoji, firstVariant?.palette);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
   /**
@@ -190,9 +190,9 @@ export default function ShowcaseSection({
    * On desktop, opens the DownloadDialog directly (SVG / PNG / JPG / Copy).
    */
   const handleDownload = useCallback(() => {
-    const isMobile = window.innerWidth < 768;
+    const isNarrowViewport = window.innerWidth < 768;
 
-    if (isMobile && typeof navigator.canShare === "function") {
+    if (isNarrowViewport && typeof navigator.canShare === "function") {
       generateImage(async (dataUrl) => {
         const filename = `${emoji}-EmojiSalon.png`;
         const blob = await (await fetch(dataUrl)).blob();
@@ -267,7 +267,7 @@ export default function ShowcaseSection({
    * Handles sharing the emoji by opening the share modal.
    */
   const handleShare = useCallback(() => {
-    setShareModalOpen(true);
+    setShareDialogOpen(true);
   }, []);
 
   if (!firstVariant) return null;
@@ -378,9 +378,9 @@ export default function ShowcaseSection({
         />
 
         {/* Share modal */}
-        <ShowcaseShareModal
-          open={shareModalOpen}
-          onOpenChange={setShareModalOpen}
+        <ShowcaseShareDialog
+          open={shareDialogOpen}
+          onOpenChange={setShareDialogOpen}
           emoji={emojiChar}
           palette={firstVariant.palette}
           svgHTML={modifiedSvg}

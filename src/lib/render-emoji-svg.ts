@@ -9,15 +9,7 @@
  * Self-contained per emoji: no global color table.
  */
 
-/** Preprocessed data for a single emoji (public/data/emoji/u<code>.json). */
-export interface EmojiData {
-  /** Path data, one entry per drawn element. */
-  d: string[];
-  /** Normalized fill color for each path (same length as d). */
-  f: string[];
-  /** Distinct editable colors, first-seen order; index i is the palette index. */
-  c: string[];
-}
+import type { EmojiPathData } from "./emoji-path-data";
 
 /** Both SVGs for one emoji: original palette and user-customized palette. */
 interface EmojiPair {
@@ -53,7 +45,10 @@ function applyOverride(c: string[], override?: string): string[] {
  * @param data - The emoji's { d, f, c } data.
  * @param override - Optional override string, e.g. "0_55acee".
  */
-export function buildEmojiPair(data: EmojiData, override?: string): EmojiPair {
+export function buildEmojiPair(
+  data: EmojiPathData,
+  override?: string
+): EmojiPair {
   const customized = applyOverride(data.c, override);
 
   const originalInner = data.d

@@ -5,7 +5,8 @@
  * reused by the Cloudflare Pages function that rasterizes it to PNG on demand.
  */
 
-import { buildEmojiPair, type EmojiData } from "./render-emoji-svg.ts";
+import type { EmojiPathData } from "./emoji-path-data";
+import { buildEmojiPair } from "./render-emoji-svg.ts";
 
 /** Open Graph recommended 1.91:1 canvas. */
 export const OG_WIDTH = 1200;
@@ -23,7 +24,7 @@ const SRC = 36;
 
 interface OgOptions {
   /** The emoji's preprocessed { d, f, c } data. */
-  data: EmojiData;
+  data: EmojiPathData;
   /** Optional palette override string, e.g. "0_55acee". */
   override?: string;
 }

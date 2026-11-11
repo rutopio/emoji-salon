@@ -13,7 +13,7 @@ import { initWasm, Resvg } from "@resvg/resvg-wasm";
 // The .wasm is imported as a module so Wrangler bundles it with the function.
 import resvgWasm from "@resvg/resvg-wasm/index_bg.wasm";
 
-import type { EmojiData } from "../src/lib/render-emoji-svg";
+import type { EmojiPathData } from "../src/lib/emoji-path-data";
 import { OG_WIDTH, renderOgSvg } from "../src/lib/render-og-image";
 
 // initWasm must run once per isolate; guard with a shared promise.
@@ -47,7 +47,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   if (!dataRes.ok || !contentType.includes("application/json")) {
     return new Response("Unknown emoji", { status: 404 });
   }
-  const data = (await dataRes.json()) as EmojiData;
+  const data = (await dataRes.json()) as EmojiPathData;
 
   const svg = renderOgSvg({ data, override });
 

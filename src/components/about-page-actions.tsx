@@ -13,10 +13,10 @@ import {
   DrawerTrigger,
 } from "@rutopio/ui/drawer";
 import { OutlineList } from "@rutopio/ui/outline-list";
-import { ReadingProgressRing } from "@rutopio/ui/outline-nav";
+import { ReadingProgressRing } from "@rutopio/ui/outline-menu";
 import { PageActionRail } from "@rutopio/ui/page-action-rail";
 import { shareOrCopyCurrentPage } from "@rutopio/ui/page-share";
-import { navigateToSection } from "@rutopio/ui/section-navigation";
+import { scrollToSection } from "@rutopio/ui/section-navigation";
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -89,7 +89,7 @@ export function AboutPageActions() {
   });
 
   const navigateToHeading = (id: string) => {
-    navigateToSection(id, () => setOutlineOpen(false));
+    scrollToSection(id, () => setOutlineOpen(false));
   };
 
   const sharePage = () =>

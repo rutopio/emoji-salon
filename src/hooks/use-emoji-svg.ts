@@ -1,7 +1,7 @@
 /** Load showcase emoji data through React Query and derive each SVG from it. */
 import { useQuery } from "@tanstack/react-query";
+import type { EmojiPathData } from "@/lib/emoji-path-data";
 import {
-  type EmojiSVGData,
   fetchEmojiData,
   getEmojiLabel,
   getOriginalPaletteData,
@@ -24,7 +24,7 @@ function useShowcaseEmojiData(unicode: string) {
   };
 }
 
-function renderSvg(data: EmojiSVGData, colors: string[]) {
+function renderSvg(data: EmojiPathData, colors: string[]) {
   const original = getOriginalPaletteData(data).originalPaletteColors;
   const paths = data.d.map((path, index) => {
     const originalColor = data.f[index] ?? "none";

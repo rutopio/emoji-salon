@@ -64,10 +64,10 @@ interface EmojiContextValue {
   /** Array of indices mapping to original palette colors. */
   originalPaletteIndex: number[];
 
-  /** Whether the share modal is open. */
-  shareModalOpen: boolean;
-  /** Setter for share modal open state. */
-  setShareModalOpen: (open: boolean) => void;
+  /** Whether the share dialog is open. */
+  shareDialogOpen: boolean;
+  /** Setter for share dialog open state. */
+  setShareDialogOpen: (open: boolean) => void;
   /** Data URL of the generated result image. */
   resultImageSrc: string;
 
@@ -160,8 +160,8 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     []
   );
 
-  // Modal and UI state
-  const [shareModalOpen, setShareModalOpen] = useState(false);
+  // Dialog and UI state
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [resultImageSrc, setResultImageSrc] = useState<string>("");
 
   // Refs
@@ -580,7 +580,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
 
   /**
    * Handles sharing the emoji.
-   * On mobile, uses native share dialog. On desktop, opens share modal.
+   * On mobile, uses native share dialog. On desktop, opens share dialog.
    */
   const handleShare = useCallback(async () => {
     await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW);
@@ -592,7 +592,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
       };
       await navigator.share(shareData);
     } else {
-      setShareModalOpen(true);
+      setShareDialogOpen(true);
     }
   }, [updateCanvas]);
 
@@ -611,8 +611,8 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     paletteArray,
     originalPaletteColors,
     originalPaletteIndex,
-    shareModalOpen,
-    setShareModalOpen,
+    shareDialogOpen,
+    setShareDialogOpen,
     resultImageSrc,
     canvasRef,
     svgHTML,

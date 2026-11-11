@@ -1,5 +1,5 @@
 /**
- * @fileoverview Share modal component for the Showcase page.
+ * @fileoverview Share dialog component for the Showcase page.
  * Wraps the shared ShareDialog with showcase-specific props.
  * Generates a shareable URL pointing to the Create page with the
  * emoji and palette pre-selected.
@@ -9,9 +9,9 @@ import ShareDialog from "@/components/shared/share-dialog";
 import { generateShareURL } from "@/lib/share-utils";
 
 /**
- * Props for the ShowcaseShareModal component.
+ * Props for the ShowcaseShareDialog component.
  */
-interface ShowcaseShareModalProps {
+interface ShowcaseShareDialogProps {
   /** Whether the dialog is open. */
   open: boolean;
   /** Callback when open state changes. */
@@ -31,13 +31,13 @@ interface ShowcaseShareModalProps {
 }
 
 /**
- * Share modal for Showcase cards. Builds a shareable URL for the emoji
+ * Share dialog for Showcase cards. Builds a shareable URL for the emoji
  * and delegates rendering to the shared ShareDialog component.
  *
  * @param props - Component props.
- * @returns Showcase share modal component.
+ * @returns Showcase share dialog component.
  */
-export default function ShowcaseShareModal({
+export default function ShowcaseShareDialog({
   open,
   onOpenChange,
   emoji,
@@ -46,7 +46,7 @@ export default function ShowcaseShareModal({
   emojiLabel,
   customizedPaletteColors,
   originalPaletteColors,
-}: ShowcaseShareModalProps) {
+}: ShowcaseShareDialogProps) {
   const shareUrl = generateShareURL(emoji, palette);
 
   return (

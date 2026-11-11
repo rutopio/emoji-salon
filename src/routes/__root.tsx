@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
+
+import { BreakpointIndicator } from "@rutopio/ui/breakpoint-indicator";
 import { PageTransition } from "@rutopio/ui/page-transition";
-import { ScreenSize } from "@rutopio/ui/screen-size";
 import { Toaster } from "@rutopio/ui/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import {
@@ -51,7 +52,7 @@ function RootComponent() {
       <ThemeProvider>
         <AnimatedOutlet />
         <Toaster position="top-center" />
-        {import.meta.env.DEV && <ScreenSize />}
+        {import.meta.env.DEV && <BreakpointIndicator />}
         <Suspense>
           <TanStackDevtools
             plugins={[
