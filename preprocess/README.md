@@ -1,17 +1,16 @@
-# Preprocessing Pipeline
+# Generate emoji data
 
-Turns upstream Twemoji SVG assets into the per-emoji JSON files EmojiSalon
-serves and recolors. The whole pipeline is one reproducible Node script — no
-fonts, no Glyphs App, no manual steps.
+The preprocessing script converts Twemoji SVG artwork into the JSON files
+used by EmojiSalon. Run it when updating the source artwork.
 
 ## Source of truth
 
-[`jdecked/twemoji`](https://github.com/jdecked/twemoji) — the community-
-maintained continuation of Twemoji (the original `twitter/twemoji` is archived).
-Pinned to a specific tag for deterministic output.
+The source is [`jdecked/twemoji`](https://github.com/jdecked/twemoji), the
+community-maintained continuation of Twemoji. A pinned release makes the output
+reproducible.
 
 - Pinned tag: `v17.0.3` (Unicode 17). Bump `TWEMOJI_TAG` in
-  `scripts/build-emoji-data.mjs` to update, then re-run.
+  `preprocess/scripts/build-emoji-data.mjs` to update, then re-run.
 - SVGs come from `assets/svg/*.svg` in that repo.
 
 ## Run
@@ -23,8 +22,8 @@ pnpm preprocess
 This will:
 
 1. Shallow-clone `jdecked/twemoji` at the pinned tag into `preprocess/twemoji/`
-   (git-ignored). If the clone already exists it is reused — delete the folder
-   to force a fresh fetch.
+   (git-ignored). If the clone already exists, the script reuses it. Delete that folder
+   when changing the pinned release so the script fetches the new version.
 2. Parse every `assets/svg/*.svg`, skipping skin-tone-modifier files (they reuse
    the base emoji's paths).
 3. Write the output below.
@@ -38,7 +37,7 @@ is bundled with the picker so its first grid uses Twemoji thumbnails.
 | File                            | Description                                  |
 | ------------------------------- | -------------------------------------------- |
 | `public/data/emoji/u<code>.json`| One emoji's paths, fills, editable colors    |
-| `public/data/index.json`        | `{ version, emojis, chars }` — list + source |
+| `public/data/index.json`        | `{ version, emojis, chars }`: source version and emoji index |
 | `src/data/twemoji-chars.json`   | Character-to-SVG map bundled with the picker |
 
 ### Per-emoji JSON shape
@@ -63,9 +62,9 @@ A color's index is simply its position in `c`. The editor's color pickers and
 the share URL both reference colors by this index.
 
 Share URLs encode overrides as `palette=<index>_<hex>` pairs joined by `-`,
-e.g. `?emoji=u1f600&palette=0_55acee` recolors the first distinct color (the
-face) to blue. This is self-contained per emoji — no global color table is
-needed to recolor, which is why the OG worker only fetches one small JSON file.
+For example, `?emoji=u1f600&palette=0_55acee` changes the first color (the
+face) to blue. Each emoji has its own palette, so the social preview image
+function needs to fetch only that emoji's JSON file.
 
 Recoloring at runtime: for each path, find its fill's index via
 `c.indexOf(f[i])`, then substitute the customized color at that index.
@@ -74,10 +73,10 @@ Recoloring at runtime: for each path, find its fill's index via
 
 The app's "Share → CSS" feature generates `@font-palette-values` CSS that
 works with a Twemoji COLR font. The COLR font uses a global palette table
-(CPAL) where each color has a font-wide index (e.g. `#ffcc4d` = 1093),
+(CPAL) where each color has a font-wide index (for example, `#ffcc4d` = 1093),
 which differs from the per-emoji local indices used by the app internally.
 
-`public/data/cpal-map.json` bridges this gap: it maps `hex_color → global
+`public/data/cpal-map.json` maps `hex_color → global
 CPAL index`. The CSS generator looks up each original color in this map to
 emit the correct `override-colors` indices.
 
@@ -103,13 +102,11 @@ Current font: [`@sableclient/twemoji-font@1.0.2`](https://github.com/SableClient
 
 ## Categories
 
-Not produced here yet. Emoji categories previously came from emoji-mart, which
-lags Unicode. A replacement category source will be wired in as a separate,
-additive step (it will only annotate `index.json`; it does not touch the
-per-emoji data above).
+The script does not generate category data. If categories are added later,
+store them in the index without changing the per-emoji path and palette data.
 
 ## Dependencies
 
-- Node.js 18+ (uses only the standard library).
+- Node.js 26.13.0, as pinned in `.nvmrc` (the script uses only the standard library).
 - `git` on PATH (for the shallow clone).
 - Python 3 + `fonttools` (only for regenerating `cpal-map.json`).
