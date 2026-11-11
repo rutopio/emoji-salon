@@ -1,10 +1,3 @@
-@source "../node_modules/@rutopio/ui/dist";
-@import "tailwindcss" source("./");
-
-@import "tw-animate-css";
-@import "@rutopio/ui/styles.css";
-@import "@rutopio/ui/article.css";
-@import "@rutopio/ui/neutral-theme.css";
 @import "@rutopio/ui/cjk-fonts.css";
 @import "@fontsource-variable/noto-sans-jp";
 @import "@fontsource-variable/noto-sans-tc";
@@ -53,33 +46,4 @@
   font-weight: 300 800;
   font-style: normal;
   font-display: swap;
-}
-
-.font-mono {
-  font-weight: 400;
-  font-stretch: expanded;
-  font-feature-settings:
-    "cv20" 3,
-    "cv36" 21,
-    "cv52" 9,
-    "cv54" 7,
-    "cv59" 13,
-    "cv10" 1,
-    "cv02" 1,
-    "cv03" 1,
-    "cv06" 2,
-    "cv09" 2;
-}
-
-:root {
-  /* z-index scale */
-  --z-base: 0;
-  --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-fixed: 30;
-  --z-modal-backdrop: 40;
-  --z-modal: 50;
-  --z-popover: 50;
-  --z-tooltip: 60;
-
 }
