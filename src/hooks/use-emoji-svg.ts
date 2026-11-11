@@ -13,7 +13,11 @@ function useShowcaseEmojiData(unicode: string) {
   const emoji = unicodeToEmoji(unicode);
   const query = useQuery({
     queryKey: ["showcase-emoji", unicode],
-    queryFn: () => fetchEmojiData(emoji ?? ""),
+    queryFn: async () => {
+      const data = await fetchEmojiData(emoji ?? "");
+      if (!data) throw new Error("Emoji data unavailable");
+      return data;
+    },
     enabled: Boolean(emoji),
     staleTime: Number.POSITIVE_INFINITY,
   });

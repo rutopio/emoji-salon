@@ -15,6 +15,7 @@ const PALETTE_OVERRIDE_RE = /^(\d+)_([A-Fa-f0-9]{6})$/;
 
 /** In-memory cache of fetched per-emoji data, keyed by unicode id. */
 const emojiDataCache = new Map<string, EmojiPathData>();
+const pendingEmojiData = new Map<string, Promise<EmojiPathData | null>>();
 
 /**
  * Converts an RGBA color array to a hex color string.
@@ -145,7 +146,19 @@ export async function fetchEmojiData(
 
   const cached = emojiDataCache.get(unicode);
   if (cached) return cached;
+  const pending = pendingEmojiData.get(unicode);
+  if (pending) return pending;
+  const loading = loadEmojiData(emoji, unicode).finally(() => {
+    pendingEmojiData.delete(unicode);
+  });
+  pendingEmojiData.set(unicode, loading);
+  return loading;
+}
 
+async function loadEmojiData(
+  emoji: string,
+  unicode: string
+): Promise<EmojiPathData | null> {
   // Try the id as-is first, then an FE0F-stripped variant. emojiToUnicode keeps
   // embedded FE0F for some sequences (e.g. u1f441_fe0f_200d_1f5e8_fe0f) while
   // the data file drops it (u1f441_200d_1f5e8) — but other ids legitimately
