@@ -155,11 +155,15 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
   );
 
   // Dialog and UI state
-  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpenState] = useState(false);
   const [resultImageSrc, setResultImageSrc] = useState<string>("");
 
   // Refs
   const previewIdRef = useRef(0);
+  const setShareDialogOpen = useCallback((open: boolean) => {
+    if (!open) previewIdRef.current++;
+    setShareDialogOpenState(open);
+  }, []);
   const urlUpdateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -568,12 +572,12 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
    * @param format - Output format: "png" (default), "jpg", or "svg".
    */
   const handleDownloadImage = useCallback(
-    (format: ImageFormat = "png") => {
+    async (format: ImageFormat = "png") => {
       if (format === "svg") {
         downloadSVG(generateSVGData(), currentEmoji);
         return;
       }
-      updateCanvas(CANVAS_ACTION.DOWNLOAD, format);
+      if (!(await updateCanvas(CANVAS_ACTION.DOWNLOAD, format))) return;
       toast.success(currentT("Downloading image..."), {
         description: `${emojiToUnicode(currentEmoji)}-EmojiSalon.${format}`,
       });
@@ -616,7 +620,7 @@ export function EmojiProvider({ children }: EmojiProviderProps) {
     } else if (await updateCanvas(CANVAS_ACTION.GENERATE_PREVIEW)) {
       setShareDialogOpen(true);
     }
-  }, [updateCanvas]);
+  }, [updateCanvas, setShareDialogOpen]);
 
   // Computed SVG HTML
   const svgHTML = generateSVGData();

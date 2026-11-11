@@ -59,6 +59,16 @@ test("share preview waits for decoding and ignores an older preview or changed p
     });
     assert.equal(app.value.shareDialogOpen, false);
     assert.equal(app.errors.length, 1);
+    let closed;
+    await app.act(() => {
+      closed = app.value.handleShare();
+      app.value.setShareDialogOpen(false);
+    });
+    await app.act(async () => {
+      renders[4].resolve({ toDataURL: () => "closed" });
+      await closed;
+    });
+    assert.equal(app.value.shareDialogOpen, false);
   } finally {
     await app.close();
   }
