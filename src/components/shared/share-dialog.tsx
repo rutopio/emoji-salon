@@ -14,13 +14,13 @@ import {
   ThreadsLogoIcon,
   XLogoIcon,
 } from "@phosphor-icons/react";
-import { Button } from "@rutopio/base-component/button";
+import { Button } from "@rutopio/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@rutopio/base-component/dialog";
+} from "@rutopio/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";

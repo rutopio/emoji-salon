@@ -1,11 +1,11 @@
-@source "../node_modules/@rutopio/base-component/dist";
+@source "../node_modules/@rutopio/ui/dist";
 @import "tailwindcss" source("./");
 
 @import "tw-animate-css";
-@import "@rutopio/base-component/styles.css";
-@import "@rutopio/base-component/article.css";
-@import "@rutopio/base-component/neutral-theme.css";
-@import "@rutopio/base-component/cjk-fonts.css";
+@import "@rutopio/ui/styles.css";
+@import "@rutopio/ui/article.css";
+@import "@rutopio/ui/neutral-theme.css";
+@import "@rutopio/ui/cjk-fonts.css";
 @import "@fontsource-variable/noto-sans-jp";
 @import "@fontsource-variable/noto-sans-tc";
 

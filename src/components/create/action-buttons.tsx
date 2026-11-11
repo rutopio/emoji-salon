@@ -12,14 +12,14 @@ import {
   ShareNetworkIcon,
   SmileyWinkIcon,
 } from "@phosphor-icons/react";
-import { Button } from "@rutopio/base-component/button";
+import { Button } from "@rutopio/ui/button";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "@rutopio/base-component/drawer";
+} from "@rutopio/ui/drawer";
 import { useState } from "react";
 import { EmojiPicker } from "@/components/create/emoji-picker";
 import DownloadDialog from "@/components/shared/download-dialog";

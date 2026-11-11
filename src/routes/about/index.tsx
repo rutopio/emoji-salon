@@ -1,12 +1,12 @@
-import { Article, ArticleSection } from "@rutopio/base-component/article";
-import { PageIntro } from "@rutopio/base-component/page-intro";
+import { Article, ArticleSection } from "@rutopio/ui/article";
+import { PageIntro } from "@rutopio/ui/page-intro";
 /**
  * @fileoverview About page route for EmojiSalon.
  * Provides information about the application, how it works, accessibility,
  * copyright, and open source details.
  */
 
-import { GithubMarkIcon } from "@rutopio/base-component/github-mark-icon";
+import { GithubMarkIcon } from "@rutopio/ui/github-mark-icon";
 import { createFileRoute } from "@tanstack/react-router";
 import { AboutPageActions } from "@/components/about-page-actions";
 import { ArticleHeading } from "@/components/article-heading";

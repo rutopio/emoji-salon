@@ -1,11 +1,11 @@
 import { CheckIcon, GithubLogoIcon, ListIcon } from "@phosphor-icons/react";
-import { buttonVariants } from "@rutopio/base-component/button";
-import { LanguageToggle } from "@rutopio/base-component/language-toggle";
+import { buttonVariants } from "@rutopio/ui/button";
+import { LanguageToggle } from "@rutopio/ui/language-toggle";
 import {
   HeaderNavigation,
   SiteHeader,
-} from "@rutopio/base-component/site-header";
-import { useIsMobile } from "@rutopio/base-component/use-mobile";
+} from "@rutopio/ui/site-header";
+import { useIsMobile } from "@rutopio/ui/use-mobile";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";

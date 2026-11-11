@@ -4,7 +4,7 @@
  */
 
 import { MagicWandIcon } from "@phosphor-icons/react";
-import { Button } from "@rutopio/base-component/button";
+import { Button } from "@rutopio/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import ShowcaseSection from "@/components/showcase/showcase-section";
 import showcaseData from "@/data/showcase/showcase-data.json";

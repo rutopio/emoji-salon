@@ -11,13 +11,13 @@ import {
   FileSvgIcon,
 } from "@phosphor-icons/react";
 
-import { Button } from "@rutopio/base-component/button";
+import { Button } from "@rutopio/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@rutopio/base-component/dialog";
+} from "@rutopio/ui/dialog";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { useT } from "@/lib/translations";
 

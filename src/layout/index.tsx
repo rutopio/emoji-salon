@@ -1,4 +1,4 @@
-import { SiteLayout } from "@rutopio/base-component/site-layout";
+import { SiteLayout } from "@rutopio/ui/site-layout";
 import type { ReactNode } from "react";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";

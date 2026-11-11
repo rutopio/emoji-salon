@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
-import { PageTransition } from "@rutopio/base-component/page-transition";
-import { Toaster } from "@rutopio/base-component/sonner";
+import { PageTransition } from "@rutopio/ui/page-transition";
+import { Toaster } from "@rutopio/ui/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,

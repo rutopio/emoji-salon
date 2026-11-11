@@ -1,5 +1,5 @@
-import { SectionHeading } from "@rutopio/base-component/section-heading";
-import { copySectionLink } from "@rutopio/base-component/section-navigation";
+import { SectionHeading } from "@rutopio/ui/section-heading";
+import { copySectionLink } from "@rutopio/ui/section-navigation";
 import { toast } from "sonner";
 import { useT } from "@/lib/translations";
 

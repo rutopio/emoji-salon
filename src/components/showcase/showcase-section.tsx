@@ -18,8 +18,8 @@ import {
   PencilSimpleIcon,
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
-import { Button } from "@rutopio/base-component/button";
-import { ButtonGroup } from "@rutopio/base-component/button-group";
+import { Button } from "@rutopio/ui/button";
+import { ButtonGroup } from "@rutopio/ui/button-group";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";

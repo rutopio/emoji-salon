@@ -1,4 +1,4 @@
-import { AttributionFooter } from "@rutopio/base-component/footer";
+import { AttributionFooter } from "@rutopio/ui/footer";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 
 export default function Footer() {
