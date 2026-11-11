@@ -81,7 +81,7 @@ export const aboutCopy: Record<Locale, AboutCopy> = {
       "use more distinct colors so similar emoji are easier to tell apart",
     ],
     helpOutro:
-      "These changes only apply to the images you save or share. They do not change the emoji on your device's keyboard. If an emoji carries meaning, pair it with a text label or alt text.",
+      "These changes only apply to the images you save or share. They do not change the emoji on your device’s keyboard. If an emoji carries meaning, pair it with a text label or alt text.",
     seeMore: "See more",
     copyright: "Copyright and license",
     graphics: "Graphics",
