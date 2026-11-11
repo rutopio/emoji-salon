@@ -115,7 +115,7 @@ Most current emoji designs do not consider these accessibility needs. EmojiSalon
 ## Building for Production
 
 ```bash
-pnpm run build
+pnpm build
 ```
 
 The app is deployed to [Cloudflare Pages](https://developers.cloudflare.com/pages/). The build output in `dist/` can be served as a static site on any platform.
@@ -159,11 +159,25 @@ Code licensed under the MIT License: http://opensource.org/licenses/MIT
 Use Node.js 26.13.0 (`nvm use`) and pnpm 12.18.0, as pinned in
 `.nvmrc` and `package.json`. Install with `pnpm install --frozen-lockfile`.
 
-- `pnpm check`: read-only Biome formatting/lint and browser/Functions type checks
-- `pnpm check:fix`: apply safe Biome fixes
-- `pnpm format`: format source files
-- `pnpm build`: create the production output
-- `pnpm audit`: check direct and transitive dependencies
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev` | Start the Vite development server. |
+| `pnpm build` | Run `check`, then create the production output in `dist/`. |
+| `pnpm format` | Format code, organize imports and apply safe Biome lint fixes. |
+| `pnpm check` | Check formatting, lint and browser/Functions types without modifying files. |
+| `pnpm preview` | Serve the existing production build locally. |
+
+`format` replaces `lint:fix` and `check:fix`; `check` replaces `lint`,
+`format:check` and `check-types`. Fixes that need manual review still fail `check`.
+For dependency maintenance, use pnpm's built-in `outdated`, `update` and `audit`
+commands instead of repository aliases.
+
+`pnpm preview:cf` builds the site and starts the local Cloudflare Pages runtime
+with Functions support. Use it when testing server routes; `preview` serves the
+static build only.
+
+`pnpm preprocess` regenerates the emoji data from the pinned Twemoji source.
+It is a separate maintenance task and does not run during a normal build.
 
 The five personal sites share the same `biome.json`, `.editorconfig`,
 `.gitattributes`, `tsconfig.base.json`, Functions compiler settings and pnpm

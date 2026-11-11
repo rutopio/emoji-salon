@@ -8,20 +8,12 @@
   "packageManager": "pnpm@12.18.0",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "check-types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p functions/tsconfig.json",
-    "check": "biome check . && pnpm check-types",
-    "deps": "pnpm dlx taze@latest -Ilw",
-    "deps:major": "pnpm dlx taze@latest major -Ilw",
-    "ui": "pnpm dlx shadcn@latest",
+    "build": "pnpm check && vite build",
     "preview": "vite preview",
+    "format": "biome check --write .",
+    "check": "biome check . && tsc --noEmit -p tsconfig.json && tsc --noEmit -p functions/tsconfig.json",
     "preview:cf": "pnpm build && wrangler pages dev dist",
-    "preprocess": "node preprocess/scripts/build-emoji-data.mjs",
-    "lint:fix": "biome lint --write .",
-    "format:check": "biome format .",
-    "check:fix": "biome check --write ."
+    "preprocess": "node preprocess/scripts/build-emoji-data.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
