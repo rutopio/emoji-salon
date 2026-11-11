@@ -8,6 +8,11 @@ import emojiNames from "@/data/emoji-names.json";
 import { DEFAULT_EMOJIS } from "@/lib/constants";
 import type { EmojiPathData } from "./emoji-path-data";
 
+const EMOJI_CHARACTER_RE =
+  /^(\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji})+$/u;
+const VARIATION_SELECTOR_ID_RE = /_fe0f/g;
+const PALETTE_OVERRIDE_RE = /^(\d+)_([A-Fa-f0-9]{6})$/;
+
 /** In-memory cache of fetched per-emoji data, keyed by unicode id. */
 const emojiDataCache = new Map<string, EmojiPathData>();
 
@@ -111,8 +116,7 @@ export function unicodeToEmoji(urlCode: string): string | null {
     });
 
     const character = fin.join("");
-    const emojisRegex =
-      /^(\p{Extended_Pictographic}|\p{Emoji_Component}|\p{Emoji})+$/u;
+    const emojisRegex = EMOJI_CHARACTER_RE;
 
     if (emojisRegex.test(character)) {
       return character;
@@ -147,8 +151,9 @@ export async function fetchEmojiData(
   // the data file drops it (u1f441_200d_1f5e8) — but other ids legitimately
   // contain fe0f, so the original must win when it exists.
   const candidates =
-    unicode.includes("_fe0f") && unicode !== unicode.replace(/_fe0f/g, "")
-      ? [unicode, unicode.replace(/_fe0f/g, "")]
+    unicode.includes("_fe0f") &&
+    unicode !== unicode.replace(VARIATION_SELECTOR_ID_RE, "")
+      ? [unicode, unicode.replace(VARIATION_SELECTOR_ID_RE, "")]
       : [unicode];
 
   for (const id of candidates) {
@@ -256,7 +261,7 @@ export function parsePaletteString(
   // Parse format: "195_F0DAA3-824_6E343F"
   const pairs = paletteString.split("-");
   pairs.forEach((pair) => {
-    const match = pair.match(/^(\d+)_([A-Fa-f0-9]{6})$/);
+    const match = pair.match(PALETTE_OVERRIDE_RE);
     if (match?.[1] && match[2]) {
       const colorIdx = parseInt(match[1], 10);
       const hexColor = `#${match[2]}`;

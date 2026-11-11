@@ -8,6 +8,8 @@ import { defineConfig, type Plugin } from "vite";
 import type { EmojiPathData } from "./src/lib/emoji-path-data";
 import { renderOgSvg } from "./src/lib/render-og-image.ts";
 
+const EMOJI_ID_RE = /^u[0-9a-f_]+$/;
+
 /**
  * Dev-only: mirror the /og Pages Function so the OG image works under
  * `vite dev` too (Cloudflare Functions only run under wrangler). Reads the
@@ -27,7 +29,7 @@ function ogImagePlugin(): Plugin {
         const emoji = url.searchParams.get("emoji");
         const override = url.searchParams.get("palette") ?? undefined;
         const file = emoji ? path.join(emojiDir, `${emoji}.json`) : "";
-        if (!emoji || !/^u[0-9a-f_]+$/.test(emoji) || !existsSync(file)) {
+        if (!emoji || !EMOJI_ID_RE.test(emoji) || !existsSync(file)) {
           res.statusCode = 400;
           res.end("Unknown emoji");
           return;

@@ -20,6 +20,8 @@ import charMap from "@/data/twemoji-chars.json";
 import { useT } from "@/lib/translations";
 import { useLocale } from "@/lib/use-locale";
 
+const TRAILING_VARIATION_SELECTOR_RE = /\uFE0F$/;
+
 const twemojiCharMap: Record<string, string> = charMap;
 
 /** Sticky category header. */
@@ -57,7 +59,7 @@ const FE0F = "️";
 function stemFor(char: string): string | undefined {
   return (
     twemojiCharMap[char] ??
-    twemojiCharMap[char.replace(new RegExp(`${FE0F}$`), "")] ??
+    twemojiCharMap[char.replace(TRAILING_VARIATION_SELECTOR_RE, "")] ??
     twemojiCharMap[char.replaceAll(FE0F, "")]
   );
 }

@@ -36,6 +36,14 @@ import {
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const SVG_ATTRIBUTE_RE = /([\w:-]+)\s*=\s*"([^"]*)"/g;
+const SHORT_HEX_COLOR_RE = /^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$/;
+const SVG_OPEN_TAG_RE = /^[\s\S]*?<svg[^>]*>/;
+const SVG_CLOSE_TAG_RE = /<\/svg>\s*$/;
+const SVG_ELEMENT_RE = /<(\/?)(g|path|circle|ellipse)\b([^>]*?)(\/?)>/g;
+const SVG_EXTENSION_RE = /\.svg$/;
+const HYPHEN_RE = /-/g;
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PREPROCESS_DIR = resolve(__dirname, "..");
 const REPO_ROOT = resolve(PREPROCESS_DIR, "..");
@@ -91,7 +99,7 @@ function ellipseToPath(attrs) {
 /** Parse the attributes of a single SVG element tag into a plain object. */
 function parseAttrs(tag) {
   const attrs = {};
-  for (const m of tag.matchAll(/([\w:-]+)\s*=\s*"([^"]*)"/g)) {
+  for (const m of tag.matchAll(SVG_ATTRIBUTE_RE)) {
     attrs[m[1]] = m[2];
   }
   return attrs;
@@ -103,7 +111,7 @@ function parseAttrs(tag) {
  */
 function normalizeColor(color) {
   if (!color || color === "none") return "#000000";
-  const short = color.match(/^#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$/);
+  const short = color.match(SHORT_HEX_COLOR_RE);
   if (short) {
     return `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}`.toLowerCase();
   }
@@ -121,12 +129,10 @@ function parseSvg(svg) {
   const f = [];
 
   // Strip the outer <svg ...> ... </svg> wrapper, keep the inner markup.
-  const inner = svg
-    .replace(/^[\s\S]*?<svg[^>]*>/, "")
-    .replace(/<\/svg>\s*$/, "");
+  const inner = svg.replace(SVG_OPEN_TAG_RE, "").replace(SVG_CLOSE_TAG_RE, "");
 
   // Tokenize into element tags, tracking <g fill> context for grouped fills.
-  const tagRe = /<(\/?)(g|path|circle|ellipse)\b([^>]*?)(\/?)>/g;
+  const tagRe = SVG_ELEMENT_RE;
   const groupFills = [];
   for (const m of inner.matchAll(tagRe)) {
     const [, closing, name, rawAttrs, selfClose] = m;
@@ -175,7 +181,7 @@ function distinctColors(f) {
 
 /** "1f468-200d-1f469.svg" -> "u1f468_200d_1f469". */
 function filenameToUnicode(filename) {
-  return `u${filename.replace(/\.svg$/, "").replace(/-/g, "_")}`;
+  return `u${filename.replace(SVG_EXTENSION_RE, "").replace(HYPHEN_RE, "_")}`;
 }
 
 /** "1f468-200d-1f469" -> the actual emoji character (decode the codepoints). */
@@ -229,7 +235,7 @@ function main() {
     // Copy the raw SVG for the picker's self-hosted twemoji thumbnails.
     copyFileSync(join(SVG_DIR, filename), join(SVG_OUT_DIR, filename));
 
-    const stem = filename.replace(/\.svg$/, "");
+    const stem = filename.replace(SVG_EXTENSION_RE, "");
     chars[stemToChar(stem)] = stem;
     emojis.push(unicode);
   }

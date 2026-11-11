@@ -11,6 +11,8 @@
 
 import type { EmojiPathData } from "./emoji-path-data";
 
+const PALETTE_OVERRIDE_RE = /^(\d+)_([0-9a-fA-F]{6})$/;
+
 /** Both SVGs for one emoji: original palette and user-customized palette. */
 interface EmojiPair {
   /** Original emoji inner SVG (just `<path>` elements, viewBox 0 0 36 36). */
@@ -28,7 +30,7 @@ function applyOverride(c: string[], override?: string): string[] {
   const colors = [...c];
   if (!override) return colors;
   for (const pair of override.split("-")) {
-    const m = pair.match(/^(\d+)_([0-9a-fA-F]{6})$/);
+    const m = pair.match(PALETTE_OVERRIDE_RE);
     if (m?.[1] && m[2]) {
       const idx = Number(m[1]);
       if (idx >= 0 && idx < colors.length)

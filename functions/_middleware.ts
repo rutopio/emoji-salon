@@ -12,6 +12,8 @@ import { localeForPath, stripLocale } from "../src/lib/locale";
 import { type Page, pageMeta, pagePath } from "../src/lib/page-meta";
 import { OG_HEIGHT, OG_WIDTH } from "../src/lib/render-og-image";
 
+const TRAILING_SLASH_RE = /\/$/;
+
 class MetaContentRewriter {
   constructor(private readonly content: string) {}
   element(el: Element) {
@@ -64,7 +66,8 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   if (!contentType.includes("text/html")) return response;
 
   const locale = localeForPath(url.pathname);
-  const barePath = stripLocale(url.pathname).replace(/\/$/, "") || "/";
+  const barePath =
+    stripLocale(url.pathname).replace(TRAILING_SLASH_RE, "") || "/";
   const page: Page | null =
     barePath === "/"
       ? "create"

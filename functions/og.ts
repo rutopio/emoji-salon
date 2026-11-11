@@ -16,6 +16,8 @@ import resvgWasm from "@resvg/resvg-wasm/index_bg.wasm";
 import type { EmojiPathData } from "../src/lib/emoji-path-data";
 import { OG_WIDTH, renderOgSvg } from "../src/lib/render-og-image";
 
+const EMOJI_ID_RE = /^u[0-9a-f_]+$/;
+
 // initWasm must run once per isolate; guard with a shared promise.
 let wasmReady: Promise<void> | null = null;
 function ensureWasm(): Promise<void> {
@@ -27,7 +29,7 @@ function ensureWasm(): Promise<void> {
 
 /** Only accept well-formed emoji ids to keep the asset fetch path safe. */
 function isValidEmojiId(id: string): boolean {
-  return /^u[0-9a-f_]+$/.test(id);
+  return EMOJI_ID_RE.test(id);
 }
 
 export const onRequestGet: PagesFunction = async ({ request }) => {
