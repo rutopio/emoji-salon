@@ -1,16 +1,3 @@
-/**
- * @fileoverview Showcase section component for displaying emoji variants.
- * Displays an emoji card with original and customized variants, supporting
- * both single and multiple variant displays.
- *
- * Download behaviour:
- *   - Mobile (canShare support): opens the native share sheet via Web Share API
- *     so the user can save the image directly from the OS share menu.
- *   - Desktop: opens a DownloadDialog with SVG / PNG / JPG / Copy options.
- *
- * Share behaviour: opens a ShareDialog (same as the Create page).
- */
-
 import {
   ArrowDownIcon,
   ArrowRightIcon,
@@ -34,45 +21,25 @@ import { withLocale } from "@/lib/locale";
 import { rasterizeSvg } from "@/lib/rasterize-svg";
 import { downloadSVG } from "@/lib/share-utils";
 
-/**
- * Variant data structure for emoji customization.
- */
 interface Variant {
-  /** Color palette string identifier. */
+  /** Share-URL palette overrides, e.g. 0_ff0000. */
   palette: string;
-  /** Display name for the variant. */
   name: string;
 }
 
-/**
- * Props for the ShowcaseSection component.
- */
 interface ShowcaseSectionProps {
-  /** Unicode emoji identifier. */
+  /** Asset ID, e.g. u1f600. */
   emoji: string;
-  /** Array of variant configurations. */
   variants: Variant[];
-  /** Optional CSS class name. */
   className?: string;
 }
 
-/**
- * Props for the VariantPreview component.
- */
 interface VariantPreviewProps {
-  /** Unicode emoji identifier. */
+  /** Asset ID, e.g. u1f600. */
   emoji: string;
-  /** Variant configuration. */
   variant: Variant;
 }
 
-/**
- * Preview component for a single emoji variant.
- * Loads and displays the SVG for a specific emoji variant.
- *
- * @param props - Component props.
- * @returns Emoji preview component for the variant.
- */
 function VariantPreview({ emoji, variant }: VariantPreviewProps) {
   const t = useT();
   const { svg, isLoading } = useVariantSVG(emoji, variant.palette);
@@ -82,13 +49,6 @@ function VariantPreview({ emoji, variant }: VariantPreviewProps) {
   );
 }
 
-/**
- * Showcase section component for displaying emoji with variants.
- * Shows original emoji alongside customized variants with download and share options.
- *
- * @param props - Component props.
- * @returns Showcase section card component.
- */
 export default function ShowcaseSection({
   emoji,
   variants,
@@ -109,11 +69,6 @@ export default function ShowcaseSection({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
-  /**
-   * Navigates to the main page with the specified emoji and palette.
-   *
-   * @param palette - Optional palette identifier to pre-select.
-   */
   const handleNavigate = (palette?: string) => {
     navigate({
       to: withLocale("/", locale),
@@ -124,13 +79,6 @@ export default function ShowcaseSection({
     });
   };
 
-  /**
-   * Generates a PNG (or JPG) image from the modified SVG.
-   * Uses a hidden canvas to render the SVG and convert it to a data URL.
-   *
-   * @param callback - Function called with the generated image data URL.
-   * @param format - Output image format ("png" or "jpg"). Defaults to "png".
-   */
   const generateImage = useCallback(
     async (
       callback: (dataUrl: string) => void | Promise<void>,
@@ -149,15 +97,7 @@ export default function ShowcaseSection({
     [modifiedSvg, t]
   );
 
-  /**
-   * Handles the download button press.
-   *
-   * On mobile (viewport < 768 px) with Web Share API support, triggers the OS
-   * native share sheet with the PNG attached so the user can save the image.
-   * Falls back to the DownloadDialog if the share is cancelled or fails.
-   *
-   * On desktop, opens the DownloadDialog directly (SVG / PNG / JPG / Copy).
-   */
+  // Native sharing lets mobile users save the image through the OS share sheet.
   const handleDownload = useCallback(() => {
     const isNarrowViewport = window.innerWidth < 768;
 
@@ -174,7 +114,7 @@ export default function ShowcaseSection({
         if (navigator.canShare({ files })) {
           try {
             await navigator.share({ files });
-            return; // share succeeded — do not open dialog
+            return;
           } catch {
             // User cancelled or share failed; fall through to dialog.
           }
@@ -186,17 +126,11 @@ export default function ShowcaseSection({
     }
   }, [emoji, generateImage]);
 
-  /**
-   * Downloads the modified SVG directly.
-   */
   const handleDownloadSVG = useCallback(() => {
     const emojiChar = unicodeToEmoji(emoji) || emoji;
     downloadSVG(modifiedSvg, emojiChar);
   }, [emoji, modifiedSvg]);
 
-  /**
-   * Renders the emoji to canvas and triggers a PNG download.
-   */
   const handleDownloadPNG = useCallback(() => {
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.png`;
@@ -205,9 +139,6 @@ export default function ShowcaseSection({
     }, "png");
   }, [emoji, generateImage, t]);
 
-  /**
-   * Renders the emoji to canvas (white background) and triggers a JPG download.
-   */
   const handleDownloadJPG = useCallback(() => {
     generateImage((dataUrl) => {
       const filename = `${emoji}-EmojiSalon.jpg`;
@@ -216,9 +147,6 @@ export default function ShowcaseSection({
     }, "jpg");
   }, [emoji, generateImage, t]);
 
-  /**
-   * Copies the emoji image to the clipboard.
-   */
   const handleCopy = useCallback(() => {
     void generateImage(async (dataUrl) => {
       try {
@@ -234,9 +162,6 @@ export default function ShowcaseSection({
     }, "png");
   }, [generateImage, t]);
 
-  /**
-   * Handles sharing the emoji by opening the share modal.
-   */
   const handleShare = useCallback(() => {
     setShareDialogOpen(true);
   }, []);
@@ -250,7 +175,6 @@ export default function ShowcaseSection({
   return (
     <div className={`bg-card rounded-lg border p-4 lg:p-6 ${className}`}>
       <div className="flex flex-col gap-4 lg:gap-8">
-        {/* Unicode label and action buttons */}
         <div className="relative flex w-full items-center justify-start lg:justify-center">
           <span className="font-mono text-base tabular-nums">
             {unicodeDisplay}
@@ -286,16 +210,13 @@ export default function ShowcaseSection({
           </ButtonGroup>
         </div>
 
-        {/* Emoji previews */}
         <div className="flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-6">
-          {/* Original emoji */}
           <EmojiPreview
             svg={originalSvg}
             label={t(originalName)}
             isLoading={isLoading}
           />
 
-          {/* Arrow indicator */}
           <ArrowRightIcon
             size={20}
             weight="bold"
@@ -309,7 +230,6 @@ export default function ShowcaseSection({
             className="text-muted-foreground block text-sm lg:hidden"
           />
 
-          {/* Variant previews */}
           <div
             className={
               hasMultipleVariants ? "grid grid-cols-1 gap-4 sm:grid-cols-2" : ""
@@ -333,7 +253,6 @@ export default function ShowcaseSection({
           </div>
         </div>
 
-        {/* Download dialog */}
         <DownloadDialog
           open={downloadOpen}
           onOpenChange={setDownloadOpen}
@@ -345,7 +264,6 @@ export default function ShowcaseSection({
           onCopy={handleCopy}
         />
 
-        {/* Share modal */}
         <ShowcaseShareDialog
           open={shareDialogOpen}
           onOpenChange={setShareDialogOpen}

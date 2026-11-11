@@ -1,11 +1,5 @@
-/**
- * @fileoverview Emoji picker built on frimousse (headless) with self-hosted
- * Twemoji thumbnails. Each cell renders the jdecked Twemoji SVG copied to
- * /twemoji during preprocessing, so the picker preview matches the editor and
- * OG image (one source of truth).
- *
- * @see https://frimousse.liveblocks.io
- */
+// https://frimousse.liveblocks.io
+// Use the same Twemoji thumbnails as the editor and share previews.
 
 import {
   type EmojiPickerListCategoryHeaderProps,
@@ -24,7 +18,6 @@ const TRAILING_VARIATION_SELECTOR_RE = /\uFE0F$/;
 
 const twemojiCharMap: Record<string, string> = charMap;
 
-/** Sticky category header. */
 function CategoryHeader({
   category,
   ...props
@@ -39,7 +32,6 @@ function CategoryHeader({
   );
 }
 
-/** A row of emoji buttons. */
 function Row({ children, ...props }: EmojiPickerListRowProps) {
   return (
     <div className="scroll-my-1 px-1" {...props}>
@@ -51,11 +43,7 @@ function Row({ children, ...props }: EmojiPickerListRowProps) {
 /** Variation selector emojibase appends but Twemoji filenames usually omit. */
 const FE0F = "️";
 
-/**
- * Resolve an emoji character to its Twemoji filename stem. emojibase reports
- * many emoji with a trailing/embedded FE0F that the Twemoji filename drops, so
- * fall back to FE0F-stripped variants. Lifts coverage from ~81% to ~99.7%.
- */
+// Twemoji may omit FE0F even when the picker includes it; prefer the exact asset first.
 function stemFor(char: string): string | undefined {
   return (
     twemojiCharMap[char] ??
@@ -64,7 +52,6 @@ function stemFor(char: string): string | undefined {
   );
 }
 
-/** One emoji button, rendered as a self-hosted Twemoji thumbnail. */
 function EmojiButton({ emoji, ...props }: EmojiPickerListEmojiProps) {
   const stem = stemFor(emoji.emoji);
   return (
@@ -93,26 +80,10 @@ const LIST_COMPONENTS = {
   Emoji: EmojiButton,
 };
 
-/**
- * Props for the EmojiPicker component.
- */
 interface EmojiPickerProps {
-  /**
-   * Callback invoked when an emoji is selected.
-   *
-   * @param emoji - The selected emoji character.
-   * @param label - The label/name of the emoji.
-   */
   onEmojiSelect: (emoji: string, label: string) => void;
 }
 
-/**
- * Emoji picker with self-hosted Twemoji thumbnails.
- * Displays a searchable, scrollable emoji grid.
- *
- * @param props - Component props.
- * @returns Emoji picker UI component.
- */
 export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   const t = useT();
   const locale = useLocale();
@@ -146,13 +117,6 @@ export function EmojiPicker({ onEmojiSelect }: EmojiPickerProps) {
   );
 }
 
-/**
- * Desktop emoji picker component.
- * Wraps the EmojiPicker component and is only visible on large screens.
- * Uses the emoji context for handling emoji selection.
- *
- * @returns Desktop emoji picker component (hidden on mobile).
- */
 export default function DesktopEmojiPicker() {
   const { handleEmojiSelect } = useEmoji();
 

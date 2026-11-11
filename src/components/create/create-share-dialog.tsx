@@ -1,18 +1,7 @@
-/**
- * @fileoverview Share dialog component for sharing customized emoji on the Create page.
- * Wraps the shared ShareDialog with data sourced from EmojiContext.
- */
-
 import ShareDialog from "@/components/feedback/share-dialog";
 import { useEmoji } from "@/contexts/emoji-context";
 import { useT } from "@/hooks/use-translation";
 
-/**
- * Share dialog for the Create page. Reads state from EmojiContext and delegates
- * rendering to the shared ShareDialog component.
- *
- * @returns Share dialog dialog component.
- */
 export default function CreateShareDialog() {
   const t = useT();
   const {

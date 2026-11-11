@@ -1,16 +1,4 @@
-/**
- * Cloudflare Pages Function: on-demand Open Graph image.
- *
- *   GET /og?emoji=u1f600&palette=0_55acee
- *
- * Fetches the shared emoji's preprocessed data from the static assets, builds a
- * 1200x630 SVG (original emoji on the left, customized on the right) with the
- * app's pure renderer, then rasterizes it to PNG with resvg-wasm. Cached at the
- * edge so repeated shares are cheap. The worker bundles no emoji data itself.
- */
-
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
-// The .wasm is imported as a module so Wrangler bundles it with the function.
 import resvgWasm from "@resvg/resvg-wasm/index_bg.wasm";
 
 import type { EmojiPathData } from "../src/lib/emoji-path-data";
@@ -18,7 +6,7 @@ import { OG_WIDTH, renderOgSvg } from "../src/lib/render-og-image";
 
 const EMOJI_ID_RE = /^u[0-9a-f_]+$/;
 
-// initWasm must run once per isolate; guard with a shared promise.
+// Share initialization across requests; failed attempts remain retryable.
 let wasmReady: Promise<void> | null = null;
 function ensureWasm(): Promise<void> {
   if (!wasmReady) {
@@ -44,8 +32,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     return new Response("Missing or invalid emoji", { status: 400 });
   }
 
-  // Fetch the per-emoji data served as a static asset on the same origin. A
-  // missing asset falls back to the SPA shell (text/html, 200), so require JSON.
+  // Missing assets may return the HTML SPA shell with status 200; require JSON.
   const dataRes = await fetch(`${url.origin}/data/emoji/${emoji}.json`);
   const contentType = dataRes.headers.get("content-type") || "";
   if (!dataRes.ok || !contentType.includes("application/json")) {
@@ -66,7 +53,6 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   return new Response(png.buffer as ArrayBuffer, {
     headers: {
       "content-type": "image/png",
-      // Cache aggressively at the edge; the image is a pure function of the query.
       "cache-control": "public, max-age=86400, s-maxage=2592000, immutable",
     },
   });

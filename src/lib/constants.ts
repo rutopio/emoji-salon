@@ -1,11 +1,3 @@
-/**
- * @fileoverview Application-wide constants.
- * Contains UI constants, emoji defaults, and social sharing URLs.
- */
-
-/**
- * Preset colors for the color swatch picker.
- */
 export const PRESET_COLORS = [
   "#FF3B30",
   "#FF9500",
@@ -20,10 +12,6 @@ export const PRESET_COLORS = [
   "#8E8E93",
 ];
 
-/**
- * Default emojis used for random selection.
- * These are pre-bundled in defaultEmojisSVGData.json for instant loading.
- */
 export const DEFAULT_EMOJIS = [
   "😀",
   "😙",
@@ -108,43 +96,20 @@ export const DEFAULT_EMOJIS = [
   "🎨",
 ];
 
-/**
- * Canonical site URL for metadata (OG tags, canonical links, etc.).
- * Used at build/SSR time where window.location is unavailable.
- */
 export const SITE_URL = "https://emojisalon.chingru.com";
 
-/**
- * Base URL for Twitter/X share intent.
- */
 export const TWITTER_SHARE_BASE_URL = "https://twitter.com/intent/tweet";
 
-/**
- * Base URL for Facebook share dialog.
- */
 export const FACEBOOK_SHARE_BASE_URL = "https://www.facebook.com/sharer.php";
 
-/**
- * Base URL for Threads share intent.
- */
 export const THREADS_SHARE_BASE_URL = "https://www.threads.net/intent/post";
 
-/**
- * Base URL for GitHub issue submission template.
- */
 export const GITHUB_ISSUE_BASE_URL =
   "https://github.com/rutopio/emoji-salon/issues/new?template=submit-showcase.yml";
 
-/**
- * Base URL for GitHub repository.
- */
 export const GITHUB_REPO_URL = "https://github.com/rutopio/emoji-salon";
 
-/**
- * Canvas export geometry, shared by the editor and showcase image renderers.
- * The emoji is drawn at `CANVAS_BASE_SIZE`, upscaled by `CANVAS_SCALE_FACTOR`
- * for a crisp raster, with `CANVAS_IMAGE_PADDING` device pixels of margin.
- */
+// Padding is the total margin in output pixels, applied after scaling.
 export const CANVAS_BASE_SIZE = 256;
 export const CANVAS_SCALE_FACTOR = 10;
 export const CANVAS_IMAGE_PADDING = 50;

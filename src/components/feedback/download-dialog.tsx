@@ -1,9 +1,3 @@
-/**
- * @fileoverview Shared download dialog component for saving emoji images.
- * Provides options to download as SVG, PNG, JPG, or copy to clipboard.
- * Used by both the Create page and Showcase page.
- */
-
 import {
   CheckCircleIcon,
   ClipboardIcon,
@@ -21,34 +15,17 @@ import {
 import { useT } from "@/hooks/use-translation";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 
-/**
- * Props for the DownloadDialog component.
- */
 interface DownloadDialogProps {
-  /** Whether the dialog is open. */
   open: boolean;
-  /** Callback when open state changes. */
   onOpenChange: (open: boolean) => void;
-  /** Inline SVG HTML string used for the preview image. */
   svgHTML: string;
-  /** Accessible label for the emoji preview. */
   emojiLabel: string;
-  /** Called when user selects SVG download. */
   onDownloadSVG: () => void;
-  /** Called when user selects PNG download. */
   onDownloadPNG: () => void;
-  /** Called when user selects JPG download. */
   onDownloadJPG: () => void;
-  /** Called when user selects copy to clipboard. */
   onCopy: () => void;
 }
 
-/**
- * Shared download dialog for saving emoji as SVG, PNG, JPG, or clipboard copy.
- *
- * @param props - Component props.
- * @returns Download dialog component.
- */
 export default function DownloadDialog({
   open,
   onOpenChange,

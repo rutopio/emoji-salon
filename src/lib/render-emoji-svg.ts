@@ -1,31 +1,14 @@
-/**
- * Pure, platform-agnostic emoji SVG builder. Given one emoji's preprocessed
- * data ({ d, f, c }) it produces the original and customized (palette-
- * overridden) inner SVG, without React or the browser, so it is reused by the
- * Cloudflare Pages OG image function and the dev server.
- *
- * Palette scheme C: a color's index is its position in `c` (distinct fills in
- * first-seen order). Overrides are encoded in share URLs as "<index>_<hex>".
- * Self-contained per emoji: no global color table.
- */
-
 import type { EmojiPathData } from "./emoji-path-data";
 
 const PALETTE_OVERRIDE_RE = /^(\d+)_([0-9a-fA-F]{6})$/;
 
-/** Both SVGs for one emoji: original palette and user-customized palette. */
+/** Inner paths in 36x36 SVG coordinates, without an outer svg element. */
 interface EmojiPair {
-  /** Original emoji inner SVG (just `<path>` elements, viewBox 0 0 36 36). */
   originalInner: string;
-  /** Customized emoji inner SVG (just `<path>` elements, viewBox 0 0 36 36). */
   customizedInner: string;
 }
 
-/**
- * Apply a URL override string ("0_55acee-2_ff0000") to an emoji's distinct
- * color list `c`, returning the customized colors (same length/order as `c`).
- * Unknown or out-of-range indices are ignored.
- */
+/** Overrides address local indices in c, not global font palette indices. */
 function applyOverride(c: string[], override?: string): string[] {
   const colors = [...c];
   if (!override) return colors;
@@ -40,13 +23,6 @@ function applyOverride(c: string[], override?: string): string[] {
   return colors;
 }
 
-/**
- * Build original + customized inner SVG (just the `<path>` elements) for an
- * emoji from its preprocessed data.
- *
- * @param data - The emoji's { d, f, c } data.
- * @param override - Optional override string, e.g. "0_55acee".
- */
 export function buildEmojiPair(
   data: EmojiPathData,
   override?: string

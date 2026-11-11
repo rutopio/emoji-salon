@@ -10,13 +10,7 @@ import { renderOgSvg } from "./src/lib/render-og-image.ts";
 
 const EMOJI_ID_RE = /^u[0-9a-f_]+$/;
 
-/**
- * Dev-only: mirror the /og Pages Function so the OG image works under
- * `vite dev` too (Cloudflare Functions only run under wrangler). Reads the
- * per-emoji data from public/data and serves the SVG directly (prod fetches the
- * same asset and rasterizes to PNG via resvg-wasm), sharing the same renderer
- * so dev and prod stay in sync.
- */
+// Vite does not run Pages Functions; preview the shared OG renderer as SVG here.
 function ogImagePlugin(): Plugin {
   const emojiDir = path.resolve(import.meta.dirname, "public/data/emoji");
   return {
@@ -42,7 +36,6 @@ function ogImagePlugin(): Plugin {
   };
 }
 
-// Preload the self-hosted fonts used on first paint.
 const PUBLIC_PRELOAD_FONTS = [
   "/fonts/inter-normal-core.woff2",
   "/fonts/PaperMono%5Bwght%5D.woff2",

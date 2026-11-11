@@ -1,4 +1,3 @@
-/** Load showcase emoji data through React Query and derive each SVG from it. */
 import { useQuery } from "@tanstack/react-query";
 import type { EmojiPathData } from "@/lib/emoji-path-data";
 import {

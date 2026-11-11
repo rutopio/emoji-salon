@@ -1,10 +1,3 @@
-/**
- * @fileoverview Shared share dialog component for sharing customized emojis.
- * Provides social sharing buttons (X, Facebook, Threads, Copy Link, Submit Showcase, CSS),
- * where the CSS button opens a secondary dialog showing HTML/CSS code snippets.
- * Used by both the Create page and Showcase page.
- */
-
 import {
   ClipboardIcon,
   CodeIcon,
@@ -39,37 +32,19 @@ import {
 const BUTTON_CLASS =
   "h-auto flex-col gap-1.5 py-3 [&_svg:not([class*='size-'])]:size-6";
 
-/**
- * Props for the ShareDialog component.
- */
 interface ShareDialogProps {
-  /** Whether the dialog is open. */
   open: boolean;
-  /** Callback when open state changes. */
   onOpenChange: (open: boolean) => void;
-  /** URL to share on social media and copy link. */
   shareUrl: string;
-  /** Inline SVG HTML string used for the preview image above buttons. */
   svgHTML?: string;
-  /** Accessible label for the emoji preview. */
   emojiLabel?: string;
-  /** Emoji character — used for HTML/CSS code section. */
   emoji?: string;
-  /** Customized palette colors — required for CSS code generation. */
+  /** Supply the emoji and both palettes to enable CSS export. */
   customizedPaletteColors?: string[];
-  /** Original palette colors — required for CSS code generation. */
   originalPaletteColors?: string[];
-  /** Whether to show the "Submit to Showcase" button. Defaults to true. */
   showSubmitShowcase?: boolean;
 }
 
-/**
- * Shared share dialog with social media buttons, copy link, submit to showcase,
- * and a CSS button that opens a secondary code dialog.
- *
- * @param props - Component props.
- * @returns Share dialog component.
- */
 export default function ShareDialog({
   open,
   onOpenChange,

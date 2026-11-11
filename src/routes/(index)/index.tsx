@@ -1,9 +1,3 @@
-/**
- * @fileoverview Main emoji customization page route.
- * Provides the interface for selecting emojis, customizing colors,
- * and downloading or sharing customized emojis.
- */
-
 import { createFileRoute } from "@tanstack/react-router";
 import ActionButtons from "@/components/create/action-buttons";
 import ColorPalettePickers from "@/components/create/color-palette-pickers";
@@ -16,20 +10,11 @@ import { useT } from "@/hooks/use-translation";
 import { pageHead } from "@/lib/page-meta";
 import { prepareEmojiRoute } from "@/lib/prepare-emoji-route";
 
-/**
- * Search parameters for the emoji customization page.
- */
 interface EmojiSearchParams {
-  /** Unicode emoji identifier from URL. */
   emoji?: string;
-  /** Palette override string from URL. */
   palette?: string;
 }
 
-/**
- * Main emoji customization page route configuration.
- * Validates search parameters and provides page metadata.
- */
 export const Route = createFileRoute("/(index)/")({
   component: EmojiSalonPage,
   beforeLoad: prepareEmojiRoute,
@@ -42,13 +27,6 @@ export const Route = createFileRoute("/(index)/")({
   head: () => pageHead("en", "create"),
 });
 
-/**
- * Main emoji customization page component.
- * Displays emoji picker, color customization controls, and emoji previews.
- * Shows loading spinner during SSR to prevent hydration mismatches.
- *
- * @returns Emoji customization page component.
- */
 export function EmojiSalonPage() {
   return (
     <EmojiProvider>

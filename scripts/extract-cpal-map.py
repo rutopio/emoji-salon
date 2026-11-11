@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
-"""
-Extract the CPAL palette from a Twemoji COLR font and output a JSON mapping
-of hex color -> global palette index.
-
-Usage:
-    python3 extract-cpal-map.py <font.woff2> [--out <output.json>]
-
-The script reads palette 0 from the CPAL table and writes:
-    { "#rrggbb": index, ... }
-
-It also prints summary stats so we can verify coverage against the SVG data.
-"""
+"""Map Twemoji CPAL colors to global palette indices for CSS export."""
 
 import argparse
 import json
@@ -19,9 +8,7 @@ from pathlib import Path
 
 from fontTools.ttLib import TTFont
 
-# CSS named colors that appear in some Twemoji SVGs (mainly flags) but aren't
-# normalised to hex by the current preprocessor.  We map them here so the CPAL
-# lookup can still find a match when the emoji data contains a named color.
+# Preserve named fills from Twemoji SVGs when resolving their CPAL indices.
 CSS_NAMED_COLORS: dict[str, str] = {
     "red": "#ff0000",
     "green": "#008000",
@@ -43,7 +30,7 @@ def extract_cpal_map(font_path: str) -> dict[str, int]:
         sys.exit(1)
 
     cpal = font["CPAL"]
-    palette = cpal.palettes[0]  # base palette (palette 0)
+    palette = cpal.palettes[0]
 
     color_map: dict[str, int] = {}
     for idx, color_record in enumerate(palette):
@@ -65,7 +52,6 @@ def main():
     color_map = extract_cpal_map(args.font)
     print(f"CPAL palette 0: {len(color_map)} distinct colors")
 
-    # Optionally verify against emoji data
     if args.verify_dir:
         verify_dir = Path(args.verify_dir)
         all_svg_colors: set[str] = set()
@@ -88,8 +74,6 @@ def main():
                 print(f"  ... and {len(missing) - 20} more")
 
     if args.out:
-        # Also add CSS named-color aliases so runtime lookups succeed when the
-        # emoji data still contains unresolved named colors.
         output_map = dict(color_map)
         for name, hex_val in CSS_NAMED_COLORS.items():
             if hex_val in color_map and name not in output_map:

@@ -1,12 +1,6 @@
 import { Article, ArticleSection } from "@rutopio/ui/article";
-import { PageIntro } from "@rutopio/ui/page-intro";
-/**
- * @fileoverview About page route for EmojiSalon.
- * Provides information about the application, how it works, accessibility,
- * copyright, and open source details.
- */
-
 import { GithubMarkIcon } from "@rutopio/ui/github-mark-icon";
+import { PageIntro } from "@rutopio/ui/page-intro";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArticleHeading } from "@/components/article/article-heading";
 import PageLayout from "@/components/layout/page-layout";
@@ -16,21 +10,11 @@ import { aboutCopy } from "@/lib/about-copy";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { pageHead } from "@/lib/page-meta";
 
-/**
- * About page route configuration.
- */
 export const Route = createFileRoute("/about/")({
   component: AboutPage,
   head: () => pageHead("en", "about"),
 });
 
-/**
- * About page component.
- * Displays information about EmojiSalon including how it works,
- * accessibility considerations, copyright information, and open source details.
- *
- * @returns About page component.
- */
 export function AboutPage() {
   const locale = useLocale();
   const c = aboutCopy[locale];

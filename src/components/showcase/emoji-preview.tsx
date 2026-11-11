@@ -1,31 +1,12 @@
-/**
- * @fileoverview Emoji preview component for displaying emoji SVG with label.
- * Shows a loading skeleton while the emoji is being loaded, then displays
- * the emoji SVG with an optional label below it.
- */
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useT } from "@/hooks/use-translation";
 
-/**
- * Props for the EmojiPreview component.
- */
 interface EmojiPreviewProps {
-  /** SVG string content to display. */
   svg: string;
-  /** Label text displayed below the emoji. */
   label: string;
-  /** Whether the emoji is currently loading. */
   isLoading?: boolean;
 }
 
-/**
- * Emoji preview component that displays an emoji SVG with a label.
- * Shows a loading skeleton while the emoji is being loaded.
- *
- * @param props - Component props.
- * @returns Emoji preview component with optional label.
- */
 export default function EmojiPreview({
   svg,
   label,

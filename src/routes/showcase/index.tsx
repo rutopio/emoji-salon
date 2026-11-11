@@ -1,8 +1,3 @@
-/**
- * @fileoverview Showcase page route for displaying emoji color variations.
- * Displays a collection of customized emoji variants from showcase data.
- */
-
 import { MagicWandIcon } from "@phosphor-icons/react";
 import { Button } from "@rutopio/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,21 +8,11 @@ import { useT } from "@/hooks/use-translation";
 import { GITHUB_ISSUE_BASE_URL } from "@/lib/constants";
 import { pageHead } from "@/lib/page-meta";
 
-/**
- * Showcase page route configuration.
- */
 export const Route = createFileRoute("/showcase/")({
   component: ShowcasePage,
   head: () => pageHead("en", "showcase"),
 });
 
-/**
- * Showcase page component.
- * Displays a grid of emoji variants from the showcase data.
- * Each section shows original and customized emoji variations.
- *
- * @returns Showcase page component.
- */
 export function ShowcasePage() {
   const t = useT();
   return (

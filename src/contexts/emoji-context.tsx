@@ -1,9 +1,3 @@
-/**
- * @fileoverview Emoji context provider for sharing emoji state across components.
- * Provides centralized state management for emoji selection, color customization,
- * SVG generation, and sharing functionality in the EmojiSalon application.
- */
-
 import { useMountEffect } from "@rutopio/ui/use-mount-effect";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "@tanstack/react-router";
@@ -73,64 +67,37 @@ function createEmojiSnapshot(
   };
 }
 
-/**
- * Context value interface for emoji state and actions.
- */
 interface EmojiContextValue {
-  /** Current emoji character. */
   currentEmoji: string;
-  /** Display label for current emoji. */
   currentEmojiLabel: string;
-  /** Array of customized palette colors. */
   customizedPaletteColors: string[];
 
-  /** Array of SVG path data strings. */
   pathArray: string[];
-  /** Array of normalized palette color strings. */
   paletteArray: string[];
-  /** Array of original palette colors. */
   originalPaletteColors: string[];
-  /** Array of indices mapping to original palette colors. */
   originalPaletteIndex: number[];
 
-  /** Whether the share dialog is open. */
   shareDialogOpen: boolean;
-  /** Setter for share dialog open state. */
   setShareDialogOpen: (open: boolean) => void;
-  /** Data URL of the generated result image. */
   resultImageSrc: string;
 
-  /** Generated SVG HTML for customized emoji. */
   svgHTML: string;
-  /** Generated SVG HTML for reference (original) emoji. */
   referenceSvgHTML: string;
 
-  /** Handles emoji selection from picker. */
   handleEmojiSelect: (emoji: string, label: string) => void;
-  /** Handles color change at specific index. */
   handleColorChange: (index: number, color: string) => void;
-  /** Handles random emoji selection. */
   handleRandomEmoji: () => void;
-  /** Handles random color generation for all palette colors. */
   handleRandomColors: () => void;
-  /** Handles resetting palette to original colors. */
   handleReset: () => void;
-  /** Handles downloading the emoji image in the given format (defaults to png). */
   handleDownloadImage: (format?: ImageFormat) => void;
-  /** Handles copying the emoji image to clipboard. */
   handleCopyImage: () => void;
-  /** Handles sharing the emoji. */
   handleShare: () => Promise<void>;
 }
 
-/** Supported image download formats. */
 type ImageFormat = "png" | "jpg" | "svg";
 
 const EmojiContext = createContext<EmojiContextValue | null>(null);
 
-/**
- * Canvas action types for different operations.
- */
 const CANVAS_ACTION = {
   DOWNLOAD: 1,
   COPY: 2,
@@ -138,21 +105,10 @@ const CANVAS_ACTION = {
   GENERATE_PREVIEW: 4,
 } as const;
 
-/**
- * Props for the EmojiProvider component.
- */
 interface EmojiProviderProps {
-  /** Child components to be wrapped by the provider. */
   children: React.ReactNode;
 }
 
-/**
- * Provider component for emoji-related state and actions.
- * Manages emoji selection, color customization, SVG generation, and sharing.
- *
- * @param props - Component props.
- * @returns Emoji context provider component.
- */
 export function EmojiProvider({ children }: EmojiProviderProps) {
   const pathname = useLocation({ select: (location) => location.pathname });
   return <EmojiEditor key={pathname}>{children}</EmojiEditor>;
@@ -192,11 +148,9 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     originalPaletteIndex,
   } = snapshot;
 
-  // Dialog and UI state
   const [shareDialogOpen, setShareDialogOpenState] = useState(false);
   const [resultImageSrc, setResultImageSrc] = useState<string>("");
 
-  // Refs
   const previewIdRef = useRef(0);
   const setShareDialogOpen = useCallback((open: boolean) => {
     if (!open) previewIdRef.current++;
@@ -230,16 +184,8 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     previewIdRef.current++;
   });
 
-  /**
-   * Updates the URL and localStorage with current emoji and palette.
-   * Only updates if currently on the home page route.
-   *
-   * @param emojiUnicode - Unicode identifier for the emoji.
-   * @param paletteCode - Optional palette override string.
-   */
   const updateURL = useCallback(
     (emojiUnicode: string, paletteCode?: string) => {
-      // Only update URL if we're on the home page
       if (
         location.pathname === "/" ||
         location.pathname === "/zh_tw" ||
@@ -295,12 +241,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     [queryClient, updateURL, cancelPendingURL]
   );
 
-  /**
-   * Handles emoji selection from the emoji picker.
-   *
-   * @param emoji - The selected emoji character.
-   * @param label - The display label for the emoji.
-   */
   const handleEmojiSelect = useCallback(
     (emoji: string, label: string) => {
       void updateEmoji(emoji, label);
@@ -308,14 +248,7 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     [updateEmoji]
   );
 
-  /**
-   * Handles color change at a specific palette index.
-   * Updates the customized palette colors and debounces URL updates to avoid
-   * excessive updates during color picker drag interactions.
-   *
-   * @param index - The index of the color to change.
-   * @param color - The new color value (hex string).
-   */
+  // Debounce share-URL writes while applying drag colors immediately.
   const handleColorChange = useCallback(
     (index: number, color: string) => {
       const colors = paletteColorsRef.current ?? customizedPaletteColors;
@@ -345,19 +278,11 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     ]
   );
 
-  /**
-   * Handles random emoji selection.
-   * Selects a random emoji and resets the palette to original colors.
-   */
   const handleRandomEmoji = useCallback(() => {
     const { emoji, label } = getRandomEmojiWithLabel();
     void updateEmoji(emoji, label);
   }, [updateEmoji]);
 
-  /**
-   * Handles random color generation for all palette colors.
-   * Generates random colors for each position in the palette and updates the URL.
-   */
   const handleRandomColors = useCallback(() => {
     if (!currentEmoji) return;
     cancelPendingURL();
@@ -382,10 +307,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     updateURL,
   ]);
 
-  /**
-   * Handles resetting palette colors to original values.
-   * Reloads the current emoji with original palette colors.
-   */
   const handleReset = useCallback(() => {
     if (!currentEmoji) return;
     cancelPendingURL();
@@ -401,12 +322,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     cancelPendingURL,
   ]);
 
-  /**
-   * Generates SVG HTML for the customized emoji.
-   * Applies customized colors to the emoji paths.
-   *
-   * @returns SVG HTML string for customized emoji.
-   */
   const generateSVGData = useCallback(() => {
     if (pathArray.length === 0 || paletteArray.length === 0) return "";
 
@@ -424,12 +339,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     return `<svg id="customized-emoji-svg-data" xmlns="http://www.w3.org/2000/svg" width="16em" height="16em" viewBox="0 0 36 36"><g transform="translate(0,0) scale(1,1)">${svgPaths.join("\n")}</g></svg>`;
   }, [pathArray, paletteArray, customizedPaletteColors, originalPaletteColors]);
 
-  /**
-   * Generates SVG HTML for the reference (original) emoji.
-   * Uses original palette colors without customization.
-   *
-   * @returns SVG HTML string for reference emoji.
-   */
   const generateReferenceSVG = useCallback(() => {
     if (pathArray.length === 0 || paletteArray.length === 0) return "";
 
@@ -440,12 +349,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="16em" height="16em" viewBox="0 0 36 36"><g transform="translate(0,0) scale(1,1)">${svgPaths.join("\n")}</g></svg>`;
   }, [pathArray, paletteArray]);
 
-  /**
-   * Updates the canvas with SVG data and performs the specified action.
-   * Renders the SVG to canvas and executes download, copy, share, or preview generation.
-   *
-   * @param action - Action type: 1=download, 2=copy, 3=share, 4=generate preview.
-   */
   const updateCanvas = useCallback(
     async (action: number, format: "png" | "jpg" = "png") => {
       const svgData = generateSVGData();
@@ -509,12 +412,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     [generateSVGData, currentEmoji]
   );
 
-  /**
-   * Handles downloading the emoji image in the given format.
-   * SVG is written directly from the markup; png/jpg are rendered via canvas.
-   *
-   * @param format - Output format: "png" (default), "jpg", or "svg".
-   */
   const handleDownloadImage = useCallback(
     async (format: ImageFormat = "png") => {
       if (format === "svg") {
@@ -529,13 +426,8 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     [updateCanvas, generateSVGData, currentEmoji]
   );
 
-  /**
-   * Handles copying the emoji image to clipboard.
-   * Uses Web Share API if available, otherwise falls back to clipboard API.
-   */
   const handleCopyImage = useCallback(() => {
-    // The success/error toast is fired by updateCanvas once the async
-    // clipboard write / share settles, so we don't toast optimistically here.
+    // Let updateCanvas report success after the clipboard write or share completes.
     if (typeof navigator.canShare === "function") {
       updateCanvas(CANVAS_ACTION.SHARE);
     } else {
@@ -543,10 +435,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     }
   }, [updateCanvas]);
 
-  /**
-   * Handles sharing the emoji.
-   * On mobile, uses native share dialog. On desktop, opens share dialog.
-   */
   const handleShare = useCallback(async () => {
     if (navigator.share && window.innerWidth < 768) {
       const shareData = {
@@ -566,7 +454,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     }
   }, [updateCanvas, setShareDialogOpen]);
 
-  // Computed SVG HTML
   const svgHTML = generateSVGData();
   const referenceSvgHTML = generateReferenceSVG();
 
@@ -605,13 +492,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
   );
 }
 
-/**
- * Hook to access the emoji context.
- * Provides access to all emoji state and actions.
- *
- * @returns Emoji context value with state and actions.
- * @throws Error if used outside of EmojiProvider.
- */
 export function useEmoji(): EmojiContextValue {
   const context = use(EmojiContext);
   if (!context) {

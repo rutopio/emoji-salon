@@ -1,9 +1,3 @@
-/**
- * @fileoverview Color palette picker components for emoji customization.
- * Provides color picker popovers using react-aria-components that allow users
- * to select colors using a color area, hue slider, hex input, and preset colors.
- */
-
 import { CopyIcon, EyedropperIcon } from "@phosphor-icons/react";
 import { Button } from "@rutopio/ui/button";
 import { use, useRef } from "react";
@@ -34,20 +28,12 @@ import { useEmoji } from "@/contexts/emoji-context";
 import { useT } from "@/hooks/use-translation";
 import { PRESET_COLORS } from "@/lib/constants";
 
-/**
- * EyeDropper button component that uses the browser's EyeDropper API
- * to pick colors from anywhere on the screen.
- * Returns null if the EyeDropper API is not supported by the browser.
- *
- * @returns EyeDropper button component or null if not supported.
- */
 function EyeDropperButton() {
   const t = useT();
   const state = use(ColorPickerStateContext);
   if (!state)
     throw new Error("EyeDropperButton must be used inside ColorPicker");
 
-  // Check if browser supports EyeDropper API
   // @ts-expect-error - EyeDropper API may not be available
   if (typeof EyeDropper === "undefined") {
     return null;
@@ -72,22 +58,13 @@ function EyeDropperButton() {
 }
 
 interface ColorPickerPopoverProps {
-  /** The current color value (hex string). */
+  /** Hex color. */
   color: string;
-  /** Callback invoked when the color changes. */
   onColorChange: (color: string) => void;
-  /** Optional index for identification. */
   index?: number;
 }
 
-/**
- * Native color swatch for touch devices. Wraps the browser's built-in
- * `<input type="color">` so phones/tablets get the OS color picker instead of
- * the desktop popover (better ergonomics, no popover-close-on-tap issues).
- *
- * @param props - Component props (color + onColorChange).
- * @returns A swatch button backed by a native color input.
- */
+// Native inputs avoid popover drag and dismissal conflicts on touch devices.
 function NativeColorPicker({ color, onColorChange }: ColorPickerPopoverProps) {
   const t = useT();
   return (
@@ -106,26 +83,11 @@ function NativeColorPicker({ color, onColorChange }: ColorPickerPopoverProps) {
   );
 }
 
-/**
- * Popover-based color picker component.
- * Displays a color swatch button that opens a color picker dialog with
- * color area selector, hue slider, hex input field, and preset colors.
- *
- * @param props - Component props.
- * @returns Color picker popover component.
- */
 function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
   const t = useT();
-  // Parse the hex color string to a Color object in HSB format
   const colorValue = parseColor(color).toFormat("hsb");
-  // Track if user is dragging to prevent popover from closing during drag
   const isDraggingRef = useRef(false);
 
-  /**
-   * Handles color change from the color picker.
-   *
-   * @param newColor - The new color value from the picker.
-   */
   const handleColorChange = (newColor: Color) => {
     onColorChange(newColor.toString("hex"));
   };
@@ -142,7 +104,7 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
       <Popover
         placement="bottom"
         className="w-fit"
-        // Prevent popover from closing during color area/slider drag interactions
+        // A color drag may end outside the popover; keep it open.
         shouldCloseOnInteractOutside={() => !isDraggingRef.current}
       >
         <Dialog
@@ -150,7 +112,6 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
           aria-label={t("Color picker")}
         >
           <ColorPicker value={colorValue} onChange={handleColorChange}>
-            {/* Color Area for saturation and brightness */}
             <div
               onPointerDown={() => {
                 isDraggingRef.current = true;
@@ -170,7 +131,6 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
               >
                 <ColorThumb className="z-50" />
               </ColorArea>
-              {/* Hue Slider */}
               <ColorSlider colorSpace="hsb" channel="hue">
                 <SliderTrack className="w-full rounded-t-none border-t-0">
                   <ColorThumb className="top-1/2" />
@@ -178,14 +138,12 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
               </ColorSlider>
             </div>
 
-            {/* Hex Input Field */}
             <ColorField className="flex w-full gap-2">
               <AriaLabel className="sr-only">{t("Hex Color")}</AriaLabel>
               <AriaInput
                 className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-2.5 py-1 font-mono text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
                 placeholder={t("Hex")}
                 onKeyDown={(e) => {
-                  // Blur on Enter to commit the color value
                   if (e.key === "Enter") {
                     e.currentTarget.blur();
                   }
@@ -206,7 +164,6 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
               </Button>
             </ColorField>
 
-            {/* Color Swatch Picker */}
             <div className="grid grid-cols-6 gap-2">
               <EyeDropperButton />
               {PRESET_COLORS.map((presetColor) => (
@@ -224,13 +181,6 @@ function ColorPickerPopover({ color, onColorChange }: ColorPickerPopoverProps) {
   );
 }
 
-/**
- * Color palette pickers component.
- * Displays multiple color picker popovers for editing the emoji's color palette.
- * Each color in the palette can be individually customized.
- *
- * @returns Color palette pickers component.
- */
 export default function ColorPalettePickers() {
   const { customizedPaletteColors, handleColorChange } = useEmoji();
 
@@ -238,19 +188,15 @@ export default function ColorPalettePickers() {
     <div className="flex justify-center">
       <div className="flex flex-wrap items-center justify-center gap-2">
         {customizedPaletteColors.map((color, idx) => {
-          // Key by index, not color: colors can repeat or change on every drag,
-          // so a color key would remount the popover mid-interaction (closing
-          // it). Index is stable and unique per palette slot.
+          // Palette slots stay stable while colors change or repeat; color keys would remount the picker.
           const key = `palette-${idx}`;
           const onChange = (newColor: string) =>
             handleColorChange(idx, newColor);
           return (
             <div key={key}>
-              {/* Touch devices: native OS color picker. */}
               <div className="lg:hidden">
                 <NativeColorPicker color={color} onColorChange={onChange} />
               </div>
-              {/* Desktop: rich popover picker. */}
               <div className="hidden lg:block">
                 <ColorPickerPopover
                   color={color}

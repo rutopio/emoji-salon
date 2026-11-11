@@ -1,11 +1,4 @@
-/**
- * Cloudflare Pages middleware: rewrite the static OG/Twitter image meta tags to
- * point at the on-demand /og image for the current share URL. Crawlers don't
- * run JS, so the per-share preview must be injected into the served HTML here.
- *
- * Only HTML document responses for the app shell are rewritten; the /og
- * function and static assets pass through untouched.
- */
+// Crawlers need per-share previews before the SPA runs.
 
 import { SITE_URL } from "../src/lib/constants";
 import { localeForPath, stripLocale } from "../src/lib/locale";
@@ -48,9 +41,7 @@ class JsonRewriter {
 export const onRequest: PagesFunction = async ({ request, next }) => {
   const url = new URL(request.url);
 
-  // Canonical-host redirect. Any *.pages.dev host (<project>.pages.dev and every
-  // <hash>.<project>.pages.dev preview URL) is 301'd to the custom domain, path +
-  // query preserved, so the pages.dev origin never gets indexed or linked.
+  // Keep Pages preview hosts out of search results.
   if (url.hostname.endsWith(".pages.dev")) {
     return Response.redirect(
       `https://emojisalon.chingru.com${url.pathname}${url.search}`,
@@ -58,7 +49,6 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     );
   }
 
-  // Don't touch the image function or anything that isn't the HTML shell.
   if (url.pathname.startsWith("/og")) return next();
 
   const response = await next();
@@ -145,8 +135,7 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     new AttributeRewriter("href", `${SITE_URL}${pagePath("en", page)}`)
   );
 
-  // The share state lives in the page query (?emoji=...&palette=...). A bare URL
-  // has no emoji and keeps the static default image from index.html.
+  // Bare URLs keep the default cover; emoji share links need dynamic previews.
   const emoji = url.searchParams.get("emoji");
   if (!emoji || page !== "create") return rewrite.transform(response);
 
