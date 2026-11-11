@@ -41,8 +41,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
   // Fetch the per-emoji data served as a static asset on the same origin. A
   // missing asset falls back to the SPA shell (text/html, 200), so require JSON.
-  const dataUrl = new URL(`/data/emoji/${emoji}.json`, url.origin);
-  const dataRes = await fetch(dataUrl.toString());
+  const dataRes = await fetch(`${url.origin}/data/emoji/${emoji}.json`);
   const contentType = dataRes.headers.get("content-type") || "";
   if (!dataRes.ok || !contentType.includes("application/json")) {
     return new Response("Unknown emoji", { status: 404 });
