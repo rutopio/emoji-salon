@@ -107,9 +107,7 @@ export default function ShareDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="cn-font-heading">
-              {t("Share your emoji")}
-            </DialogTitle>
+            <DialogTitle>{t("Share your emoji")}</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
@@ -205,9 +203,7 @@ export default function ShareDialog({
         <Dialog open={cssDialogOpen} onOpenChange={setCssDialogOpen}>
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
-              <DialogTitle className="cn-font-heading">
-                {t("HTML / CSS Code")}
-              </DialogTitle>
+              <DialogTitle>{t("HTML / CSS Code")}</DialogTitle>
             </DialogHeader>
 
             <div className="flex flex-col gap-4">

@@ -5,35 +5,19 @@ import {
   HeaderNavigation,
   SiteHeader,
 } from "@rutopio/base-component/site-header";
+import { useIsMobile } from "@rutopio/base-component/use-mobile";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { useSyncExternalStore } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EMOJI_SALON_ICON_PATH } from "@/lib/brand-icon";
 import { GITHUB_REPO_URL } from "@/lib/constants";
 import { localeForPath, locales, stripLocale, withLocale } from "@/lib/locale";
 import { useT } from "@/lib/translations";
 
-const mobileQuery = "(max-width: 767px)";
-
-function subscribeToMobile(onChange: () => void) {
-  const media = window.matchMedia(mobileQuery);
-  media.addEventListener("change", onChange);
-  return () => media.removeEventListener("change", onChange);
-}
-
-function isMobileViewport() {
-  return window.matchMedia(mobileQuery).matches;
-}
-
 export default function Navbar() {
   const pathname = useLocation({ select: (location) => location.pathname });
   const navigate = useNavigate();
   const t = useT();
-  const isMobile = useSyncExternalStore(
-    subscribeToMobile,
-    isMobileViewport,
-    () => false
-  );
+  const isMobile = useIsMobile();
   const locale = localeForPath(pathname);
   const barePath = stripLocale(pathname);
   const isHome = barePath === "/";
@@ -44,10 +28,8 @@ export default function Navbar() {
   return (
     <SiteHeader
       className="bg-background"
-      navClassName="font-sans"
       label={t("Main navigation")}
       actionsLabel={t("Header actions")}
-      compactActions
       brand={
         <Link
           to={localized("/")}
@@ -92,7 +74,6 @@ export default function Navbar() {
           ]}
           label={t("Pages")}
           title="EmojiSalon"
-          titleClassName="cn-font-heading"
           menuIcon={<ListIcon aria-hidden="true" />}
           selectedIcon={<CheckIcon aria-hidden="true" />}
           renderLink={(item, props) => (
@@ -128,7 +109,6 @@ export default function Navbar() {
               htmlLang: item.htmlLang,
             }))}
             isMobile={isMobile}
-            titleClassName="cn-font-heading"
             onChange={(value) =>
               navigate({
                 to: withLocale(pathname, value),

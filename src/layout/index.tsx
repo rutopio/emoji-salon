@@ -1,3 +1,4 @@
+import { SiteLayout } from "@rutopio/base-component/site-layout";
 import type { ReactNode } from "react";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
@@ -11,7 +12,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
   const t = useT();
   return (
     <div className="h-full">
-      <div className="mx-auto flex min-h-full w-full max-w-2xl flex-col px-3 min-[360px]:px-6">
+      <SiteLayout>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:outline-2 focus:outline-ring"
@@ -27,7 +28,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
           {children}
         </main>
         <Footer />
-      </div>
+      </SiteLayout>
     </div>
   );
 }

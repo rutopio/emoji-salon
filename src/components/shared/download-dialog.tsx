@@ -69,9 +69,7 @@ export default function DownloadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="lg:max-w-md">
         <DialogHeader>
-          <DialogTitle className="cn-font-heading">
-            {t("Save Image")}
-          </DialogTitle>
+          <DialogTitle>{t("Save Image")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-center justify-center py-2">

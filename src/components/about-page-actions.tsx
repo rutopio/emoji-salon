@@ -13,6 +13,7 @@ import {
   DrawerTrigger,
 } from "@rutopio/base-component/drawer";
 import { OutlineList } from "@rutopio/base-component/outline-list";
+import { ReadingProgressRing } from "@rutopio/base-component/outline-nav";
 import { PageActionRail } from "@rutopio/base-component/page-action-rail";
 import { shareOrCopyCurrentPage } from "@rutopio/base-component/page-share";
 import { navigateToSection } from "@rutopio/base-component/section-navigation";
@@ -25,35 +26,6 @@ interface OutlineItem {
   id: string;
   label: string;
   depth: 2 | 3;
-}
-
-const circumference = 2 * Math.PI * 6.25;
-
-function ReadingProgressRing({ progress }: { progress: number }) {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 -rotate-90">
-      <circle
-        cx="8"
-        cy="8"
-        r="6.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        className="opacity-20"
-      />
-      <circle
-        cx="8"
-        cy="8"
-        r="6.25"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={(1 - progress) * circumference}
-      />
-    </svg>
-  );
 }
 
 function prefersReducedMotion() {
@@ -173,9 +145,7 @@ export function AboutPageActions() {
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader className="border-border border-b pb-4">
-                <DrawerTitle className="cn-font-heading">
-                  {t("About EmojiSalon")}
-                </DrawerTitle>
+                <DrawerTitle>{t("About EmojiSalon")}</DrawerTitle>
               </DrawerHeader>
               <nav
                 aria-label={t("Table of contents")}

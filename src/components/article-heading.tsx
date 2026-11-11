@@ -1,8 +1,7 @@
-import { SectionHeadingAnchor } from "@rutopio/base-component/section-heading-anchor";
+import { SectionHeading } from "@rutopio/base-component/section-heading";
 import { copySectionLink } from "@rutopio/base-component/section-navigation";
 import { toast } from "sonner";
 import { useT } from "@/lib/translations";
-import { cn } from "@/lib/utils";
 
 interface ArticleHeadingProps {
   id: string;
@@ -16,7 +15,6 @@ export function ArticleHeading({
   level = 2,
 }: ArticleHeadingProps) {
   const t = useT();
-  const Heading = level === 3 ? "h3" : "h2";
 
   const handleCopySectionLink = () => {
     void copySectionLink(
@@ -27,26 +25,13 @@ export function ArticleHeading({
   };
 
   return (
-    <Heading
+    <SectionHeading
       id={id}
-      className={cn(
-        "group flex items-center text-balance font-bold text-lg text-neutral-950 leading-[1.65] dark:text-neutral-50",
-        level === 3 ? "scroll-m-20" : "scroll-mt-14"
-      )}
+      level={level}
+      linkTitle={t("Copy link to this section")}
+      onLinkClick={handleCopySectionLink}
     >
-      <SectionHeadingAnchor
-        id={id}
-        title={t("Copy link to this section")}
-        onClick={handleCopySectionLink}
-      >
-        {children}
-      </SectionHeadingAnchor>
-      {level === 2 && (
-        <span
-          aria-hidden="true"
-          className="ml-4 h-0.5 min-w-4 flex-1 scale-y-50 bg-border"
-        />
-      )}
-    </Heading>
+      {children}
+    </SectionHeading>
   );
 }

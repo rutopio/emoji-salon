@@ -109,9 +109,7 @@ export default function ActionButtons({
         <Drawer open={emojiPickerOpen} onOpenChange={setEmojiPickerOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle className="cn-font-heading">
-                {t("Select Emoji")}
-              </DrawerTitle>
+              <DrawerTitle>{t("Select Emoji")}</DrawerTitle>
               <DrawerDescription className="sr-only">
                 {t("Choose an emoji to customize")}
               </DrawerDescription>

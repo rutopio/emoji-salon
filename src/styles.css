@@ -3,7 +3,9 @@
 
 @import "tw-animate-css";
 @import "@rutopio/base-component/styles.css";
+@import "@rutopio/base-component/article.css";
 @import "@rutopio/base-component/neutral-theme.css";
+@import "@rutopio/base-component/cjk-fonts.css";
 @import "@fontsource-variable/noto-sans-jp";
 @import "@fontsource-variable/noto-sans-tc";
 
@@ -80,10 +82,4 @@
   --z-popover: 50;
   --z-tooltip: 60;
 
-  --font-sans: "Inter Variable", "Noto Sans TC Variable", "Noto Sans JP Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Paper Mono", ui-monospace, monospace;
-}
-
-html:lang(ja) {
-  --font-sans: "Inter Variable", "Noto Sans JP Variable", "Noto Sans TC Variable", ui-sans-serif, system-ui, sans-serif;
 }
