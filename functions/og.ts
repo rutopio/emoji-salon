@@ -48,11 +48,13 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   if (!dataRes.ok || !contentType.includes("application/json")) {
     return new Response("Unknown emoji", { status: 404 });
   }
-  const data = (await dataRes.json()) as EmojiPathData;
+  const [data] = await Promise.all([
+    dataRes.json() as Promise<EmojiPathData>,
+    ensureWasm(),
+  ]);
 
   const svg = renderOgSvg({ data, override });
 
-  await ensureWasm();
   const resvg = new Resvg(svg, {
     fitTo: { mode: "width", value: OG_WIDTH },
   });
