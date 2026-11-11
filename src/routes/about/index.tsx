@@ -185,7 +185,7 @@ export function AboutPage() {
                 {c.graphicSuffix}
               </p>
               <p>{c.graphicsTerms}</p>
-              <p className="font-medium">{c.graphicsNoCopyright}</p>
+              <p className="font-semibold">{c.graphicsNoCopyright}</p>
             </ArticleSection>
             <ArticleSection
               heading={

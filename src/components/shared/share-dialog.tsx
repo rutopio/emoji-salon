@@ -208,7 +208,7 @@ export default function ShareDialog({
 
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
-                <div className="font-medium text-sm">HTML</div>
+                <div className="font-semibold text-sm">HTML</div>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -224,7 +224,7 @@ export default function ShareDialog({
               </pre>
 
               <div className="flex items-center gap-2">
-                <div className="font-medium text-sm">CSS</div>
+                <div className="font-semibold text-sm">CSS</div>
                 <Button
                   variant="ghost"
                   size="sm"
