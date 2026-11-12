@@ -23,15 +23,14 @@
     "@rutopio/ui": "github:rutopio/ui#v2.0.3",
     "@tanstack/react-query": "5.107.1",
     "@tanstack/react-router": "1.170.46",
-    "clsx": "2.1.1",
+    "cn": "0.5.2",
     "frimousse": "0.4.0",
     "motion": "14.12.0",
     "next-themes": "0.4.6",
     "react": "19.3.1",
     "react-aria-components": "1.22.1",
     "react-dom": "19.3.1",
-    "sonner": "2.0.8",
-    "tailwind-merge": "3.7.0"
+    "sonner": "2.0.8"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
