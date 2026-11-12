@@ -11,8 +11,8 @@
 /data/*
   Cache-Control: public, max-age=604800
 
-# Icons and social image may be regenerated under the same name.
+# Icons and social image may be regenerated under the same name → long max-age, no immutable.
 /favicon.ico
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=604800
 /social.png
   Cache-Control: public, max-age=604800
