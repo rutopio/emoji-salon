@@ -37,9 +37,9 @@ export default function Header() {
           <span className="flex size-12 items-center justify-center">
             <svg
               aria-hidden="true"
-              className="text-foreground h-8 w-7"
+              className="text-foreground size-8"
               fill="currentColor"
-              viewBox="0 0 632 739"
+              viewBox="0 0 677 675"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path d={EMOJI_SALON_ICON_PATH} />

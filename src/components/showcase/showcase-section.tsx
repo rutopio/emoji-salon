@@ -176,9 +176,7 @@ export default function ShowcaseSection({
     <div className={`bg-card rounded-lg border p-4 lg:p-6 ${className}`}>
       <div className="flex flex-col gap-4 lg:gap-8">
         <div className="relative flex w-full items-center justify-start lg:justify-center">
-          <span className="font-mono text-base tabular-nums">
-            {unicodeDisplay}
-          </span>
+          <span className="text-base tabular-nums">{unicodeDisplay}</span>
           <ButtonGroup
             aria-label={t("Emoji actions")}
             className="absolute -top-1 right-0"
