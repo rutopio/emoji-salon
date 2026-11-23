@@ -26,6 +26,20 @@ test("only the latest successful selection replaces the complete emoji snapshot"
   }
 });
 
+test("editor SVGs keep the original palette separate from edited colors", async () => {
+  const app = await editorHarness();
+  try {
+    await app.resolve("a");
+    assert.match(app.value.svgHTML, /fill="#000000"/);
+    assert.match(app.value.referenceSvgHTML, /fill="#000000"/);
+    await app.act(() => app.value.handleColorChange(0, "#abcdef"));
+    assert.match(app.value.svgHTML, /fill="#abcdef"/);
+    assert.match(app.value.referenceSvgHTML, /fill="#000000"/);
+  } finally {
+    await app.close();
+  }
+});
+
 test("selection, reset, random colors, route changes and unmount invalidate delayed URL writes", async () => {
   const app = await editorHarness();
   try {

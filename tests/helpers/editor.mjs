@@ -91,6 +91,10 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
       },
     }
   );
+  const emojiSvg = await loadSource(
+    new URL("../../src/lib/render-emoji-svg.ts", import.meta.url),
+    { globals }
+  );
   const { EmojiProvider, useEmoji } = await loadSource(
     new URL("../../src/contexts/emoji-context.tsx", import.meta.url),
     {
@@ -116,6 +120,7 @@ export async function editorHarness(extraGlobals = {}, extraImports = {}) {
           CANVAS_SCALE_FACTOR: 10,
         },
         "@/lib/emoji-utils": utils,
+        "@/lib/render-emoji-svg": emojiSvg,
         "@/lib/share-utils": { downloadSVG() {} },
         "@/lib/rasterize-svg": {
           rasterizeSvg() {

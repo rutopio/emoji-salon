@@ -23,6 +23,7 @@ import {
 } from "@/lib/emoji-utils";
 import { resolveInitialEmoji } from "@/lib/prepare-emoji-route";
 import { canvasToPng, rasterizeSvg } from "@/lib/rasterize-svg";
+import { renderEditorEmojiPair } from "@/lib/render-emoji-svg";
 import { downloadSVG } from "@/lib/share-utils";
 import { currentT } from "@/lib/translations";
 
@@ -322,36 +323,18 @@ function EmojiEditor({ children }: EmojiProviderProps) {
     cancelPendingURL,
   ]);
 
-  const generateSVGData = useCallback(() => {
-    if (pathArray.length === 0 || paletteArray.length === 0) return "";
-
-    const svgPaths = pathArray.map((d, index) => {
-      const colorIndex = originalPaletteColors.indexOf(
-        paletteArray[index] ?? "none"
-      );
-      const fillColor =
-        colorIndex !== -1
-          ? customizedPaletteColors[colorIndex] || paletteArray[index]
-          : paletteArray[index];
-      return `<path fill="${fillColor}" d="${d}" />`;
-    });
-
-    return `<svg id="customized-emoji-svg-data" xmlns="http://www.w3.org/2000/svg" width="16em" height="16em" viewBox="0 0 36 36"><g transform="translate(0,0) scale(1,1)">${svgPaths.join("\n")}</g></svg>`;
-  }, [pathArray, paletteArray, customizedPaletteColors, originalPaletteColors]);
-
-  const generateReferenceSVG = useCallback(() => {
-    if (pathArray.length === 0 || paletteArray.length === 0) return "";
-
-    const svgPaths = pathArray.map((d, index) => {
-      return `<path fill="${paletteArray[index]}" d="${d}" />`;
-    });
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="16em" height="16em" viewBox="0 0 36 36"><g transform="translate(0,0) scale(1,1)">${svgPaths.join("\n")}</g></svg>`;
-  }, [pathArray, paletteArray]);
+  const { customizedSvg: svgHTML, originalSvg: referenceSvgHTML } = useMemo(
+    () =>
+      renderEditorEmojiPair(
+        { d: pathArray, f: paletteArray, c: originalPaletteColors },
+        customizedPaletteColors
+      ),
+    [pathArray, paletteArray, originalPaletteColors, customizedPaletteColors]
+  );
 
   const updateCanvas = useCallback(
     async (action: number, format: "png" | "jpg" = "png") => {
-      const svgData = generateSVGData();
+      const svgData = svgHTML;
       if (!svgData) return false;
       const previewId =
         action === CANVAS_ACTION.GENERATE_PREVIEW ? ++previewIdRef.current : 0;
@@ -409,13 +392,13 @@ function EmojiEditor({ children }: EmojiProviderProps) {
         return false;
       }
     },
-    [generateSVGData, currentEmoji]
+    [svgHTML, currentEmoji]
   );
 
   const handleDownloadImage = useCallback(
     async (format: ImageFormat = "png") => {
       if (format === "svg") {
-        downloadSVG(generateSVGData(), currentEmoji);
+        downloadSVG(svgHTML, currentEmoji);
         return;
       }
       if (!(await updateCanvas(CANVAS_ACTION.DOWNLOAD, format))) return;
@@ -423,7 +406,7 @@ function EmojiEditor({ children }: EmojiProviderProps) {
         description: `${emojiToUnicode(currentEmoji)}-EmojiSalon.${format}`,
       });
     },
-    [updateCanvas, generateSVGData, currentEmoji]
+    [updateCanvas, svgHTML, currentEmoji]
   );
 
   const handleCopyImage = useCallback(() => {
@@ -453,9 +436,6 @@ function EmojiEditor({ children }: EmojiProviderProps) {
       setShareDialogOpen(true);
     }
   }, [updateCanvas, setShareDialogOpen]);
-
-  const svgHTML = generateSVGData();
-  const referenceSvgHTML = generateReferenceSVG();
 
   const value: EmojiContextValue = {
     currentEmoji,

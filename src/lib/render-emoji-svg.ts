@@ -27,8 +27,13 @@ export function buildEmojiPair(
   data: EmojiPathData,
   override?: string
 ): EmojiPair {
-  const customized = applyOverride(data.c, override);
+  return buildEmojiPairWithColors(data, applyOverride(data.c, override));
+}
 
+function buildEmojiPairWithColors(
+  data: EmojiPathData,
+  customized: string[]
+): EmojiPair {
   const originalInner = data.d
     .map((d, i) => `<path fill="${data.f[i]}" d="${d}" />`)
     .join("");
@@ -36,10 +41,31 @@ export function buildEmojiPair(
   const customizedInner = data.d
     .map((d, i) => {
       const ci = data.c.indexOf(data.f[i] ?? "none");
-      const fill = ci !== -1 ? customized[ci] : data.f[i];
+      const fill = ci !== -1 ? customized[ci] || data.f[i] : data.f[i];
       return `<path fill="${fill}" d="${d}" />`;
     })
     .join("");
 
   return { originalInner, customizedInner };
+}
+
+/** Editor SVGs share the same palette mapping as the server-rendered OG image. */
+export function renderEditorEmojiPair(
+  data: EmojiPathData,
+  customizedColors: string[]
+): { originalSvg: string; customizedSvg: string } {
+  if (data.d.length === 0 || data.f.length === 0)
+    return { originalSvg: "", customizedSvg: "" };
+
+  const { originalInner, customizedInner } = buildEmojiPairWithColors(
+    data,
+    customizedColors
+  );
+  const wrap = (inner: string, id?: string) =>
+    `<svg${id ? ` id="${id}"` : ""} xmlns="http://www.w3.org/2000/svg" width="16em" height="16em" viewBox="0 0 36 36"><g transform="translate(0,0) scale(1,1)">${inner}</g></svg>`;
+
+  return {
+    originalSvg: wrap(originalInner),
+    customizedSvg: wrap(customizedInner, "customized-emoji-svg-data"),
+  };
 }
